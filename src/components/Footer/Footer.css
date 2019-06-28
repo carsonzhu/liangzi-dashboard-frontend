@@ -1,0 +1,97 @@
+.footer {
+    background-color:#66c2ec;
+}
+
+.footer .container ::after{
+    background-color: #66c2ec;
+}
+
+.footer .titlename {
+    margin-top: 25px;
+    margin-left: 15px;
+    color: white;
+}
+
+.footer .leftpartone {
+    margin-left: 15px;
+    margin-right: 20px;
+    color: white;
+}
+
+.footer .leftparttwo {
+    margin-left: 15px;
+    margin-right: 20px;
+    color: white;
+}
+
+.footer .leftpartthree {
+    margin-left: 15px;
+    margin-right: 20px;
+    color: white;
+}
+
+.footer .number {
+    background-color:white;
+    color: #66c2ec;
+    font-size: 18pt;
+    text-align: right;
+    margin-right: -170px;
+    margin-left: 260px;
+}
+
+.footer .allservice {
+    color: white;
+    text-align: right;
+    margin-right: -170px;
+    margin-left: 170px;
+
+}
+
+.footer .aboard {
+    color: white;
+    text-align: right;
+    margin-right: -170px;
+    margin-left: 170px;
+    margin-bottom: 60px;
+    
+}
+
+.footer .wechatacc{
+    writing-mode: vertical-rl;
+    margin-left: 30px;
+    color: white;
+    margin-left: 180px;
+}
+
+.footer .img {
+    width: 85px;
+    height: 85px;
+    margin-left: 150px;
+}
+
+.footer .copyright {
+    margin-top: 30px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+}
+
+.footer .url {
+    color: white;
+}
+
+.footer .botmargin{
+    width: 100%;
+    height: 30px;
+    background: #66c2ec;
+}
+
+.footer .container hr {
+    width:100%; 
+    height:1px; 
+    background: white
+}
+
+
+
+

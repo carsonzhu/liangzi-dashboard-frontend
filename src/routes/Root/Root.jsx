@@ -16,6 +16,12 @@ const generateTabs = () => {
   ));
 };
 
+const generateTabComponent = () => {
+  return urlTabs.map(tabInfo => (
+    <Route path={tabInfo.link} component={tabInfo.component} />
+  ));
+};
+
 export default _ => (
   <div className="root-route">
     <div className="main-nav bg-white shadow-sm">
@@ -23,12 +29,7 @@ export default _ => (
     </div>
     <main className="">
       <Route exact path="/" component={Home} />
-      {/* <Route path="/search" component={Search} />
-      <Route path="/driverInfo" component={DriverInfo} />
-      <Route path="/login" component={Login} />
-      <Route path="/payment" component={Payment} />
-      <Route path="/RentalListPage" component={RentalListPage} />
-      <Route path="/RentalViewPage" component={RentalViewPage} /> */}
+      {generateTabComponent()}
       <Footer />
     </main>
   </div>

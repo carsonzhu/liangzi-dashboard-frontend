@@ -4,7 +4,7 @@ import "./Footer.css";
 export default () => {
   return (
     <div className="footer">
-      <div className="container"></div>
+      <div className="container">FOOTER</div>
     </div>
   );
 };

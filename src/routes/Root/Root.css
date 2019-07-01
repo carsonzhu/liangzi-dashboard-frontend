@@ -5,3 +5,8 @@
 .nav.container {
     flex-direction: column;
 }
+
+.root-route .main-nav {
+    width: 20%;
+    min-height: 100vh;
+}

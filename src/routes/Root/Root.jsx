@@ -9,16 +9,18 @@ import { urlTabs } from "./config";
 import "./Root.css";
 
 const generateTabs = () => {
-  return urlTabs.map(tabInfo => (
-    <NavLink exact={true} className="nav-link" to={tabInfo.link}>
+  const tabs = [{ title: "Home", link: "/" }, ...urlTabs];
+
+  return tabs.map((tabInfo, ind) => (
+    <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
       {tabInfo.title}
     </NavLink>
   ));
 };
 
 const generateTabComponent = () => {
-  return urlTabs.map(tabInfo => (
-    <Route path={tabInfo.link} component={tabInfo.component} />
+  return urlTabs.map((tabInfo, ind) => (
+    <Route key={ind} path={tabInfo.link} component={tabInfo.component} />
   ));
 };
 
@@ -27,7 +29,7 @@ export default _ => (
     <div className="main-nav bg-white shadow-sm">
       <nav className="nav container">{generateTabs()}</nav>
     </div>
-    <main className="">
+    <main className="content">
       <Route exact path="/" component={Home} />
       {generateTabComponent()}
       <Footer />

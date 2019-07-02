@@ -26,6 +26,7 @@
     "react-widgets-moment": "^4.0.26",
     "redux": "^4.0.1",
     "redux-devtools-extension": "^2.13.8",
+    "redux-logger": "^3.0.6",
     "redux-saga": "^1.0.2",
     "yup": "^0.27.0"
   },

@@ -29,7 +29,7 @@ export default _ => (
     <div className="main-nav bg-white shadow-sm">
       <nav className="nav container">{generateTabs()}</nav>
     </div>
-    <main className="">
+    <main className="content">
       <Route exact path="/" component={Home} />
       {generateTabComponent()}
       <Footer />

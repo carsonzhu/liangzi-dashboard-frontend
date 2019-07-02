@@ -9,7 +9,9 @@ import { urlTabs } from "./config";
 import "./Root.css";
 
 const generateTabs = () => {
-  return urlTabs.map((tabInfo, ind) => (
+  const tabs = [{ title: "Home", link: "/" }, ...urlTabs];
+
+  return tabs.map((tabInfo, ind) => (
     <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
       {tabInfo.title}
     </NavLink>

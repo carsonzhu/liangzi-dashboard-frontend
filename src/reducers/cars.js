@@ -1,5 +1,6 @@
 const initialState = {
   cars: [],
+  query: {},
   loading: false,
   error: ""
 };

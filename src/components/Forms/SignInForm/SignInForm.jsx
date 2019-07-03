@@ -1,29 +1,74 @@
-import React from "react";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { Formik } from "formik";
 import { Form, Button } from "react-bootstrap";
+import { connect } from "react-redux";
 
-const SignInForm = ({}) => {
-  return (
-    <Form>
-      <Form.Group controlId="formBasicEmail">
-        <Form.Label>Email address</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" />
-        <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
-        </Form.Text>
-      </Form.Group>
+import "./SignInForm.css";
 
-      <Form.Group controlId="formBasicPassword">
-        <Form.Label>Password</Form.Label>
-        <Form.Control type="password" placeholder="Password" />
-      </Form.Group>
-      <Form.Group controlId="formBasicChecbox">
-        <Form.Check type="checkbox" label="Check me out" />
-      </Form.Group>
-      <Button variant="primary" type="submit">
-        Submit
-      </Button>
-    </Form>
-  );
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {
+  login: ({ email, passowrd }) => ({
+    type: "LOGGING_IN",
+    payload: { email, passowrd }
+  })
 };
 
-export default SignInForm;
+class SignInForm extends Component {
+  static propTypes = {
+    login: PropTypes.func
+  };
+
+  render() {
+    return (
+      <div className="signInForm">
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          onSubmit={(values, _) => {
+            console.log("values", values);
+            this.props.login(values);
+          }}
+          render={props => (
+            <form onSubmit={props.handleSubmit}>
+              <Form.Group controlId="formBasicEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={props.values.email}
+                  name="email"
+                />
+                <Form.Text className="text-muted">
+                  We'll never share your email with anyone else.
+                </Form.Text>
+              </Form.Group>
+
+              <Form.Group controlId="formBasicPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  onChange={props.handleChange}
+                  onBlur={props.handleBlur}
+                  value={props.values.password}
+                  name="password"
+                />
+              </Form.Group>
+              <Button variant="primary" type="submit">
+                Submit
+              </Button>
+            </form>
+          )}
+        />
+      </div>
+    );
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignInForm);

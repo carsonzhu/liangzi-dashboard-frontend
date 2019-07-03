@@ -1,5 +1,6 @@
 const initialState = {
   token: "",
+  userType: "",
   loading: false,
   error: ""
 };

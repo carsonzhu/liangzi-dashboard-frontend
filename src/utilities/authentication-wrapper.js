@@ -24,11 +24,26 @@ export const authenticationWrapper = WrappedComponent => {
 
     state = {};
 
-    componentDidMount() {}
+    checkIfLoggedIn() {
+      return !!this.props.userType && !!this.props.token;
+    }
 
-    componentDidUpdate(prevProps) {}
+    showLoginModal() {
+      //TODO: use redux-saga to open modal
+      console.log("opening login modal");
+    }
 
-    componentWillUnmount() {}
+    componentDidMount() {
+      if (!this.checkIfLoggedIn()) {
+        this.showLoginModal();
+      }
+    }
+
+    componentDidUpdate(prevProps) {
+      if (!this.checkIfLoggedIn()) {
+        this.showLoginModal();
+      }
+    }
 
     render() {
       console.log("this.props", this.props);

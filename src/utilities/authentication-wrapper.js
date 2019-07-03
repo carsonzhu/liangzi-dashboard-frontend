@@ -1,52 +1,62 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { openLoginModal, closeLoginModal } from "../actioins/componentState";
 
 const mapStateToProps = state => ({
-  loading: state.login.loading,
   userType: state.login.userType,
   token: state.login.token
 });
 
+const mapDispatchToProps = {
+  openLoginModal,
+  closeLoginModal
+};
+
 export const authenticationWrapper = WrappedComponent => {
   class AuthenticationWrapper extends Component {
     static propTypes = {
-      loading: PropTypes.bool,
       userType: PropTypes.string.isRequired,
-      token: PropTypes.string.isRequired
-    };
-
-    static defaultProps = {
-      loading: false
+      token: PropTypes.string.isRequired,
+      openLoginModal: PropTypes.func,
+      closeLoginModal: PropTypes.func
     };
 
     static WrappedComponent = WrappedComponent;
 
-    state = {};
-
-    checkIfLoggedIn() {
-      return !!this.props.userType && !!this.props.token;
-    }
-
-    showLoginModal() {
-      //TODO: use redux-saga to open modal
-      console.log("opening login modal");
+    checkIfLoggedIn({ userType, token }) {
+      return !!userType && !!token;
     }
 
     componentDidMount() {
-      if (!this.checkIfLoggedIn()) {
-        this.showLoginModal();
+      // hasnt logged in
+      if (
+        !this.checkIfLoggedIn({
+          userType: this.props.userType,
+          token: this.props.token
+        })
+      ) {
+        this.props.openLoginModal();
       }
     }
 
     componentDidUpdate(prevProps) {
-      if (!this.checkIfLoggedIn()) {
-        this.showLoginModal();
+      // has logged in
+      if (
+        !this.checkIfLoggedIn({
+          userType: prevProps.userType,
+          token: prevProps.token
+        }) &&
+        this.checkIfLoggedIn({
+          userType: this.props.userType,
+          token: this.props.token
+        })
+      ) {
+        this.props.closeLoginModal();
       }
     }
 
     render() {
-      console.log("this.props", this.props);
       return <WrappedComponent {...this.props} />;
     }
   }
@@ -55,4 +65,7 @@ export const authenticationWrapper = WrappedComponent => {
 };
 
 export default component =>
-  connect(mapStateToProps)(authenticationWrapper(component));
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(authenticationWrapper(component));

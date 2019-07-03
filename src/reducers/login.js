@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
     case "LOGIN_SUCC":
       return {
         token: action.payload.token,
+        userType: action.payload.userType,
         loading: false,
         error: ""
       };

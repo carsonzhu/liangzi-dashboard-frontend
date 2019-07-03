@@ -57,7 +57,7 @@ class Root extends Component {
             show={this.props.loginModal}
           >
             <Modal.Header closeButton>
-              <Modal.Title>Login In Form</Modal.Title>
+              <Modal.Title>Login Form</Modal.Title>
             </Modal.Header>
             <Modal.Body>
               <SignInForm />

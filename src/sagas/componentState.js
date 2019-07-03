@@ -1,10 +1,8 @@
 import { call, put, takeLatest } from "redux-saga/effects";
 
-import { openLoginModal, closeLoginModal } from "../actioins/componentState";
-
 // Sagas
 function* openLoginFunc() {
-  yield put(openLoginModal());
+  yield put({ type: "OPEN_LOGIN_MODAL" });
 }
 
 function* openLogin() {

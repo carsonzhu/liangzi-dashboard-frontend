@@ -22,7 +22,7 @@ export default preloadState => {
   const rootReducer = createRootReducer(history);
 
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [routerMiddleware(history), sagaMiddleware];
+  const middlewares = [sagaMiddleware, routerMiddleware(history)];
   if (isDev) middlewares.push(logger);
 
   const middlewareEnhancer = applyMiddleware(...middlewares);

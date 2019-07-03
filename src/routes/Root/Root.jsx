@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Route, NavLink } from "react-router-dom";
+import { connect } from "react-redux";
 
 import { Modal } from "react-bootstrap";
 import SignInForm from "../../components/Forms/SignInForm";
@@ -13,12 +14,16 @@ import { urlTabs } from "./config";
 
 import "./Root.css";
 
+const mapStateToProps = state => ({
+  loginModal: state.componentState.loginModal
+});
+
+const mapDispatchToProps = {};
+
 class Root extends Component {
   static propTypes = {
     loginModal: PropTypes.bool
   };
-
-  handleClose = this.handleClose.bind(this);
 
   generateTabs() {
     const tabs = [{ title: "Home", link: "/" }, ...urlTabs];
@@ -36,10 +41,6 @@ class Root extends Component {
     ));
   }
 
-  handleClose() {
-    console.log("handleClose");
-  }
-
   render() {
     return (
       <div className="root-route">
@@ -53,8 +54,7 @@ class Root extends Component {
           <Modal
             size="lg"
             dialogClassName="modal-90w"
-            show={this.props.loginModal || true}
-            onHide={this.handleClose}
+            show={this.props.loginModal}
           >
             <Modal.Header closeButton>
               <Modal.Title>Login In Form</Modal.Title>
@@ -69,4 +69,7 @@ class Root extends Component {
   }
 }
 
-export default AuthenticationWrapper(Root);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AuthenticationWrapper(Root));

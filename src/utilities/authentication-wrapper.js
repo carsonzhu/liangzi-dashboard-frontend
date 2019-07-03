@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { openLoginModal, closeLoginModal } from "../actioins/componentState";
 
 const mapStateToProps = state => ({
   userType: state.login.userType,
@@ -9,8 +8,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  openLoginModal,
-  closeLoginModal
+  openLoginModal: () => ({ type: "OPEN_LOGIN_MODAL" }),
+  closeLoginModal: () => ({ type: "CLOSE_LOGIN_MODAL" })
 };
 
 export const authenticationWrapper = WrappedComponent => {

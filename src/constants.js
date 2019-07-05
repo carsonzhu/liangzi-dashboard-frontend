@@ -8,10 +8,10 @@ const insurances = [
 
 const specialServices = ["GPS", "驾照翻译件", "儿童安全座椅", "中文向导"];
 
-const PORTAL_ADMIN = "portalAdmin";
-const RENTAL_COMPANY_ADMIN = "rentalCompanyAdmin";
+const SUPER_ADMIN = "superAdmin";
+const NORMAL_ADMIN = "normalAdmin";
 
-const userType = [PORTAL_ADMIN, RENTAL_COMPANY_ADMIN];
+const userType = [SUPER_ADMIN, NORMAL_ADMIN];
 
 const carStatus = [
   "available", //can be searched, can set a time range
@@ -22,8 +22,8 @@ const carStatus = [
 export {
   insurances,
   specialServices,
-  PORTAL_ADMIN,
-  RENTAL_COMPANY_ADMIN,
+  SUPER_ADMIN,
+  NORMAL_ADMIN,
   userType,
   carStatus
 };

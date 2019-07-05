@@ -43,7 +43,11 @@ const data = [
 ];
 
 const operationGenerator = operations => {
-  return operations.map((operation, ind) => <ul key={ind}>{operation}</ul>);
+  const listItems = operations.map((operation, ind) => (
+    <li key={ind}>{operation}</li>
+  ));
+
+  return <ul style={{ "list-style-type": "disc" }}>{listItems}</ul>;
 };
 
 const tbodyGenerator = Cars => {

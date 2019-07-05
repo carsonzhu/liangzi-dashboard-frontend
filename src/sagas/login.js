@@ -5,12 +5,14 @@ import { LOGGING_IN, LOGIN_SUCC, LOGIN_FAILED } from "../reducers/login";
 
 // Request
 const loginRequest = ({ email, password }) => {
+  // DEV: fake login
   const isDev =
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "custom";
 
-  // DEV: fake login
   if (isDev) {
-    return Promise.resolve({ userType: "normalAdmin", token: "abc123" });
+    return password === "error"
+      ? Promise.reject({ error: "incorrect" })
+      : Promise.resolve({ userType: "normalAdmin", token: "abc123" });
   }
 
   return axios({
@@ -32,8 +34,11 @@ function* loginAsync({ email, password }) {
       type: LOGIN_SUCC,
       payload: json
     });
-  } catch (error) {
-    yield put({ type: LOGIN_FAILED, payload: { error } });
+  } catch (err) {
+    yield put({
+      type: LOGIN_FAILED,
+      payload: { error: "The email/password is not valid" }
+    });
   }
 }
 

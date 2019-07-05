@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import { connect } from "react-redux";
 
 import "./SignInForm.css";
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  error: state.login.error
+});
 
 const mapDispatchToProps = dispatch => ({
   login: ({ email, passowrd }) =>
@@ -18,10 +20,12 @@ const mapDispatchToProps = dispatch => ({
 
 class SignInForm extends Component {
   static propTypes = {
-    login: PropTypes.func
+    login: PropTypes.func,
+    error: PropTypes.string
   };
 
   render() {
+    console.log("error", this.props.error);
     return (
       <div className="signInForm">
         <Formik
@@ -33,6 +37,9 @@ class SignInForm extends Component {
           render={props => (
             <form onSubmit={props.handleSubmit}>
               <Form.Group controlId="formBasicEmail">
+                {this.props.error && (
+                  <Alert variant="danger">{this.props.error}</Alert>
+                )}
                 <Form.Label>Email address</Form.Label>
                 <Form.Control
                   type="email"

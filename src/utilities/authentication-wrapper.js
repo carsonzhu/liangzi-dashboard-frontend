@@ -1,16 +1,28 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { dispatch } from "rxjs/internal/observable/range";
+
+import { checkForCached } from "./cache-handler";
+import {
+  OPEN_LOGIN_MODAL,
+  CLOSE_LOGIN_MODAL
+} from "../reducers/componentState";
+import { LOGIN_SUCC } from "../reducers/login";
 
 const mapStateToProps = state => ({
   userType: state.login.userType,
-  token: state.login.token
+  token: state.login.token,
+  userId: state.login.userId
 });
 
 const mapDispatchToProps = dispatch => ({
-  openLoginModal: () => dispatch({ type: "OPEN_LOGIN_MODAL" }),
-  closeLoginModal: () => dispatch({ type: "CLOSE_LOGIN_MODAL" })
+  openLoginModal: () => dispatch({ type: OPEN_LOGIN_MODAL }),
+  closeLoginModal: () => dispatch({ type: CLOSE_LOGIN_MODAL }),
+  setLoginFromCookie: ({ userId, userToken, userType }) =>
+    dispatch({
+      type: LOGIN_SUCC,
+      payload: { userId, userType, token: userToken }
+    })
 });
 
 export const authenticationWrapper = WrappedComponent => {
@@ -24,19 +36,43 @@ export const authenticationWrapper = WrappedComponent => {
 
     static WrappedComponent = WrappedComponent;
 
-    checkIfLoggedIn({ userType, token }) {
-      return !!userType && !!token;
+    checkLoginCache() {
+      const cachedUserType = checkForCached({ name: "userType" });
+      const cachedUserToken = checkForCached({ name: "userToken" });
+      const cachedUserId = checkForCached({ name: "userId" });
+
+      return !!cachedUserType && !!cachedUserToken && !!cachedUserId;
+    }
+
+    checkIfLoggedIn({ userType, token, userId }) {
+      return !!userType && !!token && !!userId;
+    }
+
+    setUserFromCached() {
+      const cachedUserType = checkForCached({ name: "userType" });
+      const cachedUserToken = checkForCached({ name: "userToken" });
+      const cachedUserId = checkForCached({ name: "userId" });
+
+      this.props.setLoginFromCookie({
+        userId: cachedUserId,
+        userToken: cachedUserToken,
+        userType: cachedUserType
+      });
     }
 
     componentDidMount() {
       // hasnt logged in
       if (
+        !this.checkLoginCache() &&
         !this.checkIfLoggedIn({
           userType: this.props.userType,
-          token: this.props.token
+          token: this.props.token,
+          userId: this.props.userId
         })
       ) {
         this.props.openLoginModal();
+      } else if (this.checkLoginCache()) {
+        this.setUserFromCached();
       }
     }
 
@@ -45,11 +81,13 @@ export const authenticationWrapper = WrappedComponent => {
       if (
         !this.checkIfLoggedIn({
           userType: prevProps.userType,
-          token: prevProps.token
+          token: prevProps.token,
+          userId: prevProps.userId
         }) &&
         this.checkIfLoggedIn({
           userType: this.props.userType,
-          token: this.props.token
+          token: this.props.token,
+          userId: this.props.userId
         })
       ) {
         this.props.closeLoginModal();

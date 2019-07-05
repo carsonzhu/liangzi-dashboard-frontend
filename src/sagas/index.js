@@ -3,5 +3,5 @@ import Login from "./login";
 import ComponentState from "./componentState";
 
 export default function* rootSaga() {
-  yield all([...ComponentState, ...Login]);
+  yield all([...Login, ...ComponentState]);
 }

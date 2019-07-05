@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { dispatch } from "rxjs/internal/observable/range";
 
 const mapStateToProps = state => ({
   userType: state.login.userType,

@@ -1,4 +1,3 @@
-// TODO: Import component!
 import Cars from "../Cars";
 import Users from "../Users";
 import Transactions from "../Transactions";

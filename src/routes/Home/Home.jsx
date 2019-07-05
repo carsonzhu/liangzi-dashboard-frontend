@@ -6,8 +6,7 @@ import SignInForm from "../../components/Forms/SignInForm";
 const Home = () => {
   return (
     <div className="home-route">
-      <div>HOME</div>
-      <SignInForm />
+      <div>LIANG ZI DASHBOARD HOME</div>
     </div>
   );
 };

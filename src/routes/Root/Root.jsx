@@ -71,10 +71,11 @@ class Root extends Component {
           <Modal
             size="lg"
             dialogClassName="modal-90w"
+            onHide={() => {}}
             show={this.props.loginModal}
             // show={false}
           >
-            <Modal.Header closeButton>
+            <Modal.Header>
               <Modal.Title>Login Form</Modal.Title>
             </Modal.Header>
             <Modal.Body>

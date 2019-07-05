@@ -105,8 +105,9 @@ export const checkForSessionItem = ({ name }) => {
 
 export const clearCachedData = () => {
   localStorage.clear();
-  Cookies.remove("currentUserId");
+  Cookies.remove("userId");
   Cookies.remove("userType");
+  Cookies.remove("userToken");
 };
 
 export const removeCachedItem = itemKey => localStorage.removeItem(itemKey);

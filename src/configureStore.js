@@ -5,7 +5,8 @@ import { createBrowserHistory } from "history";
 import createSagaMiddleware from "redux-saga";
 import { createLogger } from "redux-logger";
 
-import { createRootReducer, saga } from "./modules";
+import { createRootReducer } from "./modules";
+import rootSage from "./sagas";
 
 const isDev =
   process.env.NODE_ENV === "development" || process.env.NODE_ENV === "custom";
@@ -21,7 +22,7 @@ export default preloadState => {
   const rootReducer = createRootReducer(history);
 
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [routerMiddleware(history), sagaMiddleware];
+  const middlewares = [sagaMiddleware, routerMiddleware(history)];
   if (isDev) middlewares.push(logger);
 
   const middlewareEnhancer = applyMiddleware(...middlewares);
@@ -31,7 +32,7 @@ export default preloadState => {
 
   const store = createStore(rootReducer, preloadState, composedEnhancers);
 
-  sagaMiddleware.run(saga);
+  sagaMiddleware.run(rootSage);
 
   return store;
 };

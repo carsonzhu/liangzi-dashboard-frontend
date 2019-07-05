@@ -3,13 +3,15 @@ import login from "./login";
 import tickets from "./tickets";
 import transactions from "./transactions";
 import users from "./users";
+import componentState from "./componentState";
 
 const appReducer = {
   cars,
   login,
   tickets,
   transactions,
-  users
+  users,
+  componentState
 };
 
 export default appReducer;

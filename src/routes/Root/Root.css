@@ -3,6 +3,10 @@
     justify-content: center;
 }
 
+.modal-backdrop.show {
+    opacity: .9;
+}
+
 .nav.container {
     flex-direction: column;
 }

@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
 import { connectRouter } from "connected-react-router";
-import { all } from "redux-saga/effects";
+
 import appReducer from "../reducers";
 
 export const createRootReducer = history =>
@@ -8,7 +8,3 @@ export const createRootReducer = history =>
     ...appReducer,
     router: connectRouter(history)
   });
-
-export const saga = function*() {
-  yield all([]);
-};

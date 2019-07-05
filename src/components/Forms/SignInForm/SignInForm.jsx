@@ -8,12 +8,13 @@ import "./SignInForm.css";
 
 const mapStateToProps = state => ({});
 
-const mapDispatchToProps = {
-  login: ({ email, passowrd }) => ({
-    type: "LOGGING_IN",
-    payload: { email, passowrd }
-  })
-};
+const mapDispatchToProps = dispatch => ({
+  login: ({ email, passowrd }) =>
+    dispatch({
+      type: "LOGGING_IN",
+      payload: { email, passowrd }
+    })
+});
 
 class SignInForm extends Component {
   static propTypes = {

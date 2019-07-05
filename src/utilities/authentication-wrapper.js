@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { dispatch } from "rxjs/internal/observable/range";
 
 const mapStateToProps = state => ({
   userType: state.login.userType,
   token: state.login.token
 });
 
-const mapDispatchToProps = {
-  openLoginModal: () => ({ type: "OPEN_LOGIN_MODAL" }),
-  closeLoginModal: () => ({ type: "CLOSE_LOGIN_MODAL" })
-};
+const mapDispatchToProps = dispatch => ({
+  openLoginModal: () => dispatch({ type: "OPEN_LOGIN_MODAL" }),
+  closeLoginModal: () => dispatch({ type: "CLOSE_LOGIN_MODAL" })
+});
 
 export const authenticationWrapper = WrappedComponent => {
   class AuthenticationWrapper extends Component {

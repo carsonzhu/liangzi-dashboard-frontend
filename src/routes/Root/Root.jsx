@@ -10,25 +10,36 @@ import AuthenticationWrapper from "../../utilities/authentication-wrapper";
 import Home from "../Home";
 import Footer from "../../components/Footer";
 
-import { urlTabs } from "./config";
+import { superAdminTabs, normalAdminTabs } from "./config";
+import { SUPER_ADMIN } from "../../constants";
 
 import "./Root.css";
 
 const mapStateToProps = state => ({
-  loginModal: state.componentState.loginModal
+  loginModal: state.componentState.loginModal,
+  userType: state.login.userType,
+  token: state.login.token
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = dispatch => ({});
 
 class Root extends Component {
   static propTypes = {
-    loginModal: PropTypes.bool
+    loginModal: PropTypes.bool,
+    userType: PropTypes.string,
+    token: PropTypes.string
   };
 
   generateTabs() {
-    const tabs = [{ title: "Home", link: "/" }, ...urlTabs];
+    if (this.props.userType === SUPER_ADMIN) {
+      return superAdminTabs.map((tabInfo, ind) => (
+        <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
+          {tabInfo.title}
+        </NavLink>
+      ));
+    }
 
-    return tabs.map((tabInfo, ind) => (
+    return normalAdminTabs.map((tabInfo, ind) => (
       <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
         {tabInfo.title}
       </NavLink>
@@ -36,7 +47,13 @@ class Root extends Component {
   }
 
   generateTabComponent() {
-    return urlTabs.map((tabInfo, ind) => (
+    if (this.props.userType === SUPER_ADMIN) {
+      return superAdminTabs.map((tabInfo, ind) => (
+        <Route key={ind} path={tabInfo.link} component={tabInfo.component} />
+      ));
+    }
+
+    return normalAdminTabs.map((tabInfo, ind) => (
       <Route key={ind} path={tabInfo.link} component={tabInfo.component} />
     ));
   }
@@ -55,6 +72,7 @@ class Root extends Component {
             size="lg"
             dialogClassName="modal-90w"
             show={this.props.loginModal}
+            // show={false}
           >
             <Modal.Header closeButton>
               <Modal.Title>Login Form</Modal.Title>

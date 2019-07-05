@@ -1,6 +1,7 @@
 const initialState = {
   token: "",
   userType: "",
+  userId: "",
   loading: false,
   error: ""
 };
@@ -12,23 +13,6 @@ export const LOGIN_FAILED = "LOGIN_FAILED";
 export default (state = initialState, action) => {
   switch (action.type) {
     case LOGGING_IN: {
-      //To Remove
-      // if (action.payload.email === "admin@admin") {
-      //   return {
-      //     token: "abc123",
-      //     userType: "superAdmin",
-      //     loading: false,
-      //     error: ""
-      //   };
-      // } else if (action.payload.email === "rental@admin") {
-      //   return {
-      //     token: "abc123",
-      //     userType: "normalAdmin",
-      //     loading: false,
-      //     error: ""
-      //   };
-      // }
-
       return {
         ...state,
         loading: true
@@ -38,6 +22,7 @@ export default (state = initialState, action) => {
       return {
         token: action.payload.token,
         userType: action.payload.userType,
+        userId: action.payload.userId,
         loading: false,
         error: ""
       };

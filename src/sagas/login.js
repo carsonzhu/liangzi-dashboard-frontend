@@ -23,7 +23,7 @@ function* loginAsync() {
 
     yield put({
       type: "LOGIN_SUCC",
-      payload: { userType: "rentalCompanyAdmin", token: "abc123" }
+      payload: { userType: "normalAdmin", token: "abc123" }
     });
   } catch (error) {
     yield put({ type: "LOGIN_FAILED", payload: { error } });

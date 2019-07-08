@@ -5,8 +5,10 @@ import "./Header.css";
 export default ({ displayName = "", signOutFunc = () => {} }) => {
   return (
     <div className="header">
-      <p>Welcome {displayName}</p>
-      <Button onClick={signOutFunc}>Log Out</Button>
+      <p className="header__welcome">Welcome, {displayName}!</p>
+      <Button className="header__logout-button" onClick={signOutFunc}>
+        Log Out
+      </Button>
     </div>
   );
 };

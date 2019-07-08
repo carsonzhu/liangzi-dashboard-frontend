@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Route, NavLink } from "react-router-dom";
+import { Route, NavLink, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { Modal } from "react-bootstrap";
@@ -84,7 +84,18 @@ class Root extends Component {
             displayName={this.props.username}
             signOutFunc={this.logOutFunc}
           />
-          <Route exact path="/" component={Home} />
+          <Route
+            exact
+            path="/"
+            // render={() =>
+            //   this.props.userType === SUPER_ADMIN ? (
+            //     <Redirect to="/admins" />
+            //   ) : (
+            //     <Redirect to="/cars" />
+            //   )
+            // }
+            component={Home}
+          />
           {this.generateTabComponent()}
           <Footer />
           <Modal

@@ -1,11 +1,12 @@
-import React from "react";
+import React, { Component } from "react";
+import { Button } from "react-bootstrap";
 import "./Header.css";
 
-export default () => {
+export default ({ displayName = "", signOutFunc = () => {} }) => {
   return (
     <div className="header">
-      <div className="container">HEADER</div>
-      <div>Sign Out</div>
+      <p>Welcome {displayName}</p>
+      <Button onClick={signOutFunc}>Log Out</Button>
     </div>
   );
 };

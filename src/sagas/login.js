@@ -1,50 +1,9 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
 
 import { cacheItem } from "../utilities/cache-handler";
 
 import { LOGGING_IN, LOGIN_SUCC, LOGIN_FAILED } from "../reducers/login";
-
-// Request
-const loginRequest = ({ email, password }) => {
-  // DEV: fake login
-  const isDev =
-    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "custom";
-
-  if (isDev) {
-    switch (password) {
-      case "error": {
-        return Promise.reject({ error: "incorrect" });
-      }
-      case "super": {
-        return Promise.resolve({
-          userType: "superAdmin",
-          token: "abc123",
-          userId: "abc123",
-          username: "abc123"
-        });
-      }
-
-      default: {
-        return Promise.resolve({
-          userType: "normalAdmin",
-          token: "abc123",
-          userId: "abc123",
-          username: "abc123"
-        });
-      }
-    }
-  }
-
-  return axios({
-    method: "post",
-    url: `${process.env.LIANG_ZI_BACKEND_URL}/apis/authentication/login`,
-    data: {
-      email,
-      password
-    }
-  });
-};
+import { loginRequest } from "../apis/login.api";
 
 // Sagas
 function* loginAsync(action) {

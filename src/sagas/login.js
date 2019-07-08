@@ -12,13 +12,26 @@ const loginRequest = ({ email, password }) => {
     process.env.NODE_ENV === "development" || process.env.NODE_ENV === "custom";
 
   if (isDev) {
-    return password === "error"
-      ? Promise.reject({ error: "incorrect" })
-      : Promise.resolve({
+    switch (password) {
+      case "error": {
+        return Promise.reject({ error: "incorrect" });
+      }
+      case "super": {
+        return Promise.resolve({
+          userType: "superAdmin",
+          token: "abc123",
+          userId: "abc123"
+        });
+      }
+
+      default: {
+        return Promise.resolve({
           userType: "normalAdmin",
           token: "abc123",
           userId: "abc123"
         });
+      }
+    }
   }
 
   return axios({
@@ -32,7 +45,9 @@ const loginRequest = ({ email, password }) => {
 };
 
 // Sagas
-function* loginAsync({ email, password }) {
+function* loginAsync(action) {
+  const { email, password } = action.payload;
+
   try {
     const json = yield call(loginRequest, { email, password });
 

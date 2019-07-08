@@ -9,6 +9,7 @@ import AuthenticationWrapper from "../../utilities/authentication-wrapper";
 
 import Home from "../Home";
 import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
 import { superAdminTabs, normalAdminTabs } from "./config";
 import { SUPER_ADMIN } from "../../constants";
@@ -65,6 +66,7 @@ class Root extends Component {
           <nav className="nav container">{this.generateTabs()}</nav>
         </div>
         <main className="content">
+          <Header />
           <Route exact path="/" component={Home} />
           {this.generateTabComponent()}
           <Footer />

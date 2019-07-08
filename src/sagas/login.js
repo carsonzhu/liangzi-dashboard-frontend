@@ -20,7 +20,8 @@ const loginRequest = ({ email, password }) => {
         return Promise.resolve({
           userType: "superAdmin",
           token: "abc123",
-          userId: "abc123"
+          userId: "abc123",
+          username: "abc123"
         });
       }
 
@@ -28,7 +29,8 @@ const loginRequest = ({ email, password }) => {
         return Promise.resolve({
           userType: "normalAdmin",
           token: "abc123",
-          userId: "abc123"
+          userId: "abc123",
+          username: "abc123"
         });
       }
     }
@@ -53,20 +55,8 @@ function* loginAsync(action) {
 
     //cache the result
     cacheItem({
-      name: "userType",
-      data: json.userType,
-      expiry: 1
-      // storeInCookie: true
-    });
-    cacheItem({
-      name: "userToken",
-      data: json.token,
-      expiry: 1
-      // storeInCookie: true
-    });
-    cacheItem({
-      name: "userId",
-      data: json.userId,
+      name: "userLogin",
+      data: JSON.stringify(json),
       expiry: 1
       // storeInCookie: true
     });

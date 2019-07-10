@@ -1,8 +1,9 @@
 import axios from "axios";
 
 //Admin User
-const LIANG_ZI_BACKEND_URL = process.env.LIANG_ZI_BACKEND_URL;
-const USER_API = `${LIANG_ZI_BACKEND_URL}/apis/users`;
+const LIANG_ZI_BACKEND_URL =
+  process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
+const USER_API = `${LIANG_ZI_BACKEND_URL}/apis/admins`;
 
 export const addUserRequest = ({
   email,

@@ -4,7 +4,8 @@ const initialState = {
   userId: "",
   loading: false,
   username: "",
-  error: ""
+  error: "",
+  allowedOperations: []
 };
 
 export const LOGGING_IN = "LOGGING_IN";
@@ -23,10 +24,12 @@ export default (state = initialState, action) => {
 
     case LOGIN_SUCC:
       return {
+        ...state,
         token: action.payload.token,
         userType: action.payload.userType,
         userId: action.payload.userId,
         username: action.payload.username,
+        allowedOperations: action.payload.allowedOperations,
         loading: false,
         error: ""
       };

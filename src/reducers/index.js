@@ -4,6 +4,7 @@ import tickets from "./tickets";
 import transactions from "./transactions";
 import users from "./users";
 import componentState from "./componentState";
+import admins from "./admins";
 
 const appReducer = {
   cars,
@@ -11,7 +12,8 @@ const appReducer = {
   tickets,
   transactions,
   users,
-  componentState
+  componentState,
+  admins
 };
 
 export default appReducer;

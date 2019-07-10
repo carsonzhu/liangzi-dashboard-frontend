@@ -1,0 +1,11 @@
+.admins__column-active {
+    background-color: #28a745;
+}
+
+.admins__column-inactive {
+    background-color: #dc3545;
+}
+
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}

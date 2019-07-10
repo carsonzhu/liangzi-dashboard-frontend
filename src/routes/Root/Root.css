@@ -19,3 +19,11 @@
     width: 60%;
     padding: 0 1rem;
 }
+
+.activity-indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem 0;
+}

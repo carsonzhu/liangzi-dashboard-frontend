@@ -5,6 +5,7 @@ import { Table, Modal, Button } from "react-bootstrap";
 import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
+import AdminModal from "../../components/Modal/adminModal";
 
 import { FETCHING } from "../../reducers/admins";
 
@@ -87,7 +88,7 @@ class Admins extends Component {
   render() {
     console.log("this.props.admins", this.props.admins);
 
-    const { adminToShow = {} } = this.state;
+    const { adminToShow } = this.state;
 
     return (
       <div className="admins-route">
@@ -108,20 +109,14 @@ class Admins extends Component {
           )}
         </ActivityIndicator>
 
-        <Modal show={!!adminToShow} onHide={this.closeModal}>
-          <Modal.Header closeButton>
-            <Modal.Title>{adminToShow.username}</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>{JSON.stringify(adminToShow)}</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={this.handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={this.handleClose}>
-              Edit
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        {adminToShow && (
+          <AdminModal
+            toShow={true}
+            data={adminToShow}
+            handleClose={this.closeModal}
+            handleEdit={() => {}}
+          />
+        )}
       </div>
     );
   }

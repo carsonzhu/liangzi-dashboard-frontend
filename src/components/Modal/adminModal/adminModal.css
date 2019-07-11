@@ -1,0 +1,15 @@
+.modal__capitalized {
+    text-transform: capitalize;
+}
+
+.dataForm {
+    padding: 0.5rem 1.5rem;
+}
+
+.adminModal .modal-header {
+    padding: 1rem 2.5rem;
+}
+
+.dataForm__button-group {
+    padding-top: 1rem;
+}

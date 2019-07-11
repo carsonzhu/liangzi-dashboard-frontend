@@ -36,12 +36,9 @@ class Admins extends Component {
     adminToEdit: null
   };
 
-  // openModel = this.openModel.bind(this, data);
   closeModal = this.closeModal.bind(this);
 
   tbodyGenerator({ admins }) {
-    console.log("admins", admins);
-
     return admins.map((info, ind) => (
       <tr
         key={ind}
@@ -58,9 +55,7 @@ class Admins extends Component {
     ));
   }
 
-  theadGenerater({ fields }) {
-    console.log("fields", fields);
-
+  theadGenerater() {
     return (
       <tr>
         <th>#</th>

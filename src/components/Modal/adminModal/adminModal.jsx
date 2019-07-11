@@ -1,24 +1,24 @@
-import React, from "react";
+import React from "react";
 import { Table, Modal, Button } from "react-bootstrap";
 import "./adminModal.css";
 
-const adminModal = ({toShow, closeModalHandler, handleClose, handleEdit}) => {
+const adminModal = ({ toShow, handleClose, handleEdit, data }) => {
   return (
-    <Modal show={!!adminToShow} onHide={this.closeModal}>
+    <Modal show={toShow} size="lg" onHide={handleClose}>
       <Modal.Header closeButton>
-        <Modal.Title>{adminToShow.username}</Modal.Title>
+        <Modal.Title>{data.username}</Modal.Title>
       </Modal.Header>
-      <Modal.Body>{JSON.stringify(adminToShow)}</Modal.Body>
+      <Modal.Body>{JSON.stringify(data)}</Modal.Body>
       <Modal.Footer>
+        <Button variant="primary" onClick={handleEdit}>
+          Edit
+        </Button>
         <Button variant="secondary" onClick={this.handleClose}>
           Close
-        </Button>
-        <Button variant="primary" onClick={this.handleClose}>
-          Edit
         </Button>
       </Modal.Footer>
     </Modal>
   );
 };
 
-export default adminModal
+export default adminModal;

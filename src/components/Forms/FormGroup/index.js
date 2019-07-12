@@ -9,12 +9,21 @@ export const inputGroup = ({
   value,
   name,
   disabled,
-  labelClass
+  labelClass,
+  onChange,
+  onBlur
 }) => {
   return (
     <Form.Group controlId={`form-${name}`}>
       <Form.Label className={labelClass}>{label}</Form.Label>
-      <Form.Control type={type} value={value} name={name} disabled={disabled} />
+      <Form.Control
+        type={type}
+        value={value}
+        name={name}
+        disabled={disabled}
+        onChange={onChange}
+        onBlur={onBlur}
+      />
     </Form.Group>
   );
 };
@@ -26,7 +35,9 @@ export const optionGroup = ({
   name,
   disabled,
   labelClass,
-  optionValues = [{ label: "", value: "", selected: false }]
+  optionValues = [{ label: "", value: "", selected: false }],
+  onChange,
+  onBlur
 }) => {
   return (
     <Form.Group controlId={`form-${name}`}>
@@ -38,6 +49,8 @@ export const optionGroup = ({
         value={value}
         name={name}
         disabled={disabled}
+        onChange={onChange}
+        onBlur={onBlur}
       >
         {optionValues.map(value => {
           return (
@@ -57,7 +70,9 @@ export const radioButtonGroup = ({
   disabled,
   labelClass = "",
   checkGroupClass = "",
-  radioValues = [{ label: "", name: "", id: "", checked: false }]
+  radioValues = [{ label: "", name: "", id: "", checked: false }],
+  onChange,
+  onBlur
 }) => {
   return (
     <Form.Group controlId={`form-${name}`}>
@@ -67,12 +82,14 @@ export const radioButtonGroup = ({
         {radioValues.map(value => {
           return (
             <Form.Check
-              type="radio"
+              type="checkbox"
               disabled={disabled}
               label={value.label}
               name={value.name}
               id={value.id}
-              checked={value.checked}
+              defaultChecked={value.checked}
+              onChange={onChange}
+              onBlur={onBlur}
             />
           );
         })}

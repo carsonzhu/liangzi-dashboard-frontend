@@ -23,11 +23,43 @@ class AdminModal extends Component {
   };
 
   toggleEditing = this.toggleEditing.bind(this);
+  checkBoxHandler = this.checkBoxHandler.bind(this);
 
   toggleEditing() {
     this.setState(prevState => ({
       beingEdited: !prevState.beingEdited
     }));
+  }
+
+  checkBoxHandler(props, event) {
+    const removeItem = (array, item) => {
+      const result = [];
+
+      for (let i = 0; i < array.length; i++) {
+        if (array[i] !== item) {
+          result.push(array[i]);
+        }
+      }
+
+      return result;
+    };
+
+    const value = event.target.checked;
+    const fieldName = event.target.name;
+
+    if (!value) {
+      const operations = props.values["allowedOperations"];
+
+      if (operations.includes(fieldName)) {
+        props.values["allowedOperations"] = removeItem(operations, fieldName);
+      }
+    } else {
+      const operations = props.values["allowedOperations"];
+
+      if (!operations.includes(fieldName)) {
+        props.values["allowedOperations"].push(fieldName);
+      }
+    }
   }
 
   formGenerator({ props, beingEdited }) {
@@ -107,7 +139,9 @@ class AdminModal extends Component {
               id: "allowed-operations__transactions",
               checked: props.values[key].indexOf("transactions") !== -1
             }
-          ]
+          ],
+          onChange: this.checkBoxHandler.bind(this, props),
+          onBlur: props.handleBlur
         });
       } else if (key === "isActive") {
         return optionGroup({
@@ -118,9 +152,11 @@ class AdminModal extends Component {
           disabled: disabledLogic(key),
           labelClass: "modal__capitalized",
           optionValues: [
-            { label: "Yes", value: true, selected: props.values[key] },
-            { label: "No", value: false, selected: !props.values[key] }
-          ]
+            { label: "Yes", value: "true" },
+            { label: "No", value: "" }
+          ],
+          onChange: props.handleChange,
+          onBlur: props.handleBlur
         });
       } else {
         return inputGroup({
@@ -129,13 +165,15 @@ class AdminModal extends Component {
           value: key !== "password" ? props.values[key] : "12345678",
           name: key,
           disabled: disabledLogic(key),
-          labelClass: "modal__capitalized"
+          labelClass: "modal__capitalized",
+          onChange: props.handleChange,
+          onBlur: props.handleBlur
         });
       }
     });
   }
 
-  createForm({ data, onSubmit, beingEdited, handleClose, handleEdit }) {
+  createForm({ data, onSubmit, beingEdited, handleClose }) {
     return (
       <div className="dataForm">
         <Formik
@@ -149,7 +187,7 @@ class AdminModal extends Component {
               {this.formGenerator({ props, data, beingEdited })}
               <div className="dataForm__button-group">
                 {beingEdited ? (
-                  <Button variant="primary" onClick={handleEdit}>
+                  <Button variant="primary" onClick={props.handleSubmit}>
                     Submit
                   </Button>
                 ) : (

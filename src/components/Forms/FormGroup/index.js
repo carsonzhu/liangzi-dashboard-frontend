@@ -35,7 +35,7 @@ export const optionGroup = ({
   name,
   disabled,
   labelClass,
-  optionValues = [{ label: "", value: "", selected: false }],
+  optionValues = [{ label: "", value: "" }],
   onChange,
   onBlur
 }) => {
@@ -52,12 +52,8 @@ export const optionGroup = ({
         onChange={onChange}
         onBlur={onBlur}
       >
-        {optionValues.map(value => {
-          return (
-            <option value={value.value} selected={value.selected}>
-              {value.label}
-            </option>
-          );
+        {optionValues.map(option => {
+          return <option value={option.value}>{option.label}</option>;
         })}
       </Form.Control>
     </Form.Group>

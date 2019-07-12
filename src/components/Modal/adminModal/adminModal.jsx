@@ -15,7 +15,8 @@ class AdminModal extends Component {
     toShow: PropTypes.bool,
     handleClose: PropTypes.func,
     handleEdit: PropTypes.func,
-    data: PropTypes.object
+    data: PropTypes.object,
+    afterSubmitAction: PropTypes.func
   };
 
   state = {
@@ -147,13 +148,13 @@ class AdminModal extends Component {
         return optionGroup({
           label: labelHelper(key),
           type: inputTypeHelper(key),
-          value: key !== "password" ? props.values[key] : "12345678",
+          value: props.values[key] ? "1" : "2",
           name: key,
           disabled: disabledLogic(key),
           labelClass: "modal__capitalized",
           optionValues: [
-            { label: "Yes", value: "true" },
-            { label: "No", value: "" }
+            { label: "Yes", value: "1" },
+            { label: "No", value: "2" }
           ],
           onChange: props.handleChange,
           onBlur: props.handleBlur
@@ -173,14 +174,26 @@ class AdminModal extends Component {
     });
   }
 
-  createForm({ data, onSubmit, beingEdited, handleClose }) {
+  onSubmitHandler({ userId, fieldToUpdate }) {
+    this.props.afterSubmitAction();
+
+    this.props.handleEdit({ userId, fieldToUpdate });
+  }
+
+  createForm({ data, beingEdited, handleClose }) {
     return (
       <div className="dataForm">
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
-            console.log("values", values);
-            onSubmit(values);
+            const userId = values._id;
+            const isActive = values.isActive;
+
+            delete values._id;
+            delete values.passowrd;
+            values.isActive = isActive === "1";
+
+            this.onSubmitHandler({ userId, fieldToUpdate: values });
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>
@@ -222,10 +235,8 @@ class AdminModal extends Component {
         <Modal.Body>
           {this.createForm({
             data,
-            onSubmit: handleEdit,
             beingEdited: this.state.beingEdited,
-            handleClose,
-            handleEdit
+            handleClose
           })}
         </Modal.Body>
       </Modal>

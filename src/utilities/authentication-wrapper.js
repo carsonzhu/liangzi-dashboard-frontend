@@ -18,10 +18,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   openLoginModal: () => dispatch({ type: OPEN_LOGIN_MODAL }),
   closeLoginModal: () => dispatch({ type: CLOSE_LOGIN_MODAL }),
-  setLoginFromCookie: ({ userId, userToken, userType }) =>
+  setLoginFromCookie: ({ userId, userToken, userType, username }) =>
     dispatch({
       type: LOGIN_SUCC,
-      payload: { userId, userType, token: userToken }
+      payload: { userId, userType, token: userToken, username }
     })
 });
 
@@ -37,11 +37,9 @@ export const authenticationWrapper = WrappedComponent => {
     static WrappedComponent = WrappedComponent;
 
     checkLoginCache() {
-      const cachedUserType = checkForCached({ name: "userType" });
-      const cachedUserToken = checkForCached({ name: "userToken" });
-      const cachedUserId = checkForCached({ name: "userId" });
+      const cachedItems = checkForCached({ name: "userLogin" });
 
-      return !!cachedUserType && !!cachedUserToken && !!cachedUserId;
+      return !!cachedItems;
     }
 
     checkIfLoggedIn({ userType, token, userId }) {
@@ -49,14 +47,15 @@ export const authenticationWrapper = WrappedComponent => {
     }
 
     setUserFromCached() {
-      const cachedUserType = checkForCached({ name: "userType" });
-      const cachedUserToken = checkForCached({ name: "userToken" });
-      const cachedUserId = checkForCached({ name: "userId" });
+      const cachedItems = checkForCached({ name: "userLogin" });
+
+      const { userId, userToken, userType, username } = JSON.parse(cachedItems);
 
       this.props.setLoginFromCookie({
-        userId: cachedUserId,
-        userToken: cachedUserToken,
-        userType: cachedUserType
+        userId,
+        userToken,
+        userType,
+        username
       });
     }
 
@@ -77,18 +76,23 @@ export const authenticationWrapper = WrappedComponent => {
     }
 
     componentDidUpdate(prevProps) {
+      const loggedInCurrently = this.checkIfLoggedIn({
+        userType: this.props.userType,
+        token: this.props.token,
+        userId: this.props.userId
+      });
+
+      if (!loggedInCurrently) {
+        this.props.openLoginModal();
+      }
       // has logged in
-      if (
+      else if (
         !this.checkIfLoggedIn({
           userType: prevProps.userType,
           token: prevProps.token,
           userId: prevProps.userId
         }) &&
-        this.checkIfLoggedIn({
-          userType: this.props.userType,
-          token: this.props.token,
-          userId: this.props.userId
-        })
+        loggedInCurrently
       ) {
         this.props.closeLoginModal();
       }

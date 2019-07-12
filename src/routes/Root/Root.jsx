@@ -1,34 +1,44 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Route, NavLink } from "react-router-dom";
+import { Route, NavLink, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 
 import { Modal } from "react-bootstrap";
 import SignInForm from "../../components/Forms/SignInForm";
 import AuthenticationWrapper from "../../utilities/authentication-wrapper";
+import { clearCachedData } from "../../utilities/cache-handler";
 
 import Home from "../Home";
 import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
 import { superAdminTabs, normalAdminTabs } from "./config";
 import { SUPER_ADMIN } from "../../constants";
+import { LOGOUT } from "../../reducers/login";
 
 import "./Root.css";
 
 const mapStateToProps = state => ({
   loginModal: state.componentState.loginModal,
   userType: state.login.userType,
-  token: state.login.token
+  token: state.login.token,
+  username: state.login.username
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  logOut: () => dispatch({ type: LOGOUT })
+});
 
 class Root extends Component {
   static propTypes = {
     loginModal: PropTypes.bool,
     userType: PropTypes.string,
-    token: PropTypes.string
+    token: PropTypes.string,
+    username: PropTypes.string,
+    logOut: PropTypes.func
   };
+
+  logOutFunc = this.logOutFunc.bind(this);
 
   generateTabs() {
     if (this.props.userType === SUPER_ADMIN) {
@@ -58,6 +68,11 @@ class Root extends Component {
     ));
   }
 
+  logOutFunc() {
+    this.props.logOut();
+    clearCachedData();
+  }
+
   render() {
     return (
       <div className="root-route">
@@ -65,7 +80,22 @@ class Root extends Component {
           <nav className="nav container">{this.generateTabs()}</nav>
         </div>
         <main className="content">
-          <Route exact path="/" component={Home} />
+          <Header
+            displayName={this.props.username}
+            signOutFunc={this.logOutFunc}
+          />
+          <Route
+            exact
+            path="/"
+            // render={() =>
+            //   this.props.userType === SUPER_ADMIN ? (
+            //     <Redirect to="/admins" />
+            //   ) : (
+            //     <Redirect to="/cars" />
+            //   )
+            // }
+            component={Home}
+          />
           {this.generateTabComponent()}
           <Footer />
           <Modal

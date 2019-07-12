@@ -1,57 +1,21 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import axios from "axios";
 
 import { cacheItem } from "../utilities/cache-handler";
 
 import { LOGGING_IN, LOGIN_SUCC, LOGIN_FAILED } from "../reducers/login";
-
-// Request
-const loginRequest = ({ email, password }) => {
-  // DEV: fake login
-  const isDev =
-    process.env.NODE_ENV === "development" || process.env.NODE_ENV === "custom";
-
-  if (isDev) {
-    return password === "error"
-      ? Promise.reject({ error: "incorrect" })
-      : Promise.resolve({
-          userType: "normalAdmin",
-          token: "abc123",
-          userId: "abc123"
-        });
-  }
-
-  return axios({
-    method: "post",
-    url: `${process.env.LIANG_ZI_BACKEND_URL}/apis/authentication/login`,
-    data: {
-      email,
-      password
-    }
-  });
-};
+import { loginRequest } from "../apis/login.api";
 
 // Sagas
-function* loginAsync({ email, password }) {
+function* loginAsync(action) {
+  const { email, password } = action.payload;
+
   try {
     const json = yield call(loginRequest, { email, password });
 
     //cache the result
     cacheItem({
-      name: "userType",
-      data: json.userType,
-      expiry: 1
-      // storeInCookie: true
-    });
-    cacheItem({
-      name: "userToken",
-      data: json.token,
-      expiry: 1
-      // storeInCookie: true
-    });
-    cacheItem({
-      name: "userId",
-      data: json.userId,
+      name: "userLogin",
+      data: JSON.stringify(json),
       expiry: 1
       // storeInCookie: true
     });

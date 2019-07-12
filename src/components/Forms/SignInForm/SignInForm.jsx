@@ -11,10 +11,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: ({ email, passowrd }) =>
+  login: ({ email, password }) =>
     dispatch({
       type: "LOGGING_IN",
-      payload: { email, passowrd }
+      payload: { email, password }
     })
 });
 

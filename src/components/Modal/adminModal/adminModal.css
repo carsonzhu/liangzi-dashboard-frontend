@@ -13,3 +13,12 @@
 .dataForm__button-group {
     padding-top: 1rem;
 }
+
+.dataForm .form-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.dataForm .form-control {
+    width: 60%;
+}

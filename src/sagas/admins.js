@@ -28,7 +28,7 @@ function* fetchAdminsAsync(action) {
 }
 
 function* editAdminAsync(action) {
-  const { userId, fieldToUpdate } = action;
+  const { userId, fieldToUpdate } = action.payload;
 
   try {
     yield call(updateAdminRequest, { userId, fieldToUpdate });

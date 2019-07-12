@@ -13,7 +13,7 @@ kenheaders: {
     }
     */
 
-export const addUserRequest = ({
+export const addAdminRequest = ({
   email,
   password,
   userType,
@@ -33,18 +33,28 @@ export const addUserRequest = ({
   });
 };
 
-export const updateUserRequest = ({ userId, fieldToUpdate }) => {
-  return axios({
-    method: "put",
-    url: ADMIN_API,
-    data: {
-      userId,
-      fieldToUpdate
-    }
+export const updateAdminRequest = ({ userId, fieldToUpdate }) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "put",
+      url: ADMIN_API,
+      data: {
+        userId,
+        fieldToUpdate
+      }
+    })
+      .then(json => {
+        if (json.status !== 200) {
+          return reject({ msg: "Internal Error" });
+        }
+
+        return resolve(json);
+      })
+      .catch(reject);
   });
 };
 
-export const deleteUserRequest = ({ userId }) => {
+export const deleteAdminRequest = ({ userId }) => {
   return axios({
     method: "delete",
     url: ADMIN_API,
@@ -54,7 +64,7 @@ export const deleteUserRequest = ({ userId }) => {
   });
 };
 
-export const fetchUsersRequest = () => {
+export const fetchAdminsRequest = () => {
   const fetchUsersRequestJSONTransform = json => {
     const { users } = json.data.data;
 
@@ -77,7 +87,7 @@ export const fetchUsersRequest = () => {
   });
 };
 
-export const fetchSingleUserRequest = ({ userId }) => {
+export const fetchSingleAdminRequest = ({ userId }) => {
   return axios({
     method: "get",
     url: `${ADMIN_API}/${userId}`

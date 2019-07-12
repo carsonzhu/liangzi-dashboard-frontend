@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Table, Modal, Button } from "react-bootstrap";
+import { Table } from "react-bootstrap";
 import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
 import AdminModal from "../../components/Modal/adminModal";
 
-import { FETCHING } from "../../reducers/admins";
+import { FETCH_ADMINS } from "../../reducers/admins";
 
 const mapStateToProps = state => ({
   isLoading: state.admins.loading,
@@ -15,7 +15,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAdmins: () => dispatch({ type: FETCHING })
+  fetchAdmins: () => dispatch({ type: FETCH_ADMINS })
 });
 
 class Admins extends Component {

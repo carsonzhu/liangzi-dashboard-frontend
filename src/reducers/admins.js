@@ -4,18 +4,18 @@ const initialState = {
   error: ""
 };
 
-export const FETCHING = "FETCHING";
-export const FETCH_ADMINS = "FETCH_ADMINS";
+export const FETCH_ADMINS = "FETCHING";
+export const FETCH_ADMINS_SUCC = "FETCH_ADMINS_SUCC";
 export const FETCH_ADMINS_FAILED = "FETCH_ADMINS_FAILED";
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case FETCHING:
+    case FETCH_ADMINS:
       return {
         ...state,
         loading: true
       };
-    case FETCH_ADMINS:
+    case FETCH_ADMINS_SUCC:
       return {
         ...state,
         admins: action.payload.admins,

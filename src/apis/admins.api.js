@@ -5,6 +5,14 @@ const LIANG_ZI_BACKEND_URL =
   process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
 const ADMIN_API = `${LIANG_ZI_BACKEND_URL}/apis/admins`;
 
+// TODO: add to
+
+/*
+kenheaders: {
+      'authorization': 'Basic Y2xpZW50OnNlY3JldA=='
+    }
+    */
+
 export const addUserRequest = ({
   email,
   password,

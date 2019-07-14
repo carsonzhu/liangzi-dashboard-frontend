@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Table, Toast } from "react-bootstrap";
+import { Table, Toast, Button } from "react-bootstrap";
 import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
@@ -37,12 +37,14 @@ class Admins extends Component {
 
   state = {
     adminToShow: null,
-    adminToEdit: null,
-    showToast: false
+    showToast: false,
+    createNewModal: false
   };
 
-  closeModal = this.closeModal.bind(this);
+  closeEditModal = this.closeEditModal.bind(this);
   modalAndToast = this.modalAndToast.bind(this);
+  openNewModal = this.openNewModal.bind(this);
+  closeNewModal = this.closeNewModal.bind(this);
 
   tbodyGenerator({ admins }) {
     return admins.map((info, ind) => (
@@ -51,7 +53,7 @@ class Admins extends Component {
         className={
           info.isActive ? "admins__column-active" : "admins__column-inactive"
         }
-        onClick={this.openModel.bind(this, info)}
+        onClick={this.openEditModel.bind(this, info)}
       >
         <td>{ind}</td>
         <td>{info.userType}</td>
@@ -78,12 +80,20 @@ class Admins extends Component {
 
   componentDidUpdate(prevProps) {}
 
-  openModel(data) {
+  openEditModel(data) {
     this.setState({ adminToShow: data });
   }
 
-  closeModal() {
+  closeEditModal() {
     this.setState({ adminToShow: null });
+  }
+
+  openNewModal() {
+    this.setState({ createNewModal: true });
+  }
+
+  closeNewModal() {
+    this.setState({ createNewModal: false });
   }
 
   modalAndToast() {
@@ -105,20 +115,29 @@ class Admins extends Component {
         >
           <Toast.Body>Update Successfully!</Toast.Body>
         </Toast>
-        <div>Admins</div>
+        <div className="admins-route__title">
+          <strong>Admins</strong>
+          <Button>Create New</Button>
+        </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
           {this.props.admins && this.props.admins.length && (
-            <Table responsive hover>
-              <thead>
-                {this.theadGenerater({
-                  fields: Object.keys(this.props.admins[0])
-                })}
-              </thead>
+            <div>
+              <Table responsive hover>
+                <thead>
+                  {this.theadGenerater({
+                    fields: Object.keys(this.props.admins[0])
+                  })}
+                </thead>
 
-              <tbody>
-                {this.tbodyGenerator({ admins: this.props.admins })}
-              </tbody>
-            </Table>
+                <tbody>
+                  {this.tbodyGenerator({ admins: this.props.admins })}
+                </tbody>
+              </Table>
+              <div className="admins-route__legends">
+                <p className="admins-route__legends-green">Active</p>
+                <p className="admins-route__legends-red">Inactive</p>
+              </div>
+            </div>
           )}
         </ActivityIndicator>
 
@@ -126,7 +145,7 @@ class Admins extends Component {
           <AdminModal
             toShow={true}
             data={adminToShow}
-            handleClose={this.closeModal}
+            handleClose={this.closeEditModal}
             handleEdit={this.props.editAdmin}
             afterSubmitAction={this.modalAndToast}
           />

@@ -105,7 +105,7 @@ class AdminModal extends Component {
       "allowedOperations",
       "isActive"
     ];
-    const notEditabled = ["password", "_id"];
+    const notEditabled = ["password", "_id", "userType"];
 
     return inputOrders.map(key => {
       if (key === "allowedOperations") {
@@ -155,6 +155,22 @@ class AdminModal extends Component {
           optionValues: [
             { label: "Yes", value: "1" },
             { label: "No", value: "2" }
+          ],
+          onChange: props.handleChange,
+          onBlur: props.handleBlur
+        });
+      } else if (key === "userType") {
+        return optionGroup({
+          label: labelHelper(key),
+          type: inputTypeHelper(key),
+          value:
+            props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
+          name: key,
+          disabled: disabledLogic(key),
+          labelClass: "modal__capitalized",
+          optionValues: [
+            { label: "Super Admin", value: "superAdmin" },
+            { label: "Normal Admin", value: "normalAdmin" }
           ],
           onChange: props.handleChange,
           onBlur: props.handleBlur
@@ -220,7 +236,7 @@ class AdminModal extends Component {
   }
 
   render() {
-    const { toShow, handleClose, handleEdit, data } = this.props;
+    const { toShow, handleClose, data } = this.props;
 
     return (
       <Modal

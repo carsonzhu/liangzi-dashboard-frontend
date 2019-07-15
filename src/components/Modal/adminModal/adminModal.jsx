@@ -7,7 +7,9 @@ import "./adminModal.css";
 import {
   inputGroup,
   radioButtonGroup,
-  optionGroup
+  optionGroup,
+  checkBoxHandler,
+  selectionHandler
 } from "../../Forms/FormGroup";
 
 class AdminModal extends Component {
@@ -24,43 +26,11 @@ class AdminModal extends Component {
   };
 
   toggleEditing = this.toggleEditing.bind(this);
-  checkBoxHandler = this.checkBoxHandler.bind(this);
 
   toggleEditing() {
     this.setState(prevState => ({
       beingEdited: !prevState.beingEdited
     }));
-  }
-
-  checkBoxHandler(props, event) {
-    const removeItem = (array, item) => {
-      const result = [];
-
-      for (let i = 0; i < array.length; i++) {
-        if (array[i] !== item) {
-          result.push(array[i]);
-        }
-      }
-
-      return result;
-    };
-
-    const value = event.target.checked;
-    const fieldName = event.target.name;
-
-    if (!value) {
-      const operations = props.values["allowedOperations"];
-
-      if (operations.includes(fieldName)) {
-        props.values["allowedOperations"] = removeItem(operations, fieldName);
-      }
-    } else {
-      const operations = props.values["allowedOperations"];
-
-      if (!operations.includes(fieldName)) {
-        props.values["allowedOperations"].push(fieldName);
-      }
-    }
   }
 
   formGenerator({ props, beingEdited }) {
@@ -107,9 +77,10 @@ class AdminModal extends Component {
     ];
     const notEditabled = ["password", "_id", "userType"];
 
-    return inputOrders.map(key => {
+    return inputOrders.map((key, ind) => {
       if (key === "allowedOperations") {
         return radioButtonGroup({
+          ind: ind,
           label: labelHelper(key),
           name: key,
           disabled: disabledLogic(key),
@@ -141,11 +112,12 @@ class AdminModal extends Component {
               checked: props.values[key].indexOf("transactions") !== -1
             }
           ],
-          onChange: this.checkBoxHandler.bind(this, props),
+          onChange: checkBoxHandler.bind(this, props, "allowedOperations"),
           onBlur: props.handleBlur
         });
       } else if (key === "isActive") {
         return optionGroup({
+          ind: ind,
           label: labelHelper(key),
           type: inputTypeHelper(key),
           value: props.values[key] ? "1" : "2",
@@ -156,11 +128,12 @@ class AdminModal extends Component {
             { label: "Yes", value: "1" },
             { label: "No", value: "2" }
           ],
-          onChange: props.handleChange,
+          onChange: selectionHandler.bind(this, props, "isActive"),
           onBlur: props.handleBlur
         });
       } else if (key === "userType") {
         return optionGroup({
+          ind: ind,
           label: labelHelper(key),
           type: inputTypeHelper(key),
           value:
@@ -172,11 +145,12 @@ class AdminModal extends Component {
             { label: "Super Admin", value: "superAdmin" },
             { label: "Normal Admin", value: "normalAdmin" }
           ],
-          onChange: props.handleChange,
+          onChange: selectionHandler.bind(this, props, "userType"),
           onBlur: props.handleBlur
         });
       } else {
         return inputGroup({
+          ind: ind,
           label: labelHelper(key),
           type: inputTypeHelper(key),
           value: key !== "password" ? props.values[key] : "12345678",

@@ -47,9 +47,9 @@ export const createNewFieldConfig = [
     ]
   },
   {
-    key: "allowedOperation",
+    key: "allowedOperations",
     inputType: "text",
-    label: "Allowed Operation",
+    label: "Allowed Operations",
     disabled: false,
     inputOption: INPUT_CHECKBOX,
     radioValues: [

@@ -11,7 +11,11 @@ import {
   CREATE_NEW_ADMINS_SUCC,
   CREATE_NEW_ADMINS_FAILED
 } from "../reducers/admins";
-import { fetchAdminsRequest, updateAdminRequest } from "../apis/admins.api";
+import {
+  fetchAdminsRequest,
+  updateAdminRequest,
+  addAdminRequest
+} from "../apis/admins.api";
 
 // Sagas
 function* fetchAdminsAsync(action) {
@@ -55,10 +59,22 @@ function* editAdminAsync(action) {
 }
 
 function* createNewAdminAsync(action) {
-  const { userId, fieldToUpdate } = action.payload;
+  const {
+    email,
+    password,
+    userType,
+    allowedOperations,
+    username
+  } = action.payload;
 
   try {
-    const { admin } = yield call(updateAdminRequest, { userId, fieldToUpdate });
+    const { admin } = yield call(addAdminRequest, {
+      email,
+      password,
+      userType,
+      allowedOperations,
+      username
+    });
 
     yield put({
       type: CREATE_NEW_ADMINS_SUCC,

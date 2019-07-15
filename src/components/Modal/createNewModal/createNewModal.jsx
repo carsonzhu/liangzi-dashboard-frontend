@@ -24,10 +24,10 @@ class CreateNewModal extends Component {
     inputs: PropTypes.array.isRequired
   };
 
-  onSubmitHandler({ userId, fieldToUpdate }) {
+  onSubmitHandler(values) {
     this.props.afterSubmitAction();
 
-    this.props.handleSubmit({ userId, fieldToUpdate });
+    this.props.handleSubmit(values);
   }
 
   formGenerator({
@@ -134,14 +134,7 @@ class CreateNewModal extends Component {
             // TODO: values transform
             console.log("values", values);
 
-            // const userId = values._id;
-            // const isActive = values.isActive;
-
-            // delete values._id;
-            // delete values.passowrd;
-            // values.isActive = isActive === "1";
-
-            // this.onSubmitHandler({ userId, fieldToUpdate: values });
+            this.onSubmitHandler(values);
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>

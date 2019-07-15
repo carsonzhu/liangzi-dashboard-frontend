@@ -9,7 +9,11 @@ import AdminModal from "../../components/Modal/adminModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import { createNewFieldConfig } from "./config";
 
-import { FETCH_ADMINS, EDIT_ADMINS } from "../../reducers/admins";
+import {
+  FETCH_ADMINS,
+  EDIT_ADMINS,
+  CREATE_NEW_ADMINS
+} from "../../reducers/admins";
 
 const mapStateToProps = state => ({
   isLoading: state.admins.loading,
@@ -19,7 +23,18 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   fetchAdmins: () => dispatch({ type: FETCH_ADMINS }),
   editAdmin: ({ userId, fieldToUpdate }) =>
-    dispatch({ type: EDIT_ADMINS, payload: { userId, fieldToUpdate } })
+    dispatch({ type: EDIT_ADMINS, payload: { userId, fieldToUpdate } }),
+  createNewAdmin: ({
+    email,
+    password,
+    userType,
+    username,
+    allowedOperations
+  }) =>
+    dispatch({
+      type: CREATE_NEW_ADMINS,
+      payload: { email, password, userType, username, allowedOperations }
+    })
 });
 
 class Admins extends Component {
@@ -27,14 +42,16 @@ class Admins extends Component {
     fetchAdmins: PropTypes.func,
     isLoading: PropTypes.bool,
     admins: PropTypes.array,
-    editAdmin: PropTypes.func
+    editAdmin: PropTypes.func,
+    createNewAdmin: PropTypes.func
   };
 
   static defaultProps = {
     admins: [],
     isLoading: false,
     fetchAdmins: () => {},
-    editAdmin: () => {}
+    editAdmin: () => {},
+    createNewAdmin: () => {}
   };
 
   state = {
@@ -163,7 +180,7 @@ class Admins extends Component {
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={() => {}}
+            handleSubmit={this.props.createNewAdmin}
             afterSubmitAction={this.createNewModalAndToast}
             inputs={createNewFieldConfig}
           />

@@ -59,7 +59,13 @@ export const loginRequest = ({ email, password }) => {
 
         return resolve(loginRequestJSONTransform(json));
       })
-      .catch(reject);
+      .catch(err => {
+        if (err.response.data && err.response.data.message) {
+          return reject({ msg: err.response.data.message });
+        }
+
+        return reject({ msg: "The email/password is not valid" });
+      });
   });
 };
 

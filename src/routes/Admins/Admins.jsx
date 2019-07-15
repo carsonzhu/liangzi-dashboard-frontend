@@ -6,6 +6,8 @@ import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
 import AdminModal from "../../components/Modal/adminModal";
+import CreateNewModal from "../../components/Modal/createNewModal";
+import { createNewFieldConfig } from "./config";
 
 import { FETCH_ADMINS, EDIT_ADMINS } from "../../reducers/admins";
 
@@ -42,9 +44,16 @@ class Admins extends Component {
   };
 
   closeEditModal = this.closeEditModal.bind(this);
-  modalAndToast = this.modalAndToast.bind(this);
+  editModalAndToast = this.editModalAndToast.bind(this);
   openNewModal = this.openNewModal.bind(this);
   closeNewModal = this.closeNewModal.bind(this);
+  createNewModalAndToast = this.createNewModalAndToast.bind(this);
+
+  componentDidMount() {
+    this.props.fetchAdmins();
+  }
+
+  componentDidUpdate(prevProps) {}
 
   tbodyGenerator({ admins }) {
     return admins.map((info, ind) => (
@@ -74,12 +83,6 @@ class Admins extends Component {
     );
   }
 
-  componentDidMount() {
-    this.props.fetchAdmins();
-  }
-
-  componentDidUpdate(prevProps) {}
-
   openEditModel(data) {
     this.setState({ adminToShow: data });
   }
@@ -96,28 +99,34 @@ class Admins extends Component {
     this.setState({ createNewModal: false });
   }
 
-  modalAndToast() {
-    this.setState({ adminToShow: null, showToast: true });
+  editModalAndToast() {
+    this.setState({ adminToShow: null, showToast: "Update Successfully!" });
+  }
+
+  createNewModalAndToast() {
+    this.setState({ createNewModal: false, showToast: "Create Successfully!" });
   }
 
   render() {
-    const { adminToShow, showToast } = this.state;
+    const { adminToShow, showToast, createNewModal } = this.state;
 
     return (
       <div className="admins-route">
-        <Toast
-          onClose={() => {
-            this.setState({ showToast: false });
-          }}
-          show={showToast}
-          delay={2000}
-          autohide
-        >
-          <Toast.Body>Update Successfully!</Toast.Body>
-        </Toast>
+        {!!showToast && (
+          <Toast
+            onClose={() => {
+              this.setState({ showToast: false });
+            }}
+            show={true}
+            delay={2000}
+            autohide
+          >
+            <Toast.Body>{showToast}</Toast.Body>
+          </Toast>
+        )}
         <div className="admins-route__title">
           <strong>Admins</strong>
-          <Button>Create New</Button>
+          <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
           {this.props.admins && this.props.admins.length && (
@@ -147,7 +156,16 @@ class Admins extends Component {
             data={adminToShow}
             handleClose={this.closeEditModal}
             handleEdit={this.props.editAdmin}
-            afterSubmitAction={this.modalAndToast}
+            afterSubmitAction={this.editModalAndToast}
+          />
+        )}
+        {createNewModal && (
+          <CreateNewModal
+            toShow={true}
+            handleClose={this.closeNewModal}
+            handleSubmit={() => {}}
+            afterSubmitAction={this.createNewModalAndToast}
+            inputs={createNewFieldConfig}
           />
         )}
       </div>

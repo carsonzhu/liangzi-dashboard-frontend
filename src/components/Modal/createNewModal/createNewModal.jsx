@@ -7,223 +7,149 @@ import "./createNewModal.css";
 import {
   inputGroup,
   radioButtonGroup,
-  optionGroup
+  optionGroup,
+  INPUT_TEXT,
+  INPUT_CHECKBOX,
+  INPUT_DROPDOWN,
+  selectionHandler,
+  checkBoxHandler
 } from "../../Forms/FormGroup";
 
 class CreateNewModal extends Component {
   static propTypes = {
     toShow: PropTypes.bool,
     handleClose: PropTypes.func,
-    handleEdit: PropTypes.func,
-    data: PropTypes.object,
-    afterSubmitAction: PropTypes.func
+    handleSubmit: PropTypes.func,
+    afterSubmitAction: PropTypes.func,
+    inputs: PropTypes.array.isRequired
   };
-
-  state = {
-    beingEdited: false
-  };
-
-  toggleEditing = this.toggleEditing.bind(this);
-  checkBoxHandler = this.checkBoxHandler.bind(this);
-
-  toggleEditing() {
-    this.setState(prevState => ({
-      beingEdited: !prevState.beingEdited
-    }));
-  }
-
-  checkBoxHandler(props, event) {
-    const removeItem = (array, item) => {
-      const result = [];
-
-      for (let i = 0; i < array.length; i++) {
-        if (array[i] !== item) {
-          result.push(array[i]);
-        }
-      }
-
-      return result;
-    };
-
-    const value = event.target.checked;
-    const fieldName = event.target.name;
-
-    if (!value) {
-      const operations = props.values["allowedOperations"];
-
-      if (operations.includes(fieldName)) {
-        props.values["allowedOperations"] = removeItem(operations, fieldName);
-      }
-    } else {
-      const operations = props.values["allowedOperations"];
-
-      if (!operations.includes(fieldName)) {
-        props.values["allowedOperations"].push(fieldName);
-      }
-    }
-  }
-
-  formGenerator({ props, beingEdited }) {
-    const inputTypeHelper = key => {
-      switch (key) {
-        case "email":
-          return "email";
-        case "password":
-          return "password";
-        default:
-          return "text";
-      }
-    };
-
-    const labelHelper = key => {
-      switch (key) {
-        case "_id":
-          return "UserId";
-        case "userType":
-          return "User Type";
-        case "allowedOperations":
-          return "Allowed Operations";
-        case "password":
-          return "Password";
-        case "isActive":
-          return "Active Account";
-        default:
-          return key;
-      }
-    };
-
-    const disabledLogic = key => {
-      return !(beingEdited && notEditabled.indexOf(key) === -1);
-    };
-
-    const inputOrders = [
-      "_id",
-      "username",
-      "email",
-      "password",
-      "userType",
-      "allowedOperations",
-      "isActive"
-    ];
-    const notEditabled = ["password", "_id", "userType"];
-
-    return inputOrders.map(key => {
-      if (key === "allowedOperations") {
-        return radioButtonGroup({
-          label: labelHelper(key),
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          checkGroupClass: "modal__checkGroupClass",
-          radioValues: [
-            {
-              label: "Vehicle Operations",
-              name: "cars",
-              id: "allowed-operations__cars",
-              checked: props.values[key].indexOf("cars") !== -1
-            },
-            {
-              label: "User Operations",
-              name: "users",
-              id: "allowed-operations__users",
-              checked: props.values[key].indexOf("users") !== -1
-            },
-            {
-              label: "Insurance Operations",
-              name: "insurances",
-              id: "allowed-operations__insurances",
-              checked: props.values[key].indexOf("insurances") !== -1
-            },
-            {
-              label: "Transaction Operations",
-              name: "transactions",
-              id: "allowed-operations__transactions",
-              checked: props.values[key].indexOf("transactions") !== -1
-            }
-          ],
-          onChange: this.checkBoxHandler.bind(this, props),
-          onBlur: props.handleBlur
-        });
-      } else if (key === "isActive") {
-        return optionGroup({
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value: props.values[key] ? "1" : "2",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          optionValues: [
-            { label: "Yes", value: "1" },
-            { label: "No", value: "2" }
-          ],
-          onChange: props.handleChange,
-          onBlur: props.handleBlur
-        });
-      } else if (key === "userType") {
-        return optionGroup({
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value:
-            props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          optionValues: [
-            { label: "Super Admin", value: "superAdmin" },
-            { label: "Normal Admin", value: "normalAdmin" }
-          ],
-          onChange: props.handleChange,
-          onBlur: props.handleBlur
-        });
-      } else {
-        return inputGroup({
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value: key !== "password" ? props.values[key] : "12345678",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          onChange: props.handleChange,
-          onBlur: props.handleBlur
-        });
-      }
-    });
-  }
 
   onSubmitHandler({ userId, fieldToUpdate }) {
     this.props.afterSubmitAction();
 
-    this.props.handleEdit({ userId, fieldToUpdate });
+    this.props.handleSubmit({ userId, fieldToUpdate });
   }
 
-  createForm({ data, beingEdited, handleClose }) {
+  formGenerator({
+    props,
+    inputs = [
+      {
+        key: "",
+        inputType: "text", //html input type: email, password, date, etc
+        label: "",
+        disabled: false,
+        inputOption: INPUT_TEXT,
+        optionValues: [{ label: "", value: "" }], // optional (only for INPUT_DOWNDOWN)
+        // optional (only for INPUT_CHECKBOX)
+        radioValues: [
+          {
+            label: "",
+            name: "",
+            id: "",
+            checked: true
+          }
+        ]
+      }
+    ]
+  }) {
+    return inputs.map(
+      (
+        {
+          key,
+          inputType,
+          label,
+          disabled,
+          inputOption,
+          optionValues,
+          radioValues
+        },
+        ind
+      ) => {
+        switch (inputOption) {
+          case INPUT_TEXT: {
+            return inputGroup({
+              ind: ind,
+              label: label,
+              type: inputType,
+              value: props.values[key],
+              name: key,
+              disabled: disabled,
+              labelClass: "modal__capitalized",
+              onChange: props.handleChange,
+              onBlur: props.handleBlur
+            });
+          }
+
+          case INPUT_DROPDOWN: {
+            return optionGroup({
+              ind: ind,
+              label: label,
+              type: inputType,
+              value: props.values[key],
+              name: key,
+              disabled: disabled,
+              labelClass: "modal__capitalized",
+              optionValues: optionValues,
+              onChange: selectionHandler.bind(this, props, key),
+              onBlur: props.handleBlur
+            });
+          }
+
+          case INPUT_CHECKBOX: {
+            return radioButtonGroup({
+              ind: ind,
+              label: label,
+              name: key,
+              disabled: disabled,
+              labelClass: "modal__capitalized",
+              checkGroupClass: "modal__checkGroupClass",
+              radioValues: radioValues,
+              onChange: checkBoxHandler.bind(this, props, key),
+              onBlur: props.handleBlur
+            });
+          }
+
+          default:
+            return inputGroup({
+              ind: ind,
+              label: label,
+              type: inputType,
+              value: props.values[key],
+              name: key,
+              disabled: disabled,
+              labelClass: "modal__capitalized",
+              onChange: props.handleChange,
+              onBlur: props.handleBlur
+            });
+        }
+      }
+    );
+  }
+
+  createForm({ handleClose, inputs }) {
     return (
       <div className="dataForm">
         <Formik
-          initialValues={data}
           onSubmit={(values, _) => {
-            const userId = values._id;
-            const isActive = values.isActive;
+            // TODO: values transform
+            console.log("values", values);
 
-            delete values._id;
-            delete values.passowrd;
-            values.isActive = isActive === "1";
+            // const userId = values._id;
+            // const isActive = values.isActive;
 
-            this.onSubmitHandler({ userId, fieldToUpdate: values });
+            // delete values._id;
+            // delete values.passowrd;
+            // values.isActive = isActive === "1";
+
+            // this.onSubmitHandler({ userId, fieldToUpdate: values });
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>
-              {this.formGenerator({ props, data, beingEdited })}
+              {this.formGenerator({ props, inputs })}
               <div className="dataForm__button-group">
-                {beingEdited ? (
-                  <Button variant="primary" onClick={props.handleSubmit}>
-                    Submit
-                  </Button>
-                ) : (
-                  <Button variant="primary" onClick={this.toggleEditing}>
-                    Edit
-                  </Button>
-                )}
+                <Button variant="primary" onClick={props.handleSubmit}>
+                  Submit
+                </Button>
                 <Button variant="secondary" onClick={handleClose}>
                   Close
                 </Button>
@@ -236,7 +162,7 @@ class CreateNewModal extends Component {
   }
 
   render() {
-    const { toShow, handleClose, data } = this.props;
+    const { toShow, handleClose, inputs } = this.props;
 
     return (
       <Modal
@@ -246,13 +172,12 @@ class CreateNewModal extends Component {
         onHide={handleClose}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{data.username}</Modal.Title>
+          <Modal.Title>Create New</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {this.createForm({
-            data,
-            beingEdited: this.state.beingEdited,
-            handleClose
+            handleClose,
+            inputs
           })}
         </Modal.Body>
       </Modal>

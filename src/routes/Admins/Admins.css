@@ -9,3 +9,22 @@
 .table-hover tbody tr:hover {
     cursor: pointer;
 }
+
+.admins-route__legends {
+    display: flex;
+}
+
+.admins-route__legends-green {
+    color: #28a745;
+    padding: 0 1rem;
+}
+
+.admins-route__legends-red {
+    color: #dc3545;
+    padding: 0 1rem;
+}
+
+.admins-route__title {
+    display: flex;
+    justify-content: space-between;
+}

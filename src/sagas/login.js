@@ -27,7 +27,7 @@ function* loginAsync(action) {
   } catch (err) {
     yield put({
       type: LOGIN_FAILED,
-      payload: { error: "The email/password is not valid" }
+      payload: { error: err.msg }
     });
   }
 }

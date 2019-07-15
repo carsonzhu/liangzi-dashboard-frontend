@@ -1,9 +1,12 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import { Formik } from "formik";
-import { Alert, Form, Modal, Button, Col } from "react-bootstrap";
+import React from "react";
+import { Form } from "react-bootstrap";
+
+export const INPUT_TEXT = "INPUT_TEXT";
+export const INPUT_DROPDOWN = "INPUT_DROPDOWN";
+export const INPUT_CHECKBOX = "INPUT_CHECKBOX";
 
 export const inputGroup = ({
+  ind,
   label,
   type,
   value,
@@ -14,7 +17,7 @@ export const inputGroup = ({
   onBlur
 }) => {
   return (
-    <Form.Group controlId={`form-${name}`}>
+    <Form.Group key={ind} controlId={`form-${name}`}>
       <Form.Label className={labelClass}>{label}</Form.Label>
       <Form.Control
         type={type}
@@ -29,6 +32,7 @@ export const inputGroup = ({
 };
 
 export const optionGroup = ({
+  ind,
   label,
   type,
   value,
@@ -40,7 +44,7 @@ export const optionGroup = ({
   onBlur
 }) => {
   return (
-    <Form.Group controlId={`form-${name}`}>
+    <Form.Group key={ind} controlId={`form-${name}`}>
       <Form.Label className={labelClass}>{label}</Form.Label>
 
       <Form.Control
@@ -61,6 +65,7 @@ export const optionGroup = ({
 };
 
 export const radioButtonGroup = ({
+  ind,
   label,
   name,
   disabled,
@@ -71,7 +76,7 @@ export const radioButtonGroup = ({
   onBlur
 }) => {
   return (
-    <Form.Group controlId={`form-${name}`}>
+    <Form.Group key={ind} controlId={`form-${name}`}>
       <Form.Label className={labelClass}>{label}</Form.Label>
 
       <div className={checkGroupClass}>
@@ -92,4 +97,50 @@ export const radioButtonGroup = ({
       </div>
     </Form.Group>
   );
+};
+
+export const checkBoxHandler = function checkBoxHandler(
+  formikProps,
+  key,
+  event
+) {
+  const removeItem = (array, item) => {
+    const result = [];
+
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] !== item) {
+        result.push(array[i]);
+      }
+    }
+
+    return result;
+  };
+
+  const value = event.target.checked;
+  const fieldName = event.target.name;
+
+  if (!value) {
+    const operations = formikProps.values[key] || [];
+
+    if (operations.includes(fieldName)) {
+      formikProps.setFieldValue(key, removeItem(operations, fieldName), false);
+    }
+  } else {
+    const operations = formikProps.values[key] || [];
+
+    if (!operations.includes(fieldName)) {
+      operations.push(fieldName);
+      formikProps.setFieldValue(key, operations, false);
+    }
+  }
+};
+
+export const selectionHandler = function selectionHandler(
+  formikProps,
+  key,
+  event
+) {
+  const value = event.target.value;
+
+  formikProps.setFieldValue(key, value, false);
 };

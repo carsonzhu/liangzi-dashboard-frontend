@@ -9,9 +9,9 @@ const ADMIN_API = `${LIANG_ZI_BACKEND_URL}/apis/admins`;
 
 /*
 kenheaders: {
-      'authorization': 'Basic Y2xpZW50OnNlY3JldA=='
-    }
-    */
+  'authorization': 'Basic Y2xpZW50OnNlY3JldA=='
+}
+*/
 
 export const addAdminRequest = ({
   email,
@@ -20,16 +20,32 @@ export const addAdminRequest = ({
   allowedOperations,
   username
 }) => {
-  return axios({
-    method: "post",
-    url: ADMIN_API,
-    data: {
-      email,
-      password,
-      userType,
-      username,
-      allowedOperations
-    }
+  const addAdminRequestJSONTransform = json => {
+    const { newUser } = json.data.data;
+
+    return { admin: newUser };
+  };
+
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "post",
+      url: ADMIN_API,
+      data: {
+        email,
+        password,
+        userType,
+        username,
+        allowedOperations
+      }
+    })
+      .then(json => {
+        if (json.status !== 200) {
+          return reject({ msg: "Internal Error" });
+        }
+
+        return resolve(addAdminRequestJSONTransform(json));
+      })
+      .catch(reject);
   });
 };
 

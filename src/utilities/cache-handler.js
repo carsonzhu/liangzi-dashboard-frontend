@@ -31,7 +31,7 @@ export const checkForCached = ({ name }) => {
   let item;
   if (localStorageIsAvailable()) {
     let itemIsExpired = moment().isAfter(
-      moment(localStorage.getItem(`${name}_expiry`))
+      moment(localStorage.getItem(`${name}_expiry`).slice(0, -1))
     );
 
     if (!localStorage.getItem(name) || itemIsExpired) {
@@ -42,6 +42,7 @@ export const checkForCached = ({ name }) => {
   } else {
     item = Cookies.get(name);
   }
+
   try {
     return JSON.parse(item);
   } catch (err) {
@@ -107,7 +108,7 @@ export const clearCachedData = () => {
   localStorage.clear();
   Cookies.remove("userId");
   Cookies.remove("userType");
-  Cookies.remove("userToken");
+  Cookies.remove("token");
 };
 
 export const removeCachedItem = itemKey => localStorage.removeItem(itemKey);

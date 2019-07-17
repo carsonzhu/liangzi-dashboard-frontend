@@ -1,3 +1,4 @@
+import axios from "axios";
 import _ from "lodash";
 
 const SEARCH_VEHICLE_API = process.env.REACT_APP_SEARCH_VEHICLE_API;
@@ -81,4 +82,35 @@ export const search = query => {
     .then(response => response.json())
     .then(arr => arr.map(mapResponseToVehicle))
     .then(vehicles => vehicles.filter(matchVehicleWith(query)));
+};
+
+//////////////////////////////////////////
+const LIANG_ZI_BACKEND_URL =
+  process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
+const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
+
+export const fetchVehiclesRequest = ({ token }) => {
+  const fetchVehiclesRequestJSONTransform = json => {
+    const { vehicles } = json.data.data;
+
+    return { vehicles };
+  };
+
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "get",
+      url: VEHICLE_API,
+      headers: {
+        authorization: token
+      }
+    })
+      .then(json => {
+        if (json.status !== 200) {
+          return reject({ msg: "Internal Error" });
+        }
+
+        return resolve(fetchVehiclesRequestJSONTransform(json));
+      })
+      .catch(reject);
+  });
 };

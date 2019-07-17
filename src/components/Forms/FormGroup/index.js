@@ -57,6 +57,18 @@ export const optionGroup = ({
         onBlur={onBlur}
       >
         {optionValues.map(option => {
+          if (option.placeholder) {
+            return (
+              <option
+                value={option.value}
+                disabled={option.disabled}
+                selected={option.selected}
+              >
+                {option.label}
+              </option>
+            );
+          }
+
           return <option value={option.value}>{option.label}</option>;
         })}
       </Form.Control>

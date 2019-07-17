@@ -42,6 +42,7 @@ export const createNewFieldConfig = [
     disabled: false,
     inputOption: INPUT_DROPDOWN,
     optionValues: [
+      { label: "Select user type", value: "", placeholder: true },
       { label: "Super Admin", value: "superAdmin" },
       { label: "Noraml Admin", value: "normalAdmin" }
     ]

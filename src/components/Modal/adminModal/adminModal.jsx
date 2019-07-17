@@ -18,7 +18,8 @@ class AdminModal extends Component {
     handleClose: PropTypes.func,
     handleEdit: PropTypes.func,
     data: PropTypes.object,
-    afterSubmitAction: PropTypes.func
+    afterSubmitAction: PropTypes.func,
+    token: PropTypes.string
   };
 
   state = {
@@ -167,7 +168,7 @@ class AdminModal extends Component {
   onSubmitHandler({ userId, fieldToUpdate }) {
     this.props.afterSubmitAction();
 
-    this.props.handleEdit({ userId, fieldToUpdate });
+    this.props.handleEdit({ userId, fieldToUpdate, token: this.props.token });
   }
 
   createForm({ data, beingEdited, handleClose }) {

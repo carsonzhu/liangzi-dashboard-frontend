@@ -17,23 +17,26 @@ import {
 
 const mapStateToProps = state => ({
   isLoading: state.admins.loading,
-  admins: state.admins.admins
+  admins: state.admins.admins,
+  token: state.login.token
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAdmins: () => dispatch({ type: FETCH_ADMINS }),
-  editAdmin: ({ userId, fieldToUpdate }) =>
-    dispatch({ type: EDIT_ADMINS, payload: { userId, fieldToUpdate } }),
+  fetchAdmins: ({ token }) =>
+    dispatch({ type: FETCH_ADMINS, payload: { token } }),
+  editAdmin: ({ userId, fieldToUpdate, token }) =>
+    dispatch({ type: EDIT_ADMINS, payload: { userId, fieldToUpdate, token } }),
   createNewAdmin: ({
     email,
     password,
     userType,
     username,
-    allowedOperations
+    allowedOperations,
+    token
   }) =>
     dispatch({
       type: CREATE_NEW_ADMINS,
-      payload: { email, password, userType, username, allowedOperations }
+      payload: { email, password, userType, username, allowedOperations, token }
     })
 });
 
@@ -43,7 +46,8 @@ class Admins extends Component {
     isLoading: PropTypes.bool,
     admins: PropTypes.array,
     editAdmin: PropTypes.func,
-    createNewAdmin: PropTypes.func
+    createNewAdmin: PropTypes.func,
+    token: PropTypes.string
   };
 
   static defaultProps = {
@@ -67,7 +71,7 @@ class Admins extends Component {
   createNewModalAndToast = this.createNewModalAndToast.bind(this);
 
   componentDidMount() {
-    this.props.fetchAdmins();
+    this.props.fetchAdmins({ token: this.props.token });
   }
 
   componentDidUpdate(prevProps) {}
@@ -174,6 +178,7 @@ class Admins extends Component {
             handleClose={this.closeEditModal}
             handleEdit={this.props.editAdmin}
             afterSubmitAction={this.editModalAndToast}
+            token={this.props.token}
           />
         )}
         {createNewModal && (
@@ -183,6 +188,7 @@ class Admins extends Component {
             handleSubmit={this.props.createNewAdmin}
             afterSubmitAction={this.createNewModalAndToast}
             inputs={createNewFieldConfig}
+            token={this.props.token}
           />
         )}
       </div>

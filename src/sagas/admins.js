@@ -19,8 +19,9 @@ import {
 
 // Sagas
 function* fetchAdminsAsync(action) {
+  const { token } = action.payload;
   try {
-    const json = yield call(fetchAdminsRequest);
+    const json = yield call(fetchAdminsRequest, { token });
 
     yield put({
       type: FETCH_ADMINS_SUCC,
@@ -35,16 +36,16 @@ function* fetchAdminsAsync(action) {
 }
 
 function* editAdminAsync(action) {
-  const { userId, fieldToUpdate } = action.payload;
+  const { userId, fieldToUpdate, token } = action.payload;
 
   try {
-    yield call(updateAdminRequest, { userId, fieldToUpdate });
+    yield call(updateAdminRequest, { userId, fieldToUpdate, token });
 
     yield put({
       type: EDIT_ADMINS_SUCC
     });
 
-    const json = yield call(fetchAdminsRequest);
+    const json = yield call(fetchAdminsRequest, { token });
 
     yield put({
       type: FETCH_ADMINS_SUCC,
@@ -64,7 +65,8 @@ function* createNewAdminAsync(action) {
     password,
     userType,
     allowedOperations,
-    username
+    username,
+    token
   } = action.payload;
 
   try {
@@ -73,7 +75,8 @@ function* createNewAdminAsync(action) {
       password,
       userType,
       allowedOperations,
-      username
+      username,
+      token
     });
 
     yield put({

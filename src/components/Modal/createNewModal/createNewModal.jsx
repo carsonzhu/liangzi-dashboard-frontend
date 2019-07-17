@@ -21,13 +21,14 @@ class CreateNewModal extends Component {
     handleClose: PropTypes.func,
     handleSubmit: PropTypes.func,
     afterSubmitAction: PropTypes.func,
-    inputs: PropTypes.array.isRequired
+    inputs: PropTypes.array.isRequired,
+    token: PropTypes.string
   };
 
   onSubmitHandler(values) {
     this.props.afterSubmitAction();
 
-    this.props.handleSubmit(values);
+    this.props.handleSubmit({ ...values, token: this.props.token });
   }
 
   formGenerator({

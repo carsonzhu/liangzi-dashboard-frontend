@@ -30,8 +30,10 @@ export const sessionStorageIsAvailable = () => {
 export const checkForCached = ({ name }) => {
   let item;
   if (localStorageIsAvailable()) {
+    const expiryToken = localStorage.getItem(`${name}_expiry`);
+
     let itemIsExpired = moment().isAfter(
-      moment(localStorage.getItem(`${name}_expiry`).slice(0, -1))
+      moment(!!expiryToken && expiryToken.slice(0, -1))
     );
 
     if (!localStorage.getItem(name) || itemIsExpired) {

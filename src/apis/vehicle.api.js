@@ -93,9 +93,9 @@ const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
 
 export const fetchVehiclesRequest = ({ token }) => {
   const fetchVehiclesRequestJSONTransform = json => {
-    const { vehicles } = json.data.data;
+    const { vehicles, rentalCompanies } = json.data.data;
 
-    return { vehicles };
+    return { vehicles, rentalCompanies };
   };
 
   return new Promise((resolve, reject) => {

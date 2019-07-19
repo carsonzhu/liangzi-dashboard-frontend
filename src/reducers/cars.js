@@ -1,5 +1,6 @@
 const initialState = {
   vehicles: [],
+  rentalCompanies: [],
   query: {},
   loading: false,
   error: ""
@@ -20,6 +21,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         vehicles: action.payload.vehicles,
+        rentalCompanies: action.payload.rentalCompanies,
         loading: false,
         error: ""
       };

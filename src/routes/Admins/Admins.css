@@ -1,9 +1,9 @@
 .admins__column-active {
-    background-color: #28a745;
+    background-color: #00C851;
 }
 
 .admins__column-inactive {
-    background-color: #dc3545;
+    background-color: #ff4444;
 }
 
 .table-hover tbody tr:hover {
@@ -15,12 +15,12 @@
 }
 
 .admins-route__legends-green {
-    color: #28a745;
+    color: #00C851;
     padding: 0 1rem;
 }
 
 .admins-route__legends-red {
-    color: #dc3545;
+    color: #ff4444;
     padding: 0 1rem;
 }
 

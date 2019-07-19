@@ -12,7 +12,9 @@ import { fetchVehiclesRequest } from "../apis/vehicle.api";
 function* fetchVehiclesAsync(action) {
   const { token } = action.payload;
   try {
-    const json = yield call(fetchVehiclesRequest, { token }); //todo
+    const json = yield call(fetchVehiclesRequest, { token });
+
+    console.log("fetchVehicle", json);
 
     yield put({
       type: FETCH_VEHICLES_SUCC,

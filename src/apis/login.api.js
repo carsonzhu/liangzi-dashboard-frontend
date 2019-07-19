@@ -60,7 +60,7 @@ export const loginRequest = ({ email, password }) => {
         return resolve(loginRequestJSONTransform(json));
       })
       .catch(err => {
-        if (err.response.data && err.response.data.message) {
+        if (err.response && err.response.data && err.response.data.message) {
           return reject({ msg: err.response.data.message });
         }
 

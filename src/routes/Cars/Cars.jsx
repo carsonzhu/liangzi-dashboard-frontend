@@ -7,7 +7,7 @@ import "./Cars.css";
 import ActivityIndicator from "../../utilities/activity-indicator";
 import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
-import { header, createNewFieldConfig } from "./config";
+import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
 import { FETCH_VEHICLES } from "../../reducers/cars";
 
@@ -107,15 +107,15 @@ class Cars extends Component {
         {header.map((field, ind) => {
           if (field.key === "rentalCompanyId") {
             const rentalCompanyId = info[field.key];
-            let rentalCompany = "";
 
-            this.props.rentalCompanies.forEach(rentalCompanyInfo => {
-              if (rentalCompanyId === rentalCompanyInfo._id) {
-                rentalCompany = rentalCompanyInfo.name;
-              }
-            });
-
-            return <td key={ind}>{rentalCompany}</td>;
+            return (
+              <td key={ind}>
+                {getRentalCompanyName({
+                  rentalCompanyId,
+                  rentalCompanies: this.props.rentalCompanies
+                })}
+              </td>
+            );
           }
 
           return <td key={ind}>{info[field.key]}</td>;

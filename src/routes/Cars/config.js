@@ -12,6 +12,18 @@ export const header = [
   { title: "Daily Rate", key: "dailyRateDisplay" }
 ];
 
+export const getRentalCompanyName = ({ rentalCompanyId, rentalCompanies }) => {
+  let rentalCompanyName = "";
+
+  rentalCompanies.forEach(rentalCompany => {
+    if (rentalCompany._id === rentalCompanyId) {
+      rentalCompanyName = rentalCompany.name;
+    }
+  });
+
+  return rentalCompanyName;
+};
+
 export const createNewFieldConfig = [
   {
     key: "dailyRate",
@@ -26,7 +38,12 @@ export const createNewFieldConfig = [
     inputType: "text",
     label: "Daily Rate Unit",
     disabled: false,
-    inputOption: INPUT_TEXT
+    inputOption: INPUT_DROPDOWN,
+    optionValues: [
+      { label: "Select unit type", value: "", placeholder: true },
+      { label: "CAD", value: "CAD" },
+      { label: "USD", value: "USD" }
+    ]
   },
   {
     key: "locationAddress",

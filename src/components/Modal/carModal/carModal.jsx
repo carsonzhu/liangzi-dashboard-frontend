@@ -37,10 +37,14 @@ class CarModal extends Component {
   formGenerator({ props, beingEdited }) {
     const inputTypeHelper = key => {
       switch (key) {
-        case "email":
-          return "email";
-        case "password":
-          return "password";
+        case "dailyRateDisplay":
+        case "dailyRate":
+        case "trunkSize":
+        case "seats":
+          return "number";
+        // TODO: vehicleImage
+        case "vehicleImage":
+          return "file";
         default:
           return "text";
       }
@@ -49,15 +53,37 @@ class CarModal extends Component {
     const labelHelper = key => {
       switch (key) {
         case "_id":
-          return "UserId";
-        case "userType":
-          return "User Type";
-        case "allowedOperations":
-          return "Allowed Operations";
-        case "password":
-          return "Password";
-        case "isActive":
-          return "Active Account";
+          return "Vehicle Id";
+        case "dailyRateDisplay":
+          return "Daily Rate (Displayed)";
+        case "dailyRate":
+          return "Daily Rate";
+        case "dailyRateUnit":
+          return "Daily Rate Unit";
+        case "locationAddress":
+          return "Location Address";
+        case "locationHours":
+          return "Location Hourse";
+        case "specialServices":
+          return "Special Services";
+        case "transmission":
+          return "Transmission";
+        case "vehicleType":
+          return "Vehicle Type";
+        case "trunkSize":
+          return "Trunk Size";
+        case "rentalCompanyId":
+          return "Rental Company";
+        case "vehicleMake":
+          return "Vehicle Make";
+        case "vehicleImage":
+          return "Vehicle Image";
+        case "vehilceNotes":
+          return "Vehicle Notes";
+        case "insuranceIds":
+          return "Insurance";
+        case "vehicleStatus":
+          return "Status";
         default:
           return key;
       }
@@ -69,14 +95,16 @@ class CarModal extends Component {
 
     const inputOrders = [
       "_id",
-      "username",
-      "email",
-      "password",
-      "userType",
+      "rentalCompanyId",
+      "dailyRateDisplay",
+      "dailyRate",
+      "dailyRateUnit",
       "allowedOperations",
       "isActive"
     ];
-    const notEditabled = ["password", "_id", "userType"];
+    const notEditabled = ["_id"];
+    // if super: add dailyRateDisplay
+    // if regular: add dailyRate
 
     return inputOrders.map((key, ind) => {
       if (key === "allowedOperations") {

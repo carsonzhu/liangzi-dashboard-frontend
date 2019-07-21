@@ -44,7 +44,6 @@ export const createNewFieldConfig = rentalCompanies => {
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO: dropdown CAD, USD?
     {
       key: "dailyRateUnit",
       inputType: "text",
@@ -54,7 +53,8 @@ export const createNewFieldConfig = rentalCompanies => {
       optionValues: [
         PLACEHOLDER("Select unit type"),
         { label: "CAD", value: "CAD" },
-        { label: "USD", value: "USD" }
+        { label: "USD", value: "USD" },
+        { label: "RMB", value: "RMB" }
       ]
     },
     {

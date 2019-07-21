@@ -112,7 +112,7 @@ class Root extends Component {
             // component={Home}
           />
           {this.generateTabComponent()}
-          <Footer />
+          {/* <Footer /> */}
           <Modal
             size="lg"
             dialogClassName="modal-90w"

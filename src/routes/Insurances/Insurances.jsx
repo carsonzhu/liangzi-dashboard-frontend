@@ -19,7 +19,9 @@ import {
 const mapStateToProps = state => ({
   isLoading: state.insurances.loading,
   insurances: state.insurances.insurances,
-  token: state.login.token
+  token: state.login.token,
+  rentalCompanies: state.rentalCompanies.rentalCompanies,
+  error: state.insurances.error
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -66,7 +68,8 @@ class Insurances extends Component {
     editInsurance: PropTypes.func,
     deleteInsurance: PropTypes.func,
     createNewInsurances: PropTypes.func,
-    token: PropTypes.string
+    token: PropTypes.string,
+    rentalCompanies: PropTypes.object
   };
 
   static defaultProps = {
@@ -94,21 +97,10 @@ class Insurances extends Component {
     this.props.fetchInsurances({ token: this.props.token });
   }
 
-  componentDidUpdate(prevProps) {}
-
   tbodyGenerator({ insurances }) {
     return insurances.map((info, ind) => (
-      <tr
-        key={ind}
-        className={
-          info.isActive
-            ? "insurances__column-active"
-            : "insurances__column-inactive"
-        }
-        onClick={this.openEditModel.bind(this, info)}
-      >
+      <tr key={ind} onClick={this.openEditModel.bind(this, info)}>
         <td>{ind}</td>
-        <td>{info.rentalCompanyId}</td>
         <td>{info.rentalCompanyName}</td>
         <td>{info.name}</td>
         <td>{info.description}</td>
@@ -122,7 +114,6 @@ class Insurances extends Component {
     return (
       <tr>
         <th>#</th>
-        <th>Rental Company ID</th>
         <th>Rental Company Name</th>
         <th>Name</th>
         <th>Description</th>
@@ -191,10 +182,6 @@ class Insurances extends Component {
                   {this.tbodyGenerator({ insurances: this.props.insurances })}
                 </tbody>
               </Table>
-              <div className="insurances-route__legends">
-                <p className="insurances-route__legends-green">Active</p>
-                <p className="insurances-route__legends-red">Inactive</p>
-              </div>
             </div>
           )}
         </ActivityIndicator>
@@ -216,7 +203,7 @@ class Insurances extends Component {
             handleClose={this.closeNewModal}
             handleSubmit={this.props.createNewInsurances}
             afterSubmitAction={this.createNewModalAndToast}
-            inputs={createNewFieldConfig}
+            inputs={createNewFieldConfig(this.props.rentalCompanies)}
             token={this.props.token}
           />
         )}

@@ -15,7 +15,8 @@ export const inputGroup = ({
   labelClass,
   onChange,
   onBlur,
-  placeholder = ""
+  placeholder = "",
+  required = true
 }) => {
   return (
     <Form.Group key={ind} controlId={`form-${name}`}>
@@ -28,6 +29,7 @@ export const inputGroup = ({
         onChange={onChange}
         onBlur={onBlur}
         placeholder={placeholder}
+        required={required}
       />
     </Form.Group>
   );
@@ -43,7 +45,8 @@ export const optionGroup = ({
   labelClass,
   optionValues = [{ label: "", value: "" }],
   onChange,
-  onBlur
+  onBlur,
+  required = true
 }) => {
   return (
     <Form.Group key={ind} controlId={`form-${name}`}>
@@ -57,6 +60,7 @@ export const optionGroup = ({
         disabled={disabled}
         onChange={onChange}
         onBlur={onBlur}
+        required={required}
       >
         {optionValues.map(option => {
           if (option.placeholder) {

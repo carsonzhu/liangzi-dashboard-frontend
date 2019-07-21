@@ -14,7 +14,8 @@ export const inputGroup = ({
   disabled,
   labelClass,
   onChange,
-  onBlur
+  onBlur,
+  placeholder = ""
 }) => {
   return (
     <Form.Group key={ind} controlId={`form-${name}`}>
@@ -26,6 +27,7 @@ export const inputGroup = ({
         disabled={disabled}
         onChange={onChange}
         onBlur={onBlur}
+        placeholder={placeholder}
       />
     </Form.Group>
   );

@@ -1,0 +1,39 @@
+.cars__column-active {
+    background-color: #00C851;
+}
+
+.cars__column-inuse {
+    background-color: #ffbb33;
+}
+
+.cars__column-inactive {
+    background-color: #ff4444;
+}
+
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+
+.cars-route__legends {
+    display: flex;
+}
+
+.cars-route__legends-green {
+    color: #00C851;
+    padding: 0 1rem;
+}
+
+.cars-route__legends-yellow {
+    color: #ffbb33;
+    padding: 0 1rem;
+}
+
+.cars-route__legends-red {
+    color: #ff4444;
+    padding: 0 1rem;
+}
+
+.cars-route__title {
+    display: flex;
+    justify-content: space-between;
+}

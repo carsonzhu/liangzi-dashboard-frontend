@@ -1,91 +1,199 @@
-import React from "react";
-import { Table } from "react-bootstrap";
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Table, Toast, Button } from "react-bootstrap";
 import "./Cars.css";
 
-//Fake data
-const data = [
-  {
-    dailyRate: 100,
-    pickupLocation: "Toronto",
-    returnLocation: "Toronto",
-    specialServices: ["GPS", "驾照翻译件", "儿童安全座椅", "中文向导"],
-    transmission: "AUTOMATIC",
-    vehicleTypeId: "Toyota",
-    rentalCompany: "Aloma"
-  },
-  {
-    dailyRate: 100,
-    pickupLocation: "Toronto",
-    returnLocation: "Toronto",
-    specialServices: ["GPS", "驾照翻译件", "儿童安全座椅", "中文向导"],
-    transmission: "AUTOMATIC",
-    vehicleTypeId: "Toyota",
-    rentalCompany: "Aloma"
-  },
-  {
-    dailyRate: 100,
-    pickupLocation: "Toronto",
-    returnLocation: "Toronto",
-    specialServices: ["GPS", "驾照翻译件", "儿童安全座椅", "中文向导"],
-    transmission: "AUTOMATIC",
-    vehicleTypeId: "Toyota",
-    rentalCompany: "Aloma"
-  },
-  {
-    dailyRate: 100,
-    pickupLocation: "Toronto",
-    returnLocation: "Toronto",
-    specialServices: ["GPS", "驾照翻译件", "儿童安全座椅", "中文向导"],
-    transmission: "AUTOMATIC",
-    vehicleTypeId: "Toyota",
-    rentalCompany: "Aloma"
+import ActivityIndicator from "../../utilities/activity-indicator";
+import CarModal from "../../components/Modal/carModal";
+import CreateNewModal from "../../components/Modal/createNewModal";
+import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
+
+import { FETCH_VEHICLES } from "../../reducers/cars";
+import { SUPER_ADMIN } from "../../constants";
+
+const mapStateToProps = state => ({
+  isLoading: state.cars.loading,
+  vehicles: state.cars.vehicles,
+  token: state.login.token,
+  rentalCompanies: state.rentalCompanies.rentalCompanies,
+  userType: state.login.userType
+});
+
+const mapDispatchToProps = dispatch => ({
+  fetchVehicles: ({ token }) =>
+    dispatch({ type: FETCH_VEHICLES, payload: { token } })
+});
+
+class Cars extends Component {
+  static propTypes = {
+    isLoading: PropTypes.bool,
+    vehicles: PropTypes.array,
+    token: PropTypes.string,
+    rentalCompanies: PropTypes.array
+  };
+
+  static defaultProps = {
+    vehicles: [],
+    isLoading: false,
+    token: "",
+    rentalCompanies: []
+  };
+
+  state = {
+    vehicleToShow: null,
+    createNewModal: false
+  };
+
+  clearVehicleInfo = this.clearVehicleInfo.bind(this);
+  openNewModal = this.openNewModal.bind(this);
+  closeNewModal = this.closeNewModal.bind(this);
+  createNewModalAndToast = this.createNewModalAndToast.bind(this);
+
+  componentDidMount() {
+    this.props.fetchVehicles({ token: this.props.token });
   }
-];
 
-const operationGenerator = operations => {
-  const listItems = operations.map((operation, ind) => (
-    <li key={ind}>{operation}</li>
-  ));
+  componentDidUpdate(prevProps) {}
 
-  return <ul style={{ "list-style-type": "disc" }}>{listItems}</ul>;
-};
+  vehicleInfoShow(info) {
+    this.setState({ vehicleToShow: info });
+  }
 
-const tbodyGenerator = Cars => {
-  return Cars.map((info, ind) => (
-    <tr key={ind}>
-      <td>{ind}</td>
-      <td>{info.dailyRate}</td>
-      <td>{info.pickupLocation}</td>
-      <td>{info.returnLocation}</td>
-      <td>{operationGenerator(info.specialServices)}</td>
-      <td>{info.transmission}</td>
-      <td>{info.vehicleTypeId}</td>
-      <td>{info.rentalCompany}</td>
-    </tr>
-  ));
-};
+  clearVehicleInfo() {
+    this.setState({ vehicleToShow: null });
+  }
 
-const Cars = () => {
-  return (
-    <div className="cars-route">
-      <div>Cars</div>
-      <Table responsive>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Daily Rate</th>
-            <th>Pickup Location</th>
-            <th>Return Location</th>
-            <th>Special Services</th>
-            <th>Transmission</th>
-            <th>Vehicle Type</th>
-            <th>Rental Company</th>
-          </tr>
-        </thead>
-        <tbody>{tbodyGenerator(data)}</tbody>
-      </Table>
-    </div>
-  );
-};
+  openNewModal() {
+    this.setState({ createNewModal: true });
+  }
 
-export default Cars;
+  closeNewModal() {
+    this.setState({ createNewModal: false });
+  }
+
+  createNewModalAndToast() {
+    this.setState({ createNewModal: false, showToast: "Create Successfully!" });
+  }
+
+  theadGenerater() {
+    return (
+      <tr>
+        {header.map((field, ind) => {
+          return <th key={ind}>{field.title}</th>;
+        })}
+      </tr>
+    );
+  }
+
+  tbodyGenerator(cars) {
+    const classNamePicker = ({ status }) => {
+      switch (status) {
+        case "AVAILABLE":
+          return "cars__column-active";
+        case "RENTED":
+          return "cars__column-inuse";
+        case "UNAVAILABLE":
+          return "cars__column-inactive";
+
+        default:
+          return "cars__column-active";
+      }
+    };
+
+    return cars.map((info, ind) => (
+      <tr
+        key={ind}
+        className={classNamePicker({ status: info.vehicleStatus })}
+        onClick={this.vehicleInfoShow.bind(this, info)}
+      >
+        {header.map((field, ind) => {
+          if (field.key === "rentalCompanyId") {
+            const rentalCompanyId = info[field.key];
+
+            return (
+              <td key={ind}>
+                {getRentalCompanyName({
+                  rentalCompanyId,
+                  rentalCompanies: this.props.rentalCompanies
+                })}
+              </td>
+            );
+          }
+
+          return <td key={ind}>{info[field.key]}</td>;
+        })}
+      </tr>
+    ));
+  }
+  render() {
+    const { vehicleToShow, createNewModal, showToast } = this.state;
+
+    console.log("this.props.vehicles", this.props.vehicles);
+    return (
+      <div className="cars-route">
+        {!!showToast && (
+          <Toast
+            onClose={() => {
+              this.setState({ showToast: false });
+            }}
+            show={true}
+            delay={2000}
+            autohide
+          >
+            <Toast.Body>{showToast}</Toast.Body>
+          </Toast>
+        )}
+
+        <div className="cars-route__title">
+          <strong>Admins</strong>
+          <Button onClick={this.openNewModal}>Create New</Button>
+        </div>
+        <ActivityIndicator isLoading={this.props.isLoading}>
+          {this.props.vehicles && this.props.vehicles.length && (
+            <div>
+              <Table responsive hover>
+                <thead>{this.theadGenerater()}</thead>
+                <tbody>{this.tbodyGenerator(this.props.vehicles)}</tbody>
+              </Table>
+
+              <div className="cars-route__legends">
+                <p className="cars-route__legends-green">Active</p>
+                <p className="cars-route__legends-yellow">Rented</p>
+                <p className="cars-route__legends-red">Inactive</p>
+              </div>
+            </div>
+          )}
+        </ActivityIndicator>
+
+        {vehicleToShow && (
+          <CarModal
+            toShow={true}
+            data={vehicleToShow}
+            handleClose={this.clearVehicleInfo}
+            handleEdit={() => {}}
+            afterSubmitAction={() => {}}
+            token={this.props.token}
+            isSuper={this.props.userType === SUPER_ADMIN}
+            rentalCompanies={this.props.rentalCompanies}
+          />
+        )}
+        {createNewModal && (
+          <CreateNewModal
+            toShow={true}
+            handleClose={this.closeNewModal}
+            handleSubmit={() => {}}
+            afterSubmitAction={this.createNewModalAndToast}
+            inputs={createNewFieldConfig(this.props.rentalCompanies)}
+            token={this.props.token}
+          />
+        )}
+      </div>
+    );
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Cars);

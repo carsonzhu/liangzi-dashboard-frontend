@@ -19,7 +19,9 @@ class CarModal extends Component {
     handleEdit: PropTypes.func,
     data: PropTypes.object,
     afterSubmitAction: PropTypes.func,
-    token: PropTypes.string
+    token: PropTypes.string,
+    isSuper: PropTypes.bool,
+    rentalCompanies: PropTypes.array
   };
 
   state = {
@@ -27,6 +29,14 @@ class CarModal extends Component {
   };
 
   toggleEditing = this.toggleEditing.bind(this);
+
+  getRentalCompanyName({ rentalCompanyId }) {
+    for (let i = 0; i < this.props.rentalCompanies.length; i++) {
+      if (this.props.rentalCompanies[i]._id === rentalCompanyId) {
+        return this.props.rentalCompanies[i].name;
+      }
+    }
+  }
 
   toggleEditing() {
     this.setState(prevState => ({
@@ -43,8 +53,8 @@ class CarModal extends Component {
         case "seats":
           return "number";
         // TODO: vehicleImage
-        case "vehicleImage":
-          return "file";
+        // case "vehicleImage":
+        //   return "file";
         default:
           return "text";
       }
@@ -94,102 +104,210 @@ class CarModal extends Component {
     };
 
     const inputOrders = [
+      "vehicleImage",
       "_id",
       "rentalCompanyId",
       "dailyRateDisplay",
       "dailyRate",
       "dailyRateUnit",
-      "allowedOperations",
-      "isActive"
+      "locationAddress",
+      "locationHours",
+      "specialServices",
+      "transmission",
+      "vehicleType",
+      "trunkSize",
+      "seats",
+      "vehicleMake",
+      "vehicleNote",
+      "insuranceIds",
+      "vehicleStatus"
     ];
-    const notEditabled = ["_id"];
-    // if super: add dailyRateDisplay
-    // if regular: add dailyRate
+    const notEditabled = ["_id", "vehicleImage", "rentalCompanyId"];
+    if (this.props.isSuper) {
+      notEditabled.push("dailyRate");
+    } else {
+      notEditabled.push("dailyRateDisplay");
+    }
 
     return inputOrders.map((key, ind) => {
-      if (key === "allowedOperations") {
-        return radioButtonGroup({
-          ind: ind,
-          label: labelHelper(key),
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          checkGroupClass: "modal__checkGroupClass",
-          radioValues: [
-            {
-              label: "Vehicle Operations",
-              name: "cars",
-              id: "allowed-operations__cars",
-              checked: props.values[key].indexOf("cars") !== -1
-            },
-            {
-              label: "User Operations",
-              name: "users",
-              id: "allowed-operations__users",
-              checked: props.values[key].indexOf("users") !== -1
-            },
-            {
-              label: "Insurance Operations",
-              name: "insurances",
-              id: "allowed-operations__insurances",
-              checked: props.values[key].indexOf("insurances") !== -1
-            },
-            {
-              label: "Transaction Operations",
-              name: "transactions",
-              id: "allowed-operations__transactions",
-              checked: props.values[key].indexOf("transactions") !== -1
-            }
-          ],
-          onChange: checkBoxHandler.bind(this, props, "allowedOperations"),
-          onBlur: props.handleBlur
-        });
-      } else if (key === "isActive") {
-        return optionGroup({
-          ind: ind,
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value: props.values[key] ? "1" : "2",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          optionValues: [
-            { label: "Yes", value: "1" },
-            { label: "No", value: "2" }
-          ],
-          onChange: selectionHandler.bind(this, props, "isActive"),
-          onBlur: props.handleBlur
-        });
-      } else if (key === "userType") {
-        return optionGroup({
-          ind: ind,
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value:
-            props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          optionValues: [
-            { label: "Super Admin", value: "superAdmin" },
-            { label: "Normal Admin", value: "normalAdmin" }
-          ],
-          onChange: selectionHandler.bind(this, props, "userType"),
-          onBlur: props.handleBlur
-        });
-      } else {
-        return inputGroup({
-          ind: ind,
-          label: labelHelper(key),
-          type: inputTypeHelper(key),
-          value: key !== "password" ? props.values[key] : "12345678",
-          name: key,
-          disabled: disabledLogic(key),
-          labelClass: "modal__capitalized",
-          onChange: props.handleChange,
-          onBlur: props.handleBlur
-        });
+      switch (key) {
+        case "vehicleImage": {
+          return (
+            <div className="vehile-image">
+              <img
+                className="target-image"
+                src={props.values[key]}
+                alt="vehicle-image"
+              />
+            </div>
+          );
+        }
+
+        case "rentalCompanyId": {
+          return inputGroup({
+            ind: ind,
+            label: labelHelper(key),
+            type: inputTypeHelper(key),
+            value: this.getRentalCompanyName({
+              rentalCompanyId: props.values[key]
+            }),
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            onChange: props.handleChange,
+            onBlur: props.handleBlur
+          });
+        }
+
+        // TODO
+        case "locationHours": {
+          return inputGroup({
+            ind: ind,
+            label: labelHelper(key),
+            type: inputTypeHelper(key),
+            value: JSON.stringify(props.values[key]),
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            onChange: props.handleChange,
+            onBlur: props.handleBlur
+          });
+        }
+
+        case "transmission": {
+          return optionGroup({
+            ind: ind,
+            label: labelHelper(key),
+            type: inputTypeHelper(key),
+            value: props.values[key],
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            optionValues: [
+              { label: "Automatic", value: "auto" },
+              { label: "Manual", value: "manual" }
+            ],
+            onChange: selectionHandler.bind(this, props, "isActive"),
+            onBlur: props.handleBlur
+          });
+        }
+
+        case "vehicleStatus": {
+          return optionGroup({
+            ind: ind,
+            label: labelHelper(key),
+            type: inputTypeHelper(key),
+            value: props.values[key],
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            optionValues: [
+              { label: "AVAILABLE", value: "AVAILABLE" },
+              { label: "UNAVAILABLE", value: "UNAVAILABLE" },
+              { label: "RENTED", value: "RENTED" }
+            ],
+            onChange: selectionHandler.bind(this, props, "isActive"),
+            onBlur: props.handleBlur
+          });
+        }
+
+        default:
+          return inputGroup({
+            ind: ind,
+            label: labelHelper(key),
+            type: inputTypeHelper(key),
+            value: props.values[key] || "none",
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            onChange: props.handleChange,
+            onBlur: props.handleBlur
+          });
       }
+
+      // if (key === "allowedOperations") {
+      //   return radioButtonGroup({
+      //     ind: ind,
+      //     label: labelHelper(key),
+      //     name: key,
+      //     disabled: disabledLogic(key),
+      //     labelClass: "modal__capitalized",
+      //     checkGroupClass: "modal__checkGroupClass",
+      //     radioValues: [
+      //       {
+      //         label: "Vehicle Operations",
+      //         name: "cars",
+      //         id: "allowed-operations__cars",
+      //         checked: props.values[key].indexOf("cars") !== -1
+      //       },
+      //       {
+      //         label: "User Operations",
+      //         name: "users",
+      //         id: "allowed-operations__users",
+      //         checked: props.values[key].indexOf("users") !== -1
+      //       },
+      //       {
+      //         label: "Insurance Operations",
+      //         name: "insurances",
+      //         id: "allowed-operations__insurances",
+      //         checked: props.values[key].indexOf("insurances") !== -1
+      //       },
+      //       {
+      //         label: "Transaction Operations",
+      //         name: "transactions",
+      //         id: "allowed-operations__transactions",
+      //         checked: props.values[key].indexOf("transactions") !== -1
+      //       }
+      //     ],
+      //     onChange: checkBoxHandler.bind(this, props, "allowedOperations"),
+      //     onBlur: props.handleBlur
+      //   });
+      // } else if (key === "isActive") {
+      //   return optionGroup({
+      //     ind: ind,
+      //     label: labelHelper(key),
+      //     type: inputTypeHelper(key),
+      //     value: props.values[key] ? "1" : "2",
+      //     name: key,
+      //     disabled: disabledLogic(key),
+      //     labelClass: "modal__capitalized",
+      //     optionValues: [
+      //       { label: "Yes", value: "1" },
+      //       { label: "No", value: "2" }
+      //     ],
+      //     onChange: selectionHandler.bind(this, props, "isActive"),
+      //     onBlur: props.handleBlur
+      //   });
+      // } else if (key === "userType") {
+      //   return optionGroup({
+      //     ind: ind,
+      //     label: labelHelper(key),
+      //     type: inputTypeHelper(key),
+      //     value:
+      //       props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
+      //     name: key,
+      //     disabled: disabledLogic(key),
+      //     labelClass: "modal__capitalized",
+      //     optionValues: [
+      //       { label: "Super Admin", value: "superAdmin" },
+      //       { label: "Normal Admin", value: "normalAdmin" }
+      //     ],
+      //     onChange: selectionHandler.bind(this, props, "userType"),
+      //     onBlur: props.handleBlur
+      //   });
+      // } else {
+      //   return inputGroup({
+      //     ind: ind,
+      //     label: labelHelper(key),
+      //     type: inputTypeHelper(key),
+      //     value: key !== "password" ? props.values[key] : "12345678",
+      //     name: key,
+      //     disabled: disabledLogic(key),
+      //     labelClass: "modal__capitalized",
+      //     onChange: props.handleChange,
+      //     onBlur: props.handleBlur
+      //   });
+      // }
     });
   }
 
@@ -244,15 +362,15 @@ class CarModal extends Component {
     return (
       <Modal className="carModal" show={toShow} size="lg" onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{data.username}</Modal.Title>
+          <Modal.Title>Vehicle Information</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* {this.createForm({
+          {this.createForm({
             data,
             beingEdited: this.state.beingEdited,
             handleClose
-          })} */}
-          {JSON.stringify(data)}
+          })}
+          {/* {JSON.stringify(data)} */}
         </Modal.Body>
       </Modal>
     );

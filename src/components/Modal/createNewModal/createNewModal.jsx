@@ -49,7 +49,8 @@ class CreateNewModal extends Component {
             id: "",
             checked: true
           }
-        ]
+        ],
+        placeholder: "" //optional for text
       }
     ]
   }) {
@@ -62,7 +63,8 @@ class CreateNewModal extends Component {
           disabled,
           inputOption,
           optionValues,
-          radioValues
+          radioValues,
+          placeholder
         },
         ind
       ) => {
@@ -77,7 +79,8 @@ class CreateNewModal extends Component {
               disabled: disabled,
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              placeholder: placeholder
             });
           }
 
@@ -120,7 +123,8 @@ class CreateNewModal extends Component {
               disabled: disabled,
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              placeholder: placeholder
             });
         }
       }

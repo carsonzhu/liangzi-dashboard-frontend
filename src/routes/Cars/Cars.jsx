@@ -10,12 +10,14 @@ import CreateNewModal from "../../components/Modal/createNewModal";
 import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
 import { FETCH_VEHICLES } from "../../reducers/cars";
+import { SUPER_ADMIN } from "../../constants";
 
 const mapStateToProps = state => ({
   isLoading: state.cars.loading,
   vehicles: state.cars.vehicles,
   token: state.login.token,
-  rentalCompanies: state.cars.rentalCompanies
+  rentalCompanies: state.rentalCompanies.rentalCompanies,
+  userType: state.login.userType
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -46,6 +48,7 @@ class Cars extends Component {
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
   openNewModal = this.openNewModal.bind(this);
   closeNewModal = this.closeNewModal.bind(this);
+  createNewModalAndToast = this.createNewModalAndToast.bind(this);
 
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
@@ -171,6 +174,8 @@ class Cars extends Component {
             handleEdit={() => {}}
             afterSubmitAction={() => {}}
             token={this.props.token}
+            isSuper={this.props.userType === SUPER_ADMIN}
+            rentalCompanies={this.props.rentalCompanies}
           />
         )}
         {createNewModal && (
@@ -178,8 +183,8 @@ class Cars extends Component {
             toShow={true}
             handleClose={this.closeNewModal}
             handleSubmit={() => {}}
-            afterSubmitAction={() => {}}
-            inputs={createNewFieldConfig}
+            afterSubmitAction={this.createNewModalAndToast}
+            inputs={createNewFieldConfig(this.props.rentalCompanies)}
             token={this.props.token}
           />
         )}

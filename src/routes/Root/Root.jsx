@@ -15,6 +15,7 @@ import Header from "../../components/Header";
 import { superAdminTabs, normalAdminTabs } from "./config";
 import { SUPER_ADMIN } from "../../constants";
 import { LOGOUT } from "../../reducers/login";
+import { FETCH_RENTAL_COMPANIES } from "../../reducers/rentalCompanies";
 
 import "./Root.css";
 
@@ -26,7 +27,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  logOut: () => dispatch({ type: LOGOUT })
+  logOut: () => dispatch({ type: LOGOUT }),
+  fetchRental: ({ token }) =>
+    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } })
 });
 
 class Root extends Component {
@@ -35,10 +38,17 @@ class Root extends Component {
     userType: PropTypes.string,
     token: PropTypes.string,
     username: PropTypes.string,
-    logOut: PropTypes.func
+    logOut: PropTypes.func,
+    fetchRental: PropTypes.func
   };
 
   logOutFunc = this.logOutFunc.bind(this);
+
+  componentDidUpdate(prevProps) {
+    if (!prevProps.token && this.props.token) {
+      this.props.fetchRental({ token: this.props.token });
+    }
+  }
 
   generateTabs() {
     if (this.props.userType === SUPER_ADMIN) {
@@ -59,7 +69,12 @@ class Root extends Component {
   generateTabComponent() {
     if (this.props.userType === SUPER_ADMIN) {
       return superAdminTabs.map((tabInfo, ind) => (
-        <Route key={ind} path={tabInfo.link} component={tabInfo.component} />
+        <Route
+          exact
+          key={ind}
+          path={tabInfo.link}
+          component={tabInfo.component}
+        />
       ));
     }
 
@@ -87,14 +102,14 @@ class Root extends Component {
           <Route
             exact
             path="/"
-            // render={() =>
-            //   this.props.userType === SUPER_ADMIN ? (
-            //     <Redirect to="/admins" />
-            //   ) : (
-            //     <Redirect to="/cars" />
-            //   )
-            // }
-            component={Home}
+            render={() =>
+              this.props.userType === SUPER_ADMIN ? (
+                <Redirect to="/admins" />
+              ) : (
+                <Redirect to="/cars" />
+              )
+            }
+            // component={Home}
           />
           {this.generateTabComponent()}
           <Footer />

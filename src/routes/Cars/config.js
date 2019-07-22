@@ -72,7 +72,13 @@ export const createNewFieldConfig = rentalCompanies => {
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO: special services
+    {
+      key: "specialServices",
+      inputType: "text",
+      label: "Special Services",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
     {
       key: "transmission",
       inputType: "text",
@@ -129,7 +135,7 @@ export const createNewFieldConfig = rentalCompanies => {
     },
     {
       key: "vehicleImage",
-      inputType: "text",
+      inputType: "file",
       label: "Vehicle Image",
       disabled: false,
       inputOption: INPUT_TEXT

@@ -9,7 +9,7 @@ import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
-import { FETCH_VEHICLES } from "../../reducers/cars";
+import { FETCH_VEHICLES, CREATE_VEHICLE } from "../../reducers/cars";
 import { SUPER_ADMIN } from "../../constants";
 
 const mapStateToProps = state => ({
@@ -22,7 +22,44 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchVehicles: ({ token }) =>
-    dispatch({ type: FETCH_VEHICLES, payload: { token } })
+    dispatch({ type: FETCH_VEHICLES, payload: { token } }),
+  createVehicle: ({
+    dailyRate,
+    dailyRateUnit,
+    locationAddress,
+    locationHours,
+    specialServices,
+    transmission,
+    vehicleType,
+    trunkSize,
+    seats,
+    rentalCompanyId,
+    vehicleMake,
+    vehicleImage,
+    vehicleNotes,
+    insuranceIds,
+    token
+  }) =>
+    dispatch({
+      type: CREATE_VEHICLE,
+      payload: {
+        dailyRate,
+        dailyRateUnit,
+        locationAddress,
+        locationHours,
+        specialServices,
+        transmission,
+        vehicleType,
+        trunkSize,
+        seats,
+        rentalCompanyId,
+        vehicleMake,
+        vehicleImage,
+        vehicleNotes,
+        insuranceIds,
+        token
+      }
+    })
 });
 
 class Cars extends Component {
@@ -30,14 +67,17 @@ class Cars extends Component {
     isLoading: PropTypes.bool,
     vehicles: PropTypes.array,
     token: PropTypes.string,
-    rentalCompanies: PropTypes.array
+    rentalCompanies: PropTypes.array,
+    fetchVehicles: PropTypes.func,
+    createVehicle: PropTypes.func
   };
 
   static defaultProps = {
     vehicles: [],
     isLoading: false,
     token: "",
-    rentalCompanies: []
+    rentalCompanies: [],
+    createVehicle: () => {}
   };
 
   state = {
@@ -75,6 +115,10 @@ class Cars extends Component {
   createNewModalAndToast() {
     this.setState({ createNewModal: false, showToast: "Create Successfully!" });
   }
+
+  handleCreate = values => {
+    this.props.createVehicle(values);
+  };
 
   theadGenerater() {
     return (
@@ -146,7 +190,7 @@ class Cars extends Component {
         )}
 
         <div className="cars-route__title">
-          <strong>Admins</strong>
+          <strong>Cars</strong>
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
@@ -182,7 +226,7 @@ class Cars extends Component {
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={() => {}}
+            handleSubmit={this.handleCreate}
             afterSubmitAction={this.createNewModalAndToast}
             inputs={createNewFieldConfig(this.props.rentalCompanies)}
             token={this.props.token}

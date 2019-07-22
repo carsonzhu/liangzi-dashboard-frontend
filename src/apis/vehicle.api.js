@@ -90,6 +90,7 @@ export const search = query => {
 const LIANG_ZI_BACKEND_URL =
   process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
 const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
+const VEHICLE_IMAGE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles/updateImage`;
 
 export const fetchVehiclesRequest = ({ token }) => {
   const fetchVehiclesRequestJSONTransform = json => {
@@ -118,7 +119,23 @@ export const fetchVehiclesRequest = ({ token }) => {
 };
 
 // TODO, more fields
-export const addVehicleRequest = ({ token }) => {
+export const addVehicleRequest = ({
+  dailyRate,
+  dailyRateUnit,
+  locationAddress,
+  locationHours,
+  specialServices,
+  transmission,
+  vehicleType,
+  trunkSize,
+  seats,
+  rentalCompanyId,
+  vehicleMake,
+  vehicleImage,
+  vehicleNotes,
+  insuranceIds,
+  token
+}) => {
   const addVehicleRequestJSONTransform = json => {
     const { newUser } = json.data.data;
 
@@ -130,12 +147,20 @@ export const addVehicleRequest = ({ token }) => {
       method: "post",
       url: VEHICLE_API,
       data: {
-        // TOOD: define the fields
-        // email,
-        // password,
-        // userType,
-        // username,
-        // allowedOperations
+        dailyRate,
+        dailyRateUnit,
+        locationAddress,
+        locationHours,
+        specialServices,
+        transmission,
+        vehicleType,
+        trunkSize,
+        seats,
+        rentalCompanyId,
+        vehicleMake,
+        vehicleImage,
+        vehicleNotes,
+        insuranceIds
       },
       headers: {
         authorization: token
@@ -182,6 +207,22 @@ export const deleteVehicleRequest = ({ vehicleId }) => {
     url: VEHICLE_API,
     data: {
       vehicleId
+    }
+  });
+};
+
+export const updateVehicleImageRequest = ({ vehicleId, file, token }) => {
+  var formData = new FormData();
+  formData.append("vehicleId", vehicleId);
+  formData.append("file", file);
+  return axios({
+    method: "post",
+    url: VEHICLE_IMAGE_API,
+    data: {
+      formData
+    },
+    headers: {
+      authorization: token
     }
   });
 };

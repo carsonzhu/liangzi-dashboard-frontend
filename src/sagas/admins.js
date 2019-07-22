@@ -66,7 +66,8 @@ function* createNewAdminAsync(action) {
     userType,
     allowedOperations,
     username,
-    token
+    token,
+    rentalCompanyId
   } = action.payload;
 
   try {
@@ -76,7 +77,8 @@ function* createNewAdminAsync(action) {
       userType,
       allowedOperations,
       username,
-      token
+      token,
+      rentalCompanyId
     });
 
     yield put({

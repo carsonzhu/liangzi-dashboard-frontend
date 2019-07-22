@@ -9,7 +9,12 @@ import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
-import { FETCH_VEHICLES, CREATE_VEHICLE } from "../../reducers/cars";
+import {
+  FETCH_VEHICLES,
+  ADD_VEHICLES,
+  UPDATE_VEHICLES
+} from "../../reducers/cars";
+import { FETCH_INSURANCES } from "../../reducers/insurances";
 import { SUPER_ADMIN } from "../../constants";
 
 const mapStateToProps = state => ({
@@ -17,13 +22,22 @@ const mapStateToProps = state => ({
   vehicles: state.cars.vehicles,
   token: state.login.token,
   rentalCompanies: state.rentalCompanies.rentalCompanies,
-  userType: state.login.userType
+  userType: state.login.userType,
+  insurances: state.insurances.insurances
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchVehicles: ({ token }) =>
     dispatch({ type: FETCH_VEHICLES, payload: { token } }),
-  createVehicle: ({
+  fetchInsurances: ({ token }) =>
+    dispatch({ type: FETCH_INSURANCES, payload: { token } }),
+  updateVehicles: ({ token, vehicleId, fieldToUpdate }) =>
+    dispatch({
+      type: UPDATE_VEHICLES,
+      payload: { token, vehicleId, fieldToUpdate }
+    }),
+  addVehicle: ({
+    token,
     dailyRate,
     dailyRateUnit,
     locationAddress,
@@ -37,12 +51,12 @@ const mapDispatchToProps = dispatch => ({
     vehicleMake,
     vehicleImage,
     vehicleNotes,
-    insuranceIds,
-    token
+    insuranceIds
   }) =>
     dispatch({
-      type: CREATE_VEHICLE,
+      type: ADD_VEHICLES,
       payload: {
+        token,
         dailyRate,
         dailyRateUnit,
         locationAddress,
@@ -56,8 +70,7 @@ const mapDispatchToProps = dispatch => ({
         vehicleMake,
         vehicleImage,
         vehicleNotes,
-        insuranceIds,
-        token
+        insuranceIds
       }
     })
 });
@@ -68,8 +81,9 @@ class Cars extends Component {
     vehicles: PropTypes.array,
     token: PropTypes.string,
     rentalCompanies: PropTypes.array,
-    fetchVehicles: PropTypes.func,
-    createVehicle: PropTypes.func
+    fetchInsurances: PropTypes.func,
+    updateVehicles: PropTypes.func,
+    addVehicle: PropTypes.func
   };
 
   static defaultProps = {
@@ -82,6 +96,7 @@ class Cars extends Component {
 
   state = {
     vehicleToShow: null,
+    showToast: false,
     createNewModal: false
   };
 
@@ -89,9 +104,11 @@ class Cars extends Component {
   openNewModal = this.openNewModal.bind(this);
   closeNewModal = this.closeNewModal.bind(this);
   createNewModalAndToast = this.createNewModalAndToast.bind(this);
+  editModalAndToast = this.editModalAndToast.bind(this);
 
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
+    this.props.fetchInsurances({ token: this.props.token });
   }
 
   componentDidUpdate(prevProps) {}
@@ -112,13 +129,13 @@ class Cars extends Component {
     this.setState({ createNewModal: false });
   }
 
+  editModalAndToast() {
+    this.setState({ vehicleToShow: null, showToast: "Update Successfully!" });
+  }
+
   createNewModalAndToast() {
     this.setState({ createNewModal: false, showToast: "Create Successfully!" });
   }
-
-  handleCreate = values => {
-    this.props.createVehicle(values);
-  };
 
   theadGenerater() {
     return (
@@ -173,7 +190,6 @@ class Cars extends Component {
   render() {
     const { vehicleToShow, createNewModal, showToast } = this.state;
 
-    console.log("this.props.vehicles", this.props.vehicles);
     return (
       <div className="cars-route">
         {!!showToast && (
@@ -190,24 +206,27 @@ class Cars extends Component {
         )}
 
         <div className="cars-route__title">
-          <strong>Cars</strong>
+          <strong>Vehicles</strong>
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.vehicles && this.props.vehicles.length && (
-            <div>
-              <Table responsive hover>
-                <thead>{this.theadGenerater()}</thead>
-                <tbody>{this.tbodyGenerator(this.props.vehicles)}</tbody>
-              </Table>
+          {this.props.vehicles &&
+            (this.props.vehicles.length ? (
+              <div>
+                <Table responsive hover>
+                  <thead>{this.theadGenerater()}</thead>
+                  <tbody>{this.tbodyGenerator(this.props.vehicles)}</tbody>
+                </Table>
 
-              <div className="cars-route__legends">
-                <p className="cars-route__legends-green">Active</p>
-                <p className="cars-route__legends-yellow">Rented</p>
-                <p className="cars-route__legends-red">Inactive</p>
+                <div className="cars-route__legends">
+                  <p className="cars-route__legends-green">Active</p>
+                  <p className="cars-route__legends-yellow">Rented</p>
+                  <p className="cars-route__legends-red">Inactive</p>
+                </div>
               </div>
-            </div>
-          )}
+            ) : (
+              <div>No Vehicle in the Record</div>
+            ))}
         </ActivityIndicator>
 
         {vehicleToShow && (
@@ -215,20 +234,24 @@ class Cars extends Component {
             toShow={true}
             data={vehicleToShow}
             handleClose={this.clearVehicleInfo}
-            handleEdit={() => {}}
-            afterSubmitAction={() => {}}
+            handleEdit={this.props.updateVehicles}
+            afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
             isSuper={this.props.userType === SUPER_ADMIN}
             rentalCompanies={this.props.rentalCompanies}
+            insurances={this.props.insurances}
           />
         )}
         {createNewModal && (
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={this.handleCreate}
+            handleSubmit={this.props.addVehicle}
             afterSubmitAction={this.createNewModalAndToast}
-            inputs={createNewFieldConfig(this.props.rentalCompanies)}
+            inputs={createNewFieldConfig({
+              rentalCompanies: this.props.rentalCompanies,
+              insurances: this.props.insurances
+            })}
             token={this.props.token}
           />
         )}

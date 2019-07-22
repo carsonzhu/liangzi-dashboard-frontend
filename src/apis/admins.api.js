@@ -11,7 +11,8 @@ export const addAdminRequest = ({
   userType,
   allowedOperations,
   username,
-  token
+  token,
+  rentalCompanyId
 }) => {
   const addAdminRequestJSONTransform = json => {
     const { newUser } = json.data.data;
@@ -28,7 +29,8 @@ export const addAdminRequest = ({
         password,
         userType,
         username,
-        allowedOperations
+        allowedOperations,
+        rentalCompanyId
       },
       headers: {
         authorization: token

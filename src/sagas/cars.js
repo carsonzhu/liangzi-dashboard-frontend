@@ -4,20 +4,25 @@ import {
   FETCH_VEHICLES,
   FETCH_VEHICLES_SUCC,
   FETCH_VEHICLES_FAIL,
-  CREATE_VEHICLE,
-  CREATE_VEHICLE_SUCC,
-  CREATE_VEHICLE_FAIL
+  ADD_VEHICLES,
+  ADD_VEHICLES_SUCC,
+  ADD_VEHICLES_FAIL,
+  UPDATE_VEHICLES,
+  UPDATE_VEHICLES_SUCC,
+  UPDATE_VEHICLES_FAIL
 } from "../reducers/cars";
 
-import { fetchVehiclesRequest, addVehicleRequest } from "../apis/vehicle.api";
+import {
+  fetchVehiclesRequest,
+  addVehicleRequest,
+  updateVehicleRequest
+} from "../apis/vehicle.api";
 
 // Sagas
 function* fetchVehiclesAsync(action) {
   const { token } = action.payload;
   try {
     const json = yield call(fetchVehiclesRequest, { token });
-
-    console.log("fetchVehicle", json);
 
     yield put({
       type: FETCH_VEHICLES_SUCC,
@@ -31,13 +36,14 @@ function* fetchVehiclesAsync(action) {
   }
 }
 
-function* createVehicleAsync(action) {
+function* addVehiclesAsync(action) {
   const {
+    token,
     dailyRate,
     dailyRateUnit,
     locationAddress,
     locationHours,
-    specialServices,
+    specialServices = "",
     transmission,
     vehicleType,
     trunkSize,
@@ -46,11 +52,12 @@ function* createVehicleAsync(action) {
     vehicleMake,
     vehicleImage,
     vehicleNotes,
-    insuranceIds,
-    token
+    insuranceIds
   } = action.payload;
+
   try {
     const json = yield call(addVehicleRequest, {
+      token,
       dailyRate,
       dailyRateUnit,
       locationAddress,
@@ -64,19 +71,45 @@ function* createVehicleAsync(action) {
       vehicleMake,
       vehicleImage,
       vehicleNotes,
-      insuranceIds,
-      token
+      insuranceIds
     });
 
-    console.log("createVehicle", json);
+    console.log("addVehicleRequest", json);
 
     yield put({
-      type: CREATE_VEHICLE_SUCC,
+      type: ADD_VEHICLES_SUCC,
       payload: json
     });
   } catch (err) {
     yield put({
-      type: CREATE_VEHICLE_FAIL,
+      type: ADD_VEHICLES_FAIL,
+      payload: { error: err }
+    });
+  }
+}
+
+function* updateVehiclesAsync(action) {
+  const { token, vehicleId, fieldToUpdate } = action.payload;
+  try {
+    yield call(updateVehicleRequest, {
+      token,
+      vehicleId,
+      fieldToUpdate
+    });
+
+    yield put({
+      type: UPDATE_VEHICLES_SUCC
+    });
+
+    const json = yield call(fetchVehiclesRequest, { token });
+
+    yield put({
+      type: FETCH_VEHICLES_SUCC,
+      payload: json
+    });
+  } catch (err) {
+    yield put({
+      type: UPDATE_VEHICLES_FAIL,
       payload: { error: err }
     });
   }
@@ -87,8 +120,12 @@ function* fetchVehiclesSaga() {
   yield takeEvery(FETCH_VEHICLES, fetchVehiclesAsync);
 }
 
-function* createVehicleSaga() {
-  yield takeEvery(CREATE_VEHICLE, createVehicleAsync);
+function* addVehiclesSaga() {
+  yield takeEvery(ADD_VEHICLES, addVehiclesAsync);
 }
 
-export default [fetchVehiclesSaga(), createVehicleSaga()];
+function* updateVehiclesSaga() {
+  yield takeEvery(UPDATE_VEHICLES, updateVehiclesAsync);
+}
+
+export default [fetchVehiclesSaga(), addVehiclesSaga(), updateVehiclesSaga()];

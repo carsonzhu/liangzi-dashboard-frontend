@@ -120,6 +120,7 @@ export const fetchVehiclesRequest = ({ token }) => {
 
 // TODO, more fields
 export const addVehicleRequest = ({
+  token,
   dailyRate,
   dailyRateUnit,
   locationAddress,
@@ -133,13 +134,12 @@ export const addVehicleRequest = ({
   vehicleMake,
   vehicleImage,
   vehicleNotes,
-  insuranceIds,
-  token
+  insuranceIds
 }) => {
   const addVehicleRequestJSONTransform = json => {
-    const { newUser } = json.data.data;
+    const { newVehicle } = json.data.data;
 
-    return { admin: newUser };
+    return { vehicle: newVehicle };
   };
 
   return new Promise((resolve, reject) => {

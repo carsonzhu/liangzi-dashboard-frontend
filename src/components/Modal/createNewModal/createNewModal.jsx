@@ -12,7 +12,9 @@ import {
   INPUT_CHECKBOX,
   INPUT_DROPDOWN,
   selectionHandler,
-  checkBoxHandler
+  checkBoxHandler,
+  locationHoursGroup,
+  locationHoursGroupHandler
 } from "../../Forms/FormGroup";
 
 class CreateNewModal extends Component {
@@ -109,6 +111,18 @@ class CreateNewModal extends Component {
               checkGroupClass: "modal__checkGroupClass",
               radioValues: radioValues,
               onChange: checkBoxHandler.bind(this, props, key),
+              onBlur: props.handleBlur
+            });
+          }
+
+          case "locationHours": {
+            return locationHoursGroup({
+              ind,
+              name: key,
+              value: props.values[key],
+              disabled,
+              labelClass: "modal__capitalized",
+              onChange: locationHoursGroupHandler.bind(this, props, key),
               onBlur: props.handleBlur
             });
           }

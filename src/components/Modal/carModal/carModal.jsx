@@ -223,97 +223,17 @@ class CarModal extends Component {
             onBlur: props.handleBlur
           });
       }
-
-      // if (key === "allowedOperations") {
-      //   return radioButtonGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     checkGroupClass: "modal__checkGroupClass",
-      //     radioValues: [
-      //       {
-      //         label: "Vehicle Operations",
-      //         name: "cars",
-      //         id: "allowed-operations__cars",
-      //         checked: props.values[key].indexOf("cars") !== -1
-      //       },
-      //       {
-      //         label: "User Operations",
-      //         name: "users",
-      //         id: "allowed-operations__users",
-      //         checked: props.values[key].indexOf("users") !== -1
-      //       },
-      //       {
-      //         label: "Insurance Operations",
-      //         name: "insurances",
-      //         id: "allowed-operations__insurances",
-      //         checked: props.values[key].indexOf("insurances") !== -1
-      //       },
-      //       {
-      //         label: "Transaction Operations",
-      //         name: "transactions",
-      //         id: "allowed-operations__transactions",
-      //         checked: props.values[key].indexOf("transactions") !== -1
-      //       }
-      //     ],
-      //     onChange: checkBoxHandler.bind(this, props, "allowedOperations"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else if (key === "isActive") {
-      //   return optionGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value: props.values[key] ? "1" : "2",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     optionValues: [
-      //       { label: "Yes", value: "1" },
-      //       { label: "No", value: "2" }
-      //     ],
-      //     onChange: selectionHandler.bind(this, props, "isActive"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else if (key === "userType") {
-      //   return optionGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value:
-      //       props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     optionValues: [
-      //       { label: "Super Admin", value: "superAdmin" },
-      //       { label: "Normal Admin", value: "normalAdmin" }
-      //     ],
-      //     onChange: selectionHandler.bind(this, props, "userType"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else {
-      //   return inputGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value: key !== "password" ? props.values[key] : "12345678",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     onChange: props.handleChange,
-      //     onBlur: props.handleBlur
-      //   });
-      // }
     });
   }
 
-  onSubmitHandler({ userId, fieldToUpdate }) {
+  onSubmitHandler({ vehicleId, fieldToUpdate }) {
     this.props.afterSubmitAction();
 
-    this.props.handleEdit({ userId, fieldToUpdate, token: this.props.token });
+    this.props.handleEdit({
+      vehicleId,
+      fieldToUpdate,
+      token: this.props.token
+    });
   }
 
   createForm({ data, beingEdited, handleClose }) {
@@ -322,14 +242,10 @@ class CarModal extends Component {
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
-            const userId = values._id;
-            const isActive = values.isActive;
+            console.log("carModal", values);
+            const vehicleId = values._id;
 
-            delete values._id;
-            delete values.password;
-            values.isActive = isActive === "1";
-
-            this.onSubmitHandler({ userId, fieldToUpdate: values });
+            this.onSubmitHandler({ vehicleId, fieldToUpdate: values });
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>

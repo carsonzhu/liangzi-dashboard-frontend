@@ -9,7 +9,7 @@ import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
-import { FETCH_VEHICLES } from "../../reducers/cars";
+import { FETCH_VEHICLES, UPDATE_VEHICLES } from "../../reducers/cars";
 import { FETCH_INSURANCES } from "../../reducers/insurances";
 import { SUPER_ADMIN } from "../../constants";
 
@@ -26,7 +26,12 @@ const mapDispatchToProps = dispatch => ({
   fetchVehicles: ({ token }) =>
     dispatch({ type: FETCH_VEHICLES, payload: { token } }),
   fetchInsurances: ({ token }) =>
-    dispatch({ type: FETCH_INSURANCES, payload: { token } })
+    dispatch({ type: FETCH_INSURANCES, payload: { token } }),
+  updateVehicles: ({ toke, vehicleId, fieldToUpdate }) =>
+    dispatch({
+      type: UPDATE_VEHICLES,
+      payload: { toke, vehicleId, fieldToUpdate }
+    })
 });
 
 class Cars extends Component {
@@ -35,7 +40,8 @@ class Cars extends Component {
     vehicles: PropTypes.array,
     token: PropTypes.string,
     rentalCompanies: PropTypes.array,
-    fetchInsurances: PropTypes.func
+    fetchInsurances: PropTypes.func,
+    updateVehicles: PropTypes.func
   };
 
   static defaultProps = {
@@ -47,6 +53,7 @@ class Cars extends Component {
 
   state = {
     vehicleToShow: null,
+    showToast: false,
     createNewModal: false
   };
 
@@ -54,6 +61,7 @@ class Cars extends Component {
   openNewModal = this.openNewModal.bind(this);
   closeNewModal = this.closeNewModal.bind(this);
   createNewModalAndToast = this.createNewModalAndToast.bind(this);
+  editModalAndToast = this.editModalAndToast.bind(this);
 
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
@@ -76,6 +84,10 @@ class Cars extends Component {
 
   closeNewModal() {
     this.setState({ createNewModal: false });
+  }
+
+  editModalAndToast() {
+    this.setState({ vehicleToShow: null, showToast: "Update Successfully!" });
   }
 
   createNewModalAndToast() {
@@ -180,8 +192,8 @@ class Cars extends Component {
             toShow={true}
             data={vehicleToShow}
             handleClose={this.clearVehicleInfo}
-            handleEdit={() => {}}
-            afterSubmitAction={() => {}}
+            handleEdit={this.props.updateVehicles}
+            afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
             isSuper={this.props.userType === SUPER_ADMIN}
             rentalCompanies={this.props.rentalCompanies}

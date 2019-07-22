@@ -124,6 +124,8 @@ class InsuranceModal extends Component {
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
+            console.log("values", values);
+
             delete values._id;
             delete values.__v;
             this.onSubmitHandler({
@@ -169,7 +171,7 @@ class InsuranceModal extends Component {
         onHide={handleClose}
       >
         <Modal.Header closeButton>
-          <Modal.Title>{data.username}</Modal.Title>
+          <Modal.Title>Insurance Info</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {this.createForm({

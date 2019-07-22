@@ -95,7 +95,7 @@ export default (state = initialState, action) => {
     case CREATE_NEW_INSURANCE_SUCC:
       return {
         ...state,
-        insurances: [...state.insurances, action.payload.admin],
+        insurances: [...state.insurances, action.payload.insurance],
         loading: false,
         error: ""
       };

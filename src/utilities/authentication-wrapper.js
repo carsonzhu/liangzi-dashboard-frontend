@@ -18,10 +18,16 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   openLoginModal: () => dispatch({ type: OPEN_LOGIN_MODAL }),
   closeLoginModal: () => dispatch({ type: CLOSE_LOGIN_MODAL }),
-  setLoginFromCookie: ({ userId, token, userType, username }) =>
+  setLoginFromCookie: ({
+    userId,
+    token,
+    userType,
+    username,
+    allowedOperations
+  }) =>
     dispatch({
       type: LOGIN_SUCC,
-      payload: { userId, userType, token, username }
+      payload: { userId, userType, token, username, allowedOperations }
     })
 });
 
@@ -49,13 +55,20 @@ export const authenticationWrapper = WrappedComponent => {
     setUserFromCached() {
       const cachedItems = checkForCached({ name: "userLogin" });
 
-      const { userId, token, userType, username } = cachedItems;
+      const {
+        userId,
+        token,
+        userType,
+        username,
+        allowedOperations
+      } = cachedItems;
 
       this.props.setLoginFromCookie({
         userId,
         token,
         userType,
-        username
+        username,
+        allowedOperations
       });
     }
 

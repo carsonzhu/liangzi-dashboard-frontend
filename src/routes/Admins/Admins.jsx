@@ -18,7 +18,8 @@ import {
 const mapStateToProps = state => ({
   isLoading: state.admins.loading,
   admins: state.admins.admins,
-  token: state.login.token
+  token: state.login.token,
+  rentalCompanies: state.rentalCompanies.rentalCompanies
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -32,11 +33,20 @@ const mapDispatchToProps = dispatch => ({
     userType,
     username,
     allowedOperations,
-    token
+    token,
+    rentalCompanyId
   }) =>
     dispatch({
       type: CREATE_NEW_ADMINS,
-      payload: { email, password, userType, username, allowedOperations, token }
+      payload: {
+        email,
+        password,
+        userType,
+        username,
+        allowedOperations,
+        token,
+        rentalCompanyId
+      }
     })
 });
 
@@ -47,7 +57,8 @@ class Admins extends Component {
     admins: PropTypes.array,
     editAdmin: PropTypes.func,
     createNewAdmin: PropTypes.func,
-    token: PropTypes.string
+    token: PropTypes.string,
+    rentalCompanies: PropTypes.array
   };
 
   static defaultProps = {
@@ -55,7 +66,8 @@ class Admins extends Component {
     isLoading: false,
     fetchAdmins: () => {},
     editAdmin: () => {},
-    createNewAdmin: () => {}
+    createNewAdmin: () => {},
+    rentalCompanies: []
   };
 
   state = {
@@ -179,6 +191,7 @@ class Admins extends Component {
             handleEdit={this.props.editAdmin}
             afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
+            rentalCompanies={this.props.rentalCompanies}
           />
         )}
         {createNewModal && (
@@ -187,7 +200,9 @@ class Admins extends Component {
             handleClose={this.closeNewModal}
             handleSubmit={this.props.createNewAdmin}
             afterSubmitAction={this.createNewModalAndToast}
-            inputs={createNewFieldConfig}
+            inputs={createNewFieldConfig({
+              rentalCompanies: this.props.rentalCompanies
+            })}
             token={this.props.token}
           />
         )}

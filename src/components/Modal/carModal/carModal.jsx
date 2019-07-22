@@ -9,7 +9,9 @@ import {
   radioButtonGroup,
   optionGroup,
   checkBoxHandler,
-  selectionHandler
+  selectionHandler,
+  locationHoursGroup,
+  locationHoursGroupHandler
 } from "../../Forms/FormGroup";
 
 class CarModal extends Component {
@@ -21,7 +23,16 @@ class CarModal extends Component {
     afterSubmitAction: PropTypes.func,
     token: PropTypes.string,
     isSuper: PropTypes.bool,
-    rentalCompanies: PropTypes.array
+    rentalCompanies: PropTypes.array,
+    insurances: PropTypes.array
+  };
+
+  static defaultProps = {
+    vehicles: [],
+    isLoading: false,
+    token: "",
+    rentalCompanies: [],
+    insurances: []
   };
 
   state = {
@@ -88,7 +99,7 @@ class CarModal extends Component {
           return "Vehicle Make";
         case "vehicleImage":
           return "Vehicle Image";
-        case "vehilceNotes":
+        case "vehicleNotes":
           return "Vehicle Notes";
         case "insuranceIds":
           return "Insurance";
@@ -118,7 +129,7 @@ class CarModal extends Component {
       "trunkSize",
       "seats",
       "vehicleMake",
-      "vehicleNote",
+      "vehicleNotes",
       "insuranceIds",
       "vehicleStatus"
     ];
@@ -159,17 +170,14 @@ class CarModal extends Component {
           });
         }
 
-        // TODO
         case "locationHours": {
-          return inputGroup({
-            ind: ind,
-            label: labelHelper(key),
-            type: inputTypeHelper(key),
-            value: JSON.stringify(props.values[key]),
+          return locationHoursGroup({
+            ind,
             name: key,
+            value: props.values[key],
             disabled: disabledLogic(key),
             labelClass: "modal__capitalized",
-            onChange: props.handleChange,
+            onChange: locationHoursGroupHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
@@ -187,7 +195,7 @@ class CarModal extends Component {
               { label: "Automatic", value: "auto" },
               { label: "Manual", value: "manual" }
             ],
-            onChange: selectionHandler.bind(this, props, "isActive"),
+            onChange: selectionHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
@@ -206,10 +214,28 @@ class CarModal extends Component {
               { label: "UNAVAILABLE", value: "UNAVAILABLE" },
               { label: "RENTED", value: "RENTED" }
             ],
-            onChange: selectionHandler.bind(this, props, "isActive"),
+            onChange: selectionHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
+
+        case "insuranceIds":
+          return radioButtonGroup({
+            ind: ind,
+            label: labelHelper(key),
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            checkGroupClass: "modal__checkGroupClass",
+            radioValues: this.props.insurances.map(insurance => ({
+              label: `${insurance.name} from ${insurance.rentalCompanyName}`,
+              name: insurance._id,
+              id: "insurances",
+              checked: props.values[key].indexOf(insurance._id) !== -1
+            })),
+            onChange: checkBoxHandler.bind(this, props, key),
+            onBlur: props.handleBlur
+          });
 
         default:
           return inputGroup({
@@ -224,97 +250,17 @@ class CarModal extends Component {
             onBlur: props.handleBlur
           });
       }
-
-      // if (key === "allowedOperations") {
-      //   return radioButtonGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     checkGroupClass: "modal__checkGroupClass",
-      //     radioValues: [
-      //       {
-      //         label: "Vehicle Operations",
-      //         name: "cars",
-      //         id: "allowed-operations__cars",
-      //         checked: props.values[key].indexOf("cars") !== -1
-      //       },
-      //       {
-      //         label: "User Operations",
-      //         name: "users",
-      //         id: "allowed-operations__users",
-      //         checked: props.values[key].indexOf("users") !== -1
-      //       },
-      //       {
-      //         label: "Insurance Operations",
-      //         name: "insurances",
-      //         id: "allowed-operations__insurances",
-      //         checked: props.values[key].indexOf("insurances") !== -1
-      //       },
-      //       {
-      //         label: "Transaction Operations",
-      //         name: "transactions",
-      //         id: "allowed-operations__transactions",
-      //         checked: props.values[key].indexOf("transactions") !== -1
-      //       }
-      //     ],
-      //     onChange: checkBoxHandler.bind(this, props, "allowedOperations"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else if (key === "isActive") {
-      //   return optionGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value: props.values[key] ? "1" : "2",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     optionValues: [
-      //       { label: "Yes", value: "1" },
-      //       { label: "No", value: "2" }
-      //     ],
-      //     onChange: selectionHandler.bind(this, props, "isActive"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else if (key === "userType") {
-      //   return optionGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value:
-      //       props.values[key] === "superAdmin" ? "superAdmin" : "normalAdmin",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     optionValues: [
-      //       { label: "Super Admin", value: "superAdmin" },
-      //       { label: "Normal Admin", value: "normalAdmin" }
-      //     ],
-      //     onChange: selectionHandler.bind(this, props, "userType"),
-      //     onBlur: props.handleBlur
-      //   });
-      // } else {
-      //   return inputGroup({
-      //     ind: ind,
-      //     label: labelHelper(key),
-      //     type: inputTypeHelper(key),
-      //     value: key !== "password" ? props.values[key] : "12345678",
-      //     name: key,
-      //     disabled: disabledLogic(key),
-      //     labelClass: "modal__capitalized",
-      //     onChange: props.handleChange,
-      //     onBlur: props.handleBlur
-      //   });
-      // }
     });
   }
 
-  onSubmitHandler({ userId, fieldToUpdate }) {
+  onSubmitHandler({ vehicleId, fieldToUpdate }) {
     this.props.afterSubmitAction();
 
-    this.props.handleEdit({ userId, fieldToUpdate, token: this.props.token });
+    this.props.handleEdit({
+      vehicleId,
+      fieldToUpdate,
+      token: this.props.token
+    });
   }
 
   createForm({ data, beingEdited, handleClose }) {
@@ -323,14 +269,12 @@ class CarModal extends Component {
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
-            const userId = values._id;
-            const isActive = values.isActive;
+            const vehicleId = values._id;
 
+            delete values.vehicleImage;
             delete values._id;
-            delete values.passowrd;
-            values.isActive = isActive === "1";
-
-            this.onSubmitHandler({ userId, fieldToUpdate: values });
+            delete values.__v;
+            this.onSubmitHandler({ vehicleId, fieldToUpdate: values });
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>

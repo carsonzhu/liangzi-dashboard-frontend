@@ -118,11 +118,27 @@ export const fetchVehiclesRequest = ({ token }) => {
 };
 
 // TODO, more fields
-export const addVehicleRequest = ({ token }) => {
+export const addVehicleRequest = ({
+  token,
+  dailyRate,
+  dailyRateUnit,
+  locationAddress,
+  locationHours,
+  specialServices,
+  transmission,
+  vehicleType,
+  trunkSize,
+  seats,
+  rentalCompanyId,
+  vehicleMake,
+  vehicleImage,
+  vehicleNotes,
+  insuranceIds
+}) => {
   const addVehicleRequestJSONTransform = json => {
-    const { newUser } = json.data.data;
+    const { newVehicle } = json.data.data;
 
-    return { admin: newUser };
+    return { vehicle: newVehicle };
   };
 
   return new Promise((resolve, reject) => {
@@ -130,12 +146,20 @@ export const addVehicleRequest = ({ token }) => {
       method: "post",
       url: VEHICLE_API,
       data: {
-        // TOOD: define the fields
-        // email,
-        // password,
-        // userType,
-        // username,
-        // allowedOperations
+        dailyRate,
+        dailyRateUnit,
+        locationAddress,
+        locationHours,
+        specialServices,
+        transmission,
+        vehicleType,
+        trunkSize,
+        seats,
+        rentalCompanyId,
+        vehicleMake,
+        vehicleImage,
+        vehicleNotes,
+        insuranceIds
       },
       headers: {
         authorization: token

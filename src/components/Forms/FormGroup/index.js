@@ -153,6 +153,16 @@ export const checkBoxHandler = function checkBoxHandler(
   }
 };
 
+export const isActiveHandler = function isActiveHandler(
+  formikProps,
+  key,
+  event
+) {
+  const value = event.target.value;
+
+  formikProps.setFieldValue(key, value === "1", false);
+};
+
 export const selectionHandler = function selectionHandler(
   formikProps,
   key,
@@ -276,14 +286,14 @@ export const locationHoursGroup = ({
               key={ind}
               style={{
                 display: "flex",
-                "flex-direction": "row",
-                "justify-content": "space-between"
+                flexDirection: "row",
+                justifyContent: "space-between"
               }}
             >
               <p
                 style={{
-                  "padding-right": "1rem",
-                  "font-size": "1.3rem",
+                  paddingRight: "1rem",
+                  fontSize: "1.3rem",
                   width: "7rem"
                 }}
               >

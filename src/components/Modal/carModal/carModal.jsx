@@ -90,7 +90,7 @@ class CarModal extends Component {
           return "Vehicle Make";
         case "vehicleImage":
           return "Vehicle Image";
-        case "vehilceNotes":
+        case "vehicleNotes":
           return "Vehicle Notes";
         case "insuranceIds":
           return "Insurance";
@@ -120,11 +120,16 @@ class CarModal extends Component {
       "trunkSize",
       "seats",
       "vehicleMake",
-      "vehicleNote",
+      "vehicleNotes",
       "insuranceIds",
       "vehicleStatus"
     ];
-    const notEditabled = ["_id", "vehicleImage", "rentalCompanyId"];
+    const notEditabled = [
+      "_id",
+      "vehicleImage",
+      "rentalCompanyId",
+      "insuranceIds"
+    ];
     if (this.props.isSuper) {
       notEditabled.push("dailyRate");
     } else {
@@ -242,9 +247,11 @@ class CarModal extends Component {
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
-            console.log("carModal", values);
             const vehicleId = values._id;
 
+            delete values.vehicleImage;
+            delete values._id;
+            delete values.__v;
             this.onSubmitHandler({ vehicleId, fieldToUpdate: values });
           }}
           render={props => (

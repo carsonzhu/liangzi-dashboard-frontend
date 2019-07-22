@@ -71,6 +71,7 @@ function* createNewAdminAsync(action) {
   } = action.payload;
 
   try {
+    console.log("action.payload", action.payload);
     const { admin } = yield call(addAdminRequest, {
       email,
       password,

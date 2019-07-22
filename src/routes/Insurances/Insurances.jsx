@@ -100,7 +100,7 @@ class Insurances extends Component {
   }
 
   tbodyGenerator({ insurances }) {
-    return insurances.map((info, ind) => (
+    return insurances.map((info = {}, ind) => (
       <tr key={ind} onClick={this.openEditModel.bind(this, info)}>
         <td>{ind}</td>
         <td>{info.rentalCompanyName}</td>

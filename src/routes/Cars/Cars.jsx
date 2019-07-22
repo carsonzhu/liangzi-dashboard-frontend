@@ -9,7 +9,11 @@ import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
 
-import { FETCH_VEHICLES, UPDATE_VEHICLES } from "../../reducers/cars";
+import {
+  FETCH_VEHICLES,
+  ADD_VEHICLES,
+  UPDATE_VEHICLES
+} from "../../reducers/cars";
 import { FETCH_INSURANCES } from "../../reducers/insurances";
 import { SUPER_ADMIN } from "../../constants";
 
@@ -27,10 +31,47 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: FETCH_VEHICLES, payload: { token } }),
   fetchInsurances: ({ token }) =>
     dispatch({ type: FETCH_INSURANCES, payload: { token } }),
-  updateVehicles: ({ toke, vehicleId, fieldToUpdate }) =>
+  updateVehicles: ({ token, vehicleId, fieldToUpdate }) =>
     dispatch({
       type: UPDATE_VEHICLES,
-      payload: { toke, vehicleId, fieldToUpdate }
+      payload: { token, vehicleId, fieldToUpdate }
+    }),
+  addVehicle: ({
+    token,
+    dailyRate,
+    dailyRateUnit,
+    locationAddress,
+    locationHours,
+    specialServices,
+    transmission,
+    vehicleType,
+    trunkSize,
+    seats,
+    rentalCompanyId,
+    vehicleMake,
+    vehicleImage,
+    vehicleNotes,
+    insuranceIds
+  }) =>
+    dispatch({
+      type: ADD_VEHICLES,
+      payload: {
+        token,
+        dailyRate,
+        dailyRateUnit,
+        locationAddress,
+        locationHours,
+        specialServices,
+        transmission,
+        vehicleType,
+        trunkSize,
+        seats,
+        rentalCompanyId,
+        vehicleMake,
+        vehicleImage,
+        vehicleNotes,
+        insuranceIds
+      }
     })
 });
 
@@ -41,7 +82,8 @@ class Cars extends Component {
     token: PropTypes.string,
     rentalCompanies: PropTypes.array,
     fetchInsurances: PropTypes.func,
-    updateVehicles: PropTypes.func
+    updateVehicles: PropTypes.func,
+    addVehicle: PropTypes.func
   };
 
   static defaultProps = {
@@ -164,7 +206,7 @@ class Cars extends Component {
         )}
 
         <div className="cars-route__title">
-          <strong>Admins</strong>
+          <strong>Vehicles</strong>
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
@@ -203,7 +245,7 @@ class Cars extends Component {
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={() => {}}
+            handleSubmit={this.props.addVehicle}
             afterSubmitAction={this.createNewModalAndToast}
             inputs={createNewFieldConfig({
               rentalCompanies: this.props.rentalCompanies,

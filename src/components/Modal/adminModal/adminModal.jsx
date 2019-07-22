@@ -9,7 +9,8 @@ import {
   radioButtonGroup,
   optionGroup,
   checkBoxHandler,
-  selectionHandler
+  selectionHandler,
+  isActiveHandler
 } from "../../Forms/FormGroup";
 
 class AdminModal extends Component {
@@ -163,7 +164,7 @@ class AdminModal extends Component {
               { label: "Yes", value: "1" },
               { label: "No", value: "2" }
             ],
-            onChange: selectionHandler.bind(this, props, key),
+            onChange: isActiveHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
@@ -218,9 +219,10 @@ class AdminModal extends Component {
             const userId = values._id;
             const isActive = values.isActive;
 
+            console.log("isActive", isActive);
+
             delete values._id;
             delete values.password;
-            values.isActive = isActive === "1";
 
             this.onSubmitHandler({ userId, fieldToUpdate: values });
           }}

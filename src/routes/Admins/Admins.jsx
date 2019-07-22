@@ -33,11 +33,20 @@ const mapDispatchToProps = dispatch => ({
     userType,
     username,
     allowedOperations,
-    token
+    token,
+    rentalCompanyId
   }) =>
     dispatch({
       type: CREATE_NEW_ADMINS,
-      payload: { email, password, userType, username, allowedOperations, token }
+      payload: {
+        email,
+        password,
+        userType,
+        username,
+        allowedOperations,
+        token,
+        rentalCompanyId
+      }
     })
 });
 

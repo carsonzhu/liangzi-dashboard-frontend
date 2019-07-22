@@ -88,7 +88,6 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       disabled: false,
       inputOption: "locationHours"
     },
-    // TODO: special services
     {
       key: "transmission",
       inputType: "text",
@@ -154,6 +153,15 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       disabled: false,
       inputOption: INPUT_CHECKBOX,
       radioValues: insuranceCheckBoxes
+    },
+    {
+      key: "specialServices",
+      inputType: "text",
+      label: "Special Services",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false,
+      placeholder: "(OPTIONAL)"
     }
   ];
 };

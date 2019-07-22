@@ -23,7 +23,8 @@ const mapStateToProps = state => ({
   loginModal: state.componentState.loginModal,
   userType: state.login.userType,
   token: state.login.token,
-  username: state.login.username
+  username: state.login.username,
+  allowedOperations: state.login.allowedOperations
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -39,7 +40,12 @@ class Root extends Component {
     token: PropTypes.string,
     username: PropTypes.string,
     logOut: PropTypes.func,
-    fetchRental: PropTypes.func
+    fetchRental: PropTypes.func,
+    allowedOperations: PropTypes.array
+  };
+
+  static defaultProps = {
+    allowedOperations: []
   };
 
   logOutFunc = this.logOutFunc.bind(this);
@@ -57,13 +63,16 @@ class Root extends Component {
           {tabInfo.title}
         </NavLink>
       ));
+    } else {
+      const filteredTabs = normalAdminTabs.filter(tab =>
+        this.props.allowedOperations.includes(tab.id)
+      );
+      return filteredTabs.map((tabInfo, ind) => (
+        <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
+          {tabInfo.title}
+        </NavLink>
+      ));
     }
-
-    return normalAdminTabs.map((tabInfo, ind) => (
-      <NavLink key={ind} exact={true} className="nav-link" to={tabInfo.link}>
-        {tabInfo.title}
-      </NavLink>
-    ));
   }
 
   generateTabComponent() {

@@ -8,7 +8,7 @@ import Insurances from "../Insurances";
 // Fake data
 const superAdminTabs = [
   { title: "Admin Management", link: "/admins", component: Admins },
-  { title: "Car Management", link: "/cars", component: Cars },
+  { title: "Vehicle Management", link: "/cars", component: Cars },
   {
     title: "Insurance Management",
     link: "/insurances",
@@ -17,8 +17,9 @@ const superAdminTabs = [
 ];
 
 const normalAdminTabs = [
-  { title: "Car Management", link: "/cars", component: Cars },
+  { id: "cars", title: "Vehicle Management", link: "/cars", component: Cars },
   {
+    id: "insurances",
     title: "Insurance Management",
     link: "/insurances",
     component: Insurances

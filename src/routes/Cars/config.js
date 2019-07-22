@@ -24,7 +24,7 @@ export const getRentalCompanyName = ({ rentalCompanyId, rentalCompanies }) => {
   return rentalCompanyName;
 };
 
-export const createNewFieldConfig = rentalCompanies => {
+export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
   const PLACEHOLDER = label => ({
     label: label,
     value: "",
@@ -34,6 +34,12 @@ export const createNewFieldConfig = rentalCompanies => {
   const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
     label: rentalCompany.name,
     value: rentalCompany._id
+  }));
+
+  const insuranceCheckBoxes = insurances.map(insurance => ({
+    label: `${insurance.name} from ${insurance.rentalCompanyName}`,
+    name: insurance._id,
+    id: "insurances"
   }));
 
   return [
@@ -55,6 +61,17 @@ export const createNewFieldConfig = rentalCompanies => {
         { label: "CAD", value: "CAD" },
         { label: "USD", value: "USD" },
         { label: "RMB", value: "RMB" }
+      ]
+    },
+    {
+      key: "rentalCompanyId",
+      inputType: "text",
+      label: "Rental Company Id",
+      disabled: false,
+      inputOption: INPUT_DROPDOWN,
+      optionValues: [
+        PLACEHOLDER("Select Rental Company"),
+        ...rentalCompanyDropdown
       ]
     },
     {
@@ -107,18 +124,6 @@ export const createNewFieldConfig = rentalCompanies => {
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO: dropdown
-    {
-      key: "rentalCompanyId",
-      inputType: "text",
-      label: "Rental Company Id",
-      disabled: false,
-      inputOption: INPUT_DROPDOWN,
-      optionValues: [
-        PLACEHOLDER("Select Rental Company"),
-        ...rentalCompanyDropdown
-      ]
-    },
     {
       key: "vehicleMake",
       inputType: "text",
@@ -148,7 +153,8 @@ export const createNewFieldConfig = rentalCompanies => {
       inputType: "text",
       label: "Insurance Ids",
       disabled: false,
-      inputOption: INPUT_TEXT
+      inputOption: INPUT_CHECKBOX,
+      radioValues: insuranceCheckBoxes
     }
   ];
 };

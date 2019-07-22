@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Table, Toast, Button } from "react-bootstrap";
+import _ from "lodash";
+
 import "./Insurances.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
@@ -140,11 +142,29 @@ class Insurances extends Component {
   }
 
   editModalAndToast() {
-    this.setState({ insuranceToShow: null, showToast: "Update Successfully!" });
+    const errorMsg = _.get(
+      this.props.error,
+      "error.response.data.description",
+      ""
+    );
+
+    this.setState({
+      insuranceToShow: null,
+      showToast: errorMsg || "Update Successfully!"
+    });
   }
 
   createNewModalAndToast() {
-    this.setState({ createNewModal: false, showToast: "Create Successfully!" });
+    const errorMsg = _.get(
+      this.props.error,
+      "error.response.data.description",
+      ""
+    );
+
+    this.setState({
+      createNewModal: false,
+      showToast: errorMsg || "Create Successfully!"
+    });
   }
 
   render() {
@@ -169,21 +189,24 @@ class Insurances extends Component {
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.insurances && this.props.insurances.length && (
-            <div>
-              <Table responsive hover>
-                <thead>
-                  {this.theadGenerater({
-                    fields: Object.keys(this.props.insurances[0])
-                  })}
-                </thead>
+          {this.props.insurances &&
+            (this.props.insurances.length ? (
+              <div>
+                <Table responsive hover>
+                  <thead>
+                    {this.theadGenerater({
+                      fields: Object.keys(this.props.insurances[0])
+                    })}
+                  </thead>
 
-                <tbody>
-                  {this.tbodyGenerator({ insurances: this.props.insurances })}
-                </tbody>
-              </Table>
-            </div>
-          )}
+                  <tbody>
+                    {this.tbodyGenerator({ insurances: this.props.insurances })}
+                  </tbody>
+                </Table>
+              </div>
+            ) : (
+              <div>No Insurance in the Record</div>
+            ))}
         </ActivityIndicator>
 
         {insuranceToShow && (

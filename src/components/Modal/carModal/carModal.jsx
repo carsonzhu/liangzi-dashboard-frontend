@@ -327,7 +327,7 @@ class CarModal extends Component {
             const isActive = values.isActive;
 
             delete values._id;
-            delete values.passowrd;
+            delete values.password;
             values.isActive = isActive === "1";
 
             this.onSubmitHandler({ userId, fieldToUpdate: values });

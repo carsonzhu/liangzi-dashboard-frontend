@@ -23,7 +23,16 @@ class CarModal extends Component {
     afterSubmitAction: PropTypes.func,
     token: PropTypes.string,
     isSuper: PropTypes.bool,
-    rentalCompanies: PropTypes.array
+    rentalCompanies: PropTypes.array,
+    insurances: PropTypes.array
+  };
+
+  static defaultProps = {
+    vehicles: [],
+    isLoading: false,
+    token: "",
+    rentalCompanies: [],
+    insurances: []
   };
 
   state = {
@@ -124,12 +133,7 @@ class CarModal extends Component {
       "insuranceIds",
       "vehicleStatus"
     ];
-    const notEditabled = [
-      "_id",
-      "vehicleImage",
-      "rentalCompanyId",
-      "insuranceIds"
-    ];
+    const notEditabled = ["_id", "vehicleImage", "rentalCompanyId"];
     if (this.props.isSuper) {
       notEditabled.push("dailyRate");
     } else {
@@ -214,6 +218,24 @@ class CarModal extends Component {
             onBlur: props.handleBlur
           });
         }
+
+        case "insuranceIds":
+          return radioButtonGroup({
+            ind: ind,
+            label: labelHelper(key),
+            name: key,
+            disabled: disabledLogic(key),
+            labelClass: "modal__capitalized",
+            checkGroupClass: "modal__checkGroupClass",
+            radioValues: this.props.insurances.map(insurance => ({
+              label: `${insurance.name} from ${insurance.rentalCompanyName}`,
+              name: insurance._id,
+              id: "insurances",
+              checked: props.values[key].indexOf(insurance._id) !== -1
+            })),
+            onChange: checkBoxHandler.bind(this, props, key),
+            onBlur: props.handleBlur
+          });
 
         default:
           return inputGroup({

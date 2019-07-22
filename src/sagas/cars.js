@@ -37,7 +37,6 @@ function* fetchVehiclesAsync(action) {
 }
 
 function* addVehiclesAsync(action) {
-  console.log("addVehiclesAsync", action.payload);
   const {
     token,
     dailyRate,
@@ -75,7 +74,6 @@ function* addVehiclesAsync(action) {
       insuranceIds
     });
 
-    console.log("json", json);
     yield put({
       type: ADD_VEHICLES_SUCC,
       payload: json
@@ -89,7 +87,6 @@ function* addVehiclesAsync(action) {
 }
 
 function* updateVehiclesAsync(action) {
-  console.log("updateVehiclesAsync", action.payload);
   const { token, vehicleId, fieldToUpdate } = action.payload;
   try {
     yield call(updateVehicleRequest, {

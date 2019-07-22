@@ -189,7 +189,6 @@ class Cars extends Component {
   render() {
     const { vehicleToShow, createNewModal, showToast } = this.state;
 
-    console.log("this.props.vehicles", this.props.vehicles);
     return (
       <div className="cars-route">
         {!!showToast && (
@@ -239,6 +238,7 @@ class Cars extends Component {
             token={this.props.token}
             isSuper={this.props.userType === SUPER_ADMIN}
             rentalCompanies={this.props.rentalCompanies}
+            insurances={this.props.insurances}
           />
         )}
         {createNewModal && (

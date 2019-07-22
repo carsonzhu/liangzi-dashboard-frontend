@@ -215,14 +215,11 @@ class AdminModal extends Component {
         <Formik
           initialValues={data}
           onSubmit={(values, _) => {
-            console.log("values", values);
             const userId = values._id;
-            const isActive = values.isActive;
-
-            console.log("isActive", isActive);
 
             delete values._id;
             delete values.password;
+            delete values.__v;
 
             this.onSubmitHandler({ userId, fieldToUpdate: values });
           }}

@@ -109,8 +109,6 @@ function* createNewInsuranceAsync(action) {
       token
     });
 
-    console.log("insurance", insurance);
-
     yield put({
       type: CREATE_NEW_INSURANCE_SUCC,
       payload: { insurance }

@@ -9,7 +9,9 @@ import {
   radioButtonGroup,
   optionGroup,
   checkBoxHandler,
-  selectionHandler
+  selectionHandler,
+  locationHoursGroup,
+  locationHoursGroupHandler
 } from "../../Forms/FormGroup";
 
 class CarModal extends Component {
@@ -159,17 +161,14 @@ class CarModal extends Component {
           });
         }
 
-        // TODO
         case "locationHours": {
-          return inputGroup({
-            ind: ind,
-            label: labelHelper(key),
-            type: inputTypeHelper(key),
-            value: JSON.stringify(props.values[key]),
+          return locationHoursGroup({
+            ind,
             name: key,
+            value: props.values[key],
             disabled: disabledLogic(key),
             labelClass: "modal__capitalized",
-            onChange: props.handleChange,
+            onChange: locationHoursGroupHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
@@ -187,7 +186,7 @@ class CarModal extends Component {
               { label: "Automatic", value: "auto" },
               { label: "Manual", value: "manual" }
             ],
-            onChange: selectionHandler.bind(this, props, "isActive"),
+            onChange: selectionHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }
@@ -206,7 +205,7 @@ class CarModal extends Component {
               { label: "UNAVAILABLE", value: "UNAVAILABLE" },
               { label: "RENTED", value: "RENTED" }
             ],
-            onChange: selectionHandler.bind(this, props, "isActive"),
+            onChange: selectionHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }

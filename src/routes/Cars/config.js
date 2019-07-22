@@ -81,13 +81,12 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO
     {
       key: "locationHours",
       inputType: "text",
       label: "Location Hours",
       disabled: false,
-      inputOption: INPUT_TEXT
+      inputOption: "locationHours"
     },
     // TODO: special services
     {

@@ -1,9 +1,9 @@
 import axios from "axios";
 
 //Insurance User
-const LIANG_ZI_BACKEND_URL =
-  process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
-const INSURANCE_API = `${LIANG_ZI_BACKEND_URL}/apis/insurances`;
+const REACT_APP_LIANG_ZI_BACKEND_URL =
+  process.env.REACT_APP_LIANG_ZI_BACKEND_URL || "http://localhost:4000";
+const INSURANCE_API = `${REACT_APP_LIANG_ZI_BACKEND_URL}/apis/insurances`;
 
 export const addInsuranceRequest = ({
   rentalCompanyId,

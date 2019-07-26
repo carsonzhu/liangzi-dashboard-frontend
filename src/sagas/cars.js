@@ -15,7 +15,8 @@ import {
 import {
   fetchVehiclesRequest,
   addVehicleRequest,
-  updateVehicleRequest
+  updateVehicleRequest,
+  updateVehicleImageRequest
 } from "../apis/vehicle.api";
 
 // Sagas
@@ -55,6 +56,8 @@ function* addVehiclesAsync(action) {
     insuranceIds
   } = action.payload;
 
+  console.log("vehicleImage", vehicleImage);
+
   try {
     const json = yield call(addVehicleRequest, {
       token,
@@ -76,9 +79,23 @@ function* addVehiclesAsync(action) {
 
     console.log("addVehicleRequest", json);
 
+    const vehicleId = json.vehicle._id;
+
+    yield call(updateVehicleImageRequest, {
+      vehicleId,
+      file: vehicleImage,
+      token
+    });
+
     yield put({
-      type: ADD_VEHICLES_SUCC,
-      payload: json
+      type: ADD_VEHICLES_SUCC
+    });
+
+    const result = yield call(fetchVehiclesRequest, { token });
+
+    yield put({
+      type: FETCH_VEHICLES_SUCC,
+      payload: result
     });
   } catch (err) {
     yield put({

@@ -46,7 +46,6 @@ export default (state = initialState, action) => {
     case ADD_VEHICLES_SUCC:
       return {
         ...state,
-        vehicles: [...state.vehicles, action.payload.vehicle],
         loading: false,
         error: ""
       };

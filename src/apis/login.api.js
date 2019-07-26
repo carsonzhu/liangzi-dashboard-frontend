@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const LIANG_ZI_BACKEND_URL =
-  process.env.LIANG_ZI_BACKEND_URL || "http://localhost:4000";
-const LOGIN_API = `${LIANG_ZI_BACKEND_URL}/apis/authentication/login`;
-const REGISTER_API = `${LIANG_ZI_BACKEND_URL}/apis/authentication/register/email`;
+const REACT_APP_LIANG_ZI_BACKEND_URL =
+  process.env.REACT_APP_LIANG_ZI_BACKEND_URL || "http://localhost:4000";
+const LOGIN_API = `${REACT_APP_LIANG_ZI_BACKEND_URL}/apis/authentication/login`;
+const REGISTER_API = `${REACT_APP_LIANG_ZI_BACKEND_URL}/apis/authentication/register/email`;
 
 // Request
 export const loginRequest = ({ email, password }) => {

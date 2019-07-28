@@ -14,7 +14,8 @@ import {
   selectionHandler,
   checkBoxHandler,
   locationHoursGroup,
-  locationHoursGroupHandler
+  locationHoursGroupHandler,
+  booleanDropdownHandler
 } from "../../Forms/FormGroup";
 
 class EditModal extends Component {
@@ -52,33 +53,29 @@ class EditModal extends Component {
   formGenerator({
     props,
     beingEdited,
-    inputs = [
-      {
-        key: "",
-        inputType: "text", //html input type: email, password, date, etc
-        value: "",
-        label: "",
-        disabled: false,
-        inputOption: INPUT_TEXT,
-        optionValues: [{ label: "", value: "" }], // optional (only for INPUT_DOWNDOWN)
-        // optional (only for INPUT_CHECKBOX)
-        radioValues: [
-          {
-            label: "",
-            name: "",
-            id: "",
-            checked: true
-          }
-        ],
-        placeholder: "" //optional for text
-      }
-    ]
+    inputs = () => ({
+      key: "",
+      inputType: "text", //html input type: email, password, date, etc
+      value: "",
+      label: "",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      optionValues: [{ label: "", value: "" }], // optional (only for INPUT_DOWNDOWN)
+      // optional (only for INPUT_CHECKBOX)
+      radioValues: [
+        {
+          label: "",
+          name: "",
+          id: "",
+          checked: true
+        }
+      ],
+      placeholder: "" //optional for text
+    })
   }) {
-    console.log("beingEdited", beingEdited);
-
     const disabledLogic = disabled => !beingEdited || disabled;
 
-    return inputs.map(
+    return inputs({ values: props.values }).map(
       (
         {
           key,
@@ -99,7 +96,7 @@ class EditModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
               disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
@@ -114,7 +111,7 @@ class EditModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
               disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
@@ -142,10 +139,25 @@ class EditModal extends Component {
             return locationHoursGroup({
               ind,
               name: key,
-              value: props.values[key],
+              value: value,
               disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
+              onBlur: props.handleBlur
+            });
+          }
+
+          case "bool": {
+            return optionGroup({
+              ind: ind,
+              label: label,
+              type: inputType,
+              value: value,
+              name: key,
+              disabled: disabledLogic(disabled),
+              labelClass: "modal__capitalized",
+              optionValues: optionValues,
+              onChange: booleanDropdownHandler.bind(this, props, key),
               onBlur: props.handleBlur
             });
           }
@@ -155,7 +167,7 @@ class EditModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
               disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",

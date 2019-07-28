@@ -109,6 +109,7 @@ export const radioButtonGroup = ({
               defaultChecked={value.checked}
               onChange={onChange}
               onBlur={onBlur}
+              checked={value.checked}
             />
           );
         })}

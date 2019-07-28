@@ -1,5 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import { fetchError } from "./utilities";
+
 import {
   FETCH_VEHICLES,
   FETCH_VEHICLES_SUCC,
@@ -32,7 +34,7 @@ function* fetchVehiclesAsync(action) {
   } catch (err) {
     yield put({
       type: FETCH_VEHICLES_FAIL,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -100,7 +102,7 @@ function* addVehiclesAsync(action) {
   } catch (err) {
     yield put({
       type: ADD_VEHICLES_FAIL,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -127,7 +129,7 @@ function* updateVehiclesAsync(action) {
   } catch (err) {
     yield put({
       type: UPDATE_VEHICLES_FAIL,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }

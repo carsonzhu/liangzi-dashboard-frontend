@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import { fetchError } from "./utilities";
 import {
   FETCH_ADMINS,
   FETCH_ADMINS_SUCC,
@@ -30,7 +31,7 @@ function* fetchAdminsAsync(action) {
   } catch (err) {
     yield put({
       type: FETCH_ADMINS_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -54,7 +55,7 @@ function* editAdminAsync(action) {
   } catch (err) {
     yield put({
       type: EDIT_ADMINS_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -88,7 +89,7 @@ function* createNewAdminAsync(action) {
   } catch (err) {
     yield put({
       type: CREATE_NEW_ADMINS_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }

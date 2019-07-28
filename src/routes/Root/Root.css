@@ -27,3 +27,11 @@
     align-items: center;
     margin: 2rem 0;
 }
+
+form .error-msg {
+    color: #ff4444;
+    text-align: right;
+    font-size: 0.6rem;
+    margin-top: -0.5rem;
+    padding-bottom: 1rem;
+}

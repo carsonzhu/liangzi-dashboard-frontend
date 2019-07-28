@@ -15,23 +15,27 @@ export const inputGroup = ({
   labelClass,
   onChange,
   onBlur,
+  error,
   placeholder = "",
   required = true
 }) => {
   return (
-    <Form.Group key={ind} controlId={`form-${name}`}>
-      <Form.Label className={labelClass}>{label}</Form.Label>
-      <Form.Control
-        type={type}
-        value={value}
-        name={name}
-        disabled={disabled}
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        required={required}
-      />
-    </Form.Group>
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
+        <Form.Control
+          type={type}
+          value={value}
+          name={name}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          required={required}
+        />
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
   );
 };
 
@@ -43,42 +47,46 @@ export const optionGroup = ({
   name,
   disabled,
   labelClass,
+  error,
   optionValues = [{ label: "", value: "" }],
   onChange,
   onBlur,
   required = true
 }) => {
   return (
-    <Form.Group key={ind} controlId={`form-${name}`}>
-      <Form.Label className={labelClass}>{label}</Form.Label>
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
 
-      <Form.Control
-        type={type}
-        as="select"
-        value={value}
-        name={name}
-        disabled={disabled}
-        onChange={onChange}
-        onBlur={onBlur}
-        required={required}
-      >
-        {optionValues.map(option => {
-          if (option.placeholder) {
-            return (
-              <option
-                value={option.value}
-                disabled={option.disabled}
-                selected={option.selected}
-              >
-                {option.label}
-              </option>
-            );
-          }
+        <Form.Control
+          type={type}
+          as="select"
+          value={value}
+          name={name}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          required={required}
+        >
+          {optionValues.map(option => {
+            if (option.placeholder) {
+              return (
+                <option
+                  value={option.value}
+                  disabled={option.disabled}
+                  selected={option.selected}
+                >
+                  {option.label}
+                </option>
+              );
+            }
 
-          return <option value={option.value}>{option.label}</option>;
-        })}
-      </Form.Control>
-    </Form.Group>
+            return <option value={option.value}>{option.label}</option>;
+          })}
+        </Form.Control>
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
   );
 };
 
@@ -89,32 +97,36 @@ export const radioButtonGroup = ({
   disabled,
   labelClass = "",
   checkGroupClass = "",
+  error,
   radioValues = [{ label: "", name: "", id: "", checked: false }],
   onChange,
   onBlur
 }) => {
   return (
-    <Form.Group key={ind} controlId={`form-${name}`}>
-      <Form.Label className={labelClass}>{label}</Form.Label>
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
 
-      <div className={checkGroupClass}>
-        {radioValues.map(value => {
-          return (
-            <Form.Check
-              type="checkbox"
-              disabled={disabled}
-              label={value.label}
-              name={value.name}
-              id={value.id}
-              defaultChecked={value.checked}
-              onChange={onChange}
-              onBlur={onBlur}
-              checked={value.checked}
-            />
-          );
-        })}
-      </div>
-    </Form.Group>
+        <div className={checkGroupClass}>
+          {radioValues.map(value => {
+            return (
+              <Form.Check
+                type="checkbox"
+                disabled={disabled}
+                label={value.label}
+                name={value.name}
+                id={value.id}
+                defaultChecked={value.checked}
+                onChange={onChange}
+                onBlur={onBlur}
+                checked={value.checked}
+              />
+            );
+          })}
+        </div>
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
   );
 };
 
@@ -209,6 +221,7 @@ export const locationHoursGroup = ({
   labelClass,
   onChange,
   onBlur,
+  error,
   required = true
 }) => {
   const getObjectValue = ({ value, keys }) => {
@@ -274,90 +287,93 @@ export const locationHoursGroup = ({
   ];
 
   return (
-    <Form.Group key={ind} controlId={`form-${name}`}>
-      <Form.Label className={labelClass}>{"Location Hours"}</Form.Label>
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{"Location Hours"}</Form.Label>
 
-      <div>
-        {days.map((day, ind) => {
-          const openKey = keys[ind * 2];
-          const closeKey = keys[ind * 2 + 1];
+        <div>
+          {days.map((day, ind) => {
+            const openKey = keys[ind * 2];
+            const closeKey = keys[ind * 2 + 1];
 
-          return (
-            <div
-              key={ind}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between"
-              }}
-            >
-              <p
+            return (
+              <div
+                key={ind}
                 style={{
-                  paddingRight: "1rem",
-                  fontSize: "1.3rem",
-                  width: "7rem"
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between"
                 }}
               >
-                {day}
-              </p>
-              <Form.Control
-                key={`${ind}-am`}
-                as="select"
-                value={getObjectValue({ keys: openKey, value })}
-                name={openKey}
-                disabled={disabled}
-                onChange={onChange}
-                onBlur={onBlur}
-                required={required}
-              >
-                {amOptionValues.map((option, ind) => {
-                  if (option.placeholder) {
-                    return (
-                      <option
-                        key={ind}
-                        value={option.value}
-                        disabled={option.disabled}
-                        selected={option.selected}
-                      >
-                        {option.label}
-                      </option>
-                    );
-                  }
+                <p
+                  style={{
+                    paddingRight: "1rem",
+                    fontSize: "1.3rem",
+                    width: "7rem"
+                  }}
+                >
+                  {day}
+                </p>
+                <Form.Control
+                  key={`${ind}-am`}
+                  as="select"
+                  value={getObjectValue({ keys: openKey, value })}
+                  name={openKey}
+                  disabled={disabled}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  required={required}
+                >
+                  {amOptionValues.map((option, ind) => {
+                    if (option.placeholder) {
+                      return (
+                        <option
+                          key={ind}
+                          value={option.value}
+                          disabled={option.disabled}
+                          selected={option.selected}
+                        >
+                          {option.label}
+                        </option>
+                      );
+                    }
 
-                  return <option value={option.value}>{option.label}</option>;
-                })}
-              </Form.Control>
-              <Form.Control
-                key={`${ind}-pm`}
-                as="select"
-                value={getObjectValue({ keys: closeKey, value })}
-                name={closeKey}
-                disabled={disabled}
-                onChange={onChange}
-                onBlur={onBlur}
-                required={required}
-              >
-                {pmOptionValues.map((option, ind) => {
-                  if (option.placeholder) {
-                    return (
-                      <option
-                        key={ind}
-                        value={option.value}
-                        disabled={option.disabled}
-                        selected={option.selected}
-                      >
-                        {option.label}
-                      </option>
-                    );
-                  }
+                    return <option value={option.value}>{option.label}</option>;
+                  })}
+                </Form.Control>
+                <Form.Control
+                  key={`${ind}-pm`}
+                  as="select"
+                  value={getObjectValue({ keys: closeKey, value })}
+                  name={closeKey}
+                  disabled={disabled}
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  required={required}
+                >
+                  {pmOptionValues.map((option, ind) => {
+                    if (option.placeholder) {
+                      return (
+                        <option
+                          key={ind}
+                          value={option.value}
+                          disabled={option.disabled}
+                          selected={option.selected}
+                        >
+                          {option.label}
+                        </option>
+                      );
+                    }
 
-                  return <option value={option.value}>{option.label}</option>;
-                })}
-              </Form.Control>
-            </div>
-          );
-        })}
-      </div>
-    </Form.Group>
+                    return <option value={option.value}>{option.label}</option>;
+                  })}
+                </Form.Control>
+              </div>
+            );
+          })}
+        </div>
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
   );
 };

@@ -33,6 +33,36 @@ class CreateNewModal extends Component {
     this.props.handleSubmit({ ...values, token: this.props.token });
   }
 
+  validationHelper(inputs) {
+    return values => {
+      const errors = {};
+
+      for (let i = 0; i < inputs.length; i++) {
+        const field = inputs[i];
+        const {
+          key,
+          required = true,
+          customErrorValidation,
+          customErrorMsg = ""
+        } = field;
+
+        // Custom error check
+        if (customErrorValidation) {
+          if (customErrorValidation(values[key])) {
+            errors[key] = customErrorMsg;
+          }
+        }
+
+        // Required Check
+        if (required && !values[key]) {
+          errors[key] = "Required";
+        }
+      }
+
+      return errors;
+    };
+  }
+
   formGenerator({
     props,
     inputs = [
@@ -82,7 +112,8 @@ class CreateNewModal extends Component {
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
-              placeholder: placeholder
+              placeholder: placeholder,
+              error: props.errors[key]
             });
           }
 
@@ -97,7 +128,8 @@ class CreateNewModal extends Component {
               labelClass: "modal__capitalized",
               optionValues: optionValues,
               onChange: selectionHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -111,7 +143,8 @@ class CreateNewModal extends Component {
               checkGroupClass: "modal__checkGroupClass",
               radioValues: radioValues,
               onChange: checkBoxHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -123,7 +156,8 @@ class CreateNewModal extends Component {
               disabled,
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -138,7 +172,8 @@ class CreateNewModal extends Component {
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
-              placeholder: placeholder
+              placeholder: placeholder,
+              error: props.errors[key]
             });
         }
       }
@@ -168,6 +203,7 @@ class CreateNewModal extends Component {
               </div>
             </form>
           )}
+          validate={this.validationHelper(inputs)}
         />
       </div>
     );

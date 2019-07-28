@@ -93,7 +93,7 @@ export const createNewFieldConfig = ({ rentalCompanies }) => {
   ];
 };
 
-export const editFieldConfig = ({ values, rentalCompanies }) => {
+export const editFieldConfig = ({ rentalCompanies }) => ({ values }) => {
   const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
     label: rentalCompany.name,
     value: rentalCompany._id
@@ -160,7 +160,7 @@ export const editFieldConfig = ({ values, rentalCompanies }) => {
     {
       key: "userType",
       inputType: "text",
-      value: values["userType"],
+      value: values["userType"] === "superAdmin" ? "superAdmin" : "normalAdmin",
       label: "User Type",
       disabled: true,
       inputOption: INPUT_DROPDOWN,
@@ -176,6 +176,15 @@ export const editFieldConfig = ({ values, rentalCompanies }) => {
       disabled: false,
       inputOption: INPUT_CHECKBOX,
       radioValues: operationRadioBoxes
+    },
+    {
+      key: "isActive",
+      inputType: "text",
+      value: values["isActive"] ? "1" : "2",
+      label: "Active Account",
+      disabled: false,
+      inputOption: "bool",
+      optionValues: [{ label: "Yes", value: "1" }, { label: "No", value: "2" }]
     },
     {
       key: "rentalCompanyId",

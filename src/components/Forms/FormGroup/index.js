@@ -166,7 +166,7 @@ export const checkBoxHandler = function checkBoxHandler(
   }
 };
 
-export const isActiveHandler = function isActiveHandler(
+export const booleanDropdownHandler = function booleanDropdownHandler(
   formikProps,
   key,
   event

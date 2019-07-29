@@ -377,3 +377,9 @@ export const locationHoursGroup = ({
     </div>
   );
 };
+
+export const imageGroup = ({ containerClassName, imgClassName, value }) => (
+  <div className={containerClassName}>
+    <img className={imgClassName} src={value} alt={imgClassName} />
+  </div>
+);

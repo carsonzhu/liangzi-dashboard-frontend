@@ -165,3 +165,149 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
     }
   ];
 };
+
+export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
+  values
+}) => {
+  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
+    label: rentalCompany.name,
+    value: rentalCompany._id
+  }));
+
+  const insuranceCheckBoxes = insurances.map(insurance => ({
+    label: `${insurance.name} from ${insurance.rentalCompanyName}`,
+    name: insurance._id,
+    id: "insurances",
+    checked: values["insuranceIds"].includes(insurance._id)
+  }));
+
+  return [
+    {
+      key: "vehicleImage",
+      value: values["vehicleImage"],
+      containerClassName: "vehile-image",
+      imgClassName: "target-image",
+      inputOption: "image"
+    },
+    {
+      key: "dailyRate",
+      inputType: "number",
+      value: values["dailyRate"],
+      label: "Daily Rate",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
+    {
+      key: "dailyRateUnit",
+      inputType: "text",
+      value: values["dailyRateUnit"],
+      label: "Daily Rate Unit",
+      disabled: false,
+      inputOption: INPUT_DROPDOWN,
+      optionValues: [
+        { label: "CAD", value: "CAD" },
+        { label: "USD", value: "USD" },
+        { label: "RMB", value: "RMB" }
+      ]
+    },
+    {
+      key: "rentalCompanyId",
+      inputType: "text",
+      value: values["rentalCompanyId"],
+      label: "Rental Company Id",
+      disabled: false,
+      inputOption: INPUT_DROPDOWN,
+      optionValues: [...rentalCompanyDropdown]
+    },
+    {
+      key: "locationAddress",
+      inputType: "text",
+      value: values["locationAddress"],
+      label: "Location Address",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
+    // TODO
+    {
+      key: "locationHours",
+      inputType: "text",
+      value: values["locationHours"],
+      label: "Location Hours",
+      disabled: false,
+      inputOption: "locationHours"
+    },
+    {
+      key: "transmission",
+      inputType: "text",
+      value: values["transmission"],
+      label: "Transmission",
+      disabled: false,
+      inputOption: INPUT_DROPDOWN,
+      optionValues: [
+        { label: "Automatic", value: "auto" },
+        { label: "Manual", value: "manual" }
+      ]
+    },
+    {
+      key: "vehicleType",
+      inputType: "text",
+      value: values["vehicleType"],
+      label: "Vehicle Type",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      placeholder: "Ex. SUV"
+    },
+    {
+      key: "trunkSize",
+      inputType: "number",
+      value: values["trunkSize"],
+      label: "Trunk Size",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
+    {
+      key: "seats",
+      inputType: "number",
+      value: values["seats"],
+      label: "seats",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
+    {
+      key: "vehicleMake",
+      inputType: "text",
+      value: values["vehicleMake"],
+      label: "Vehicle Make",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      placeholder: "Ex. Toyota"
+    },
+    // TODO
+    {
+      key: "vehicleNotes",
+      inputType: "text",
+      value: values["vehicleNotes"],
+      label: "Vehicle Notes",
+      disabled: false,
+      inputOption: INPUT_TEXT
+    },
+    {
+      key: "insuranceIds",
+      inputType: "text",
+      label: "Insurance Ids",
+      disabled: false,
+      inputOption: INPUT_CHECKBOX,
+      radioValues: insuranceCheckBoxes
+    },
+    {
+      key: "specialServices",
+      inputType: "text",
+      value: values["specialServices"],
+      label: "Special Services",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false,
+      placeholder: "(OPTIONAL)"
+    }
+  ];
+};

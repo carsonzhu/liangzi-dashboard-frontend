@@ -201,7 +201,6 @@ class Admins extends Component {
             data={adminToShow}
             inputs={editFieldConfig({
               rentalCompanies: this.props.rentalCompanies
-              // values: adminToShow
             })}
             handleClose={this.closeEditModal}
             handleSubmit={this.props.editAdmin}

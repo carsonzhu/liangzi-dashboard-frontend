@@ -7,9 +7,10 @@ import _ from "lodash";
 import "./Insurances.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
-import InsuranceModal from "../../components/Modal/insuranceModal";
+// import InsuranceModal from "../../components/Modal/insuranceModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
-import { createNewFieldConfig } from "./config";
+import EditModal from "../../components/Modal/editModal";
+import { createNewFieldConfig, editFieldConfig } from "./config";
 
 import {
   FETCH_INSURANCES,
@@ -209,7 +210,7 @@ class Insurances extends Component {
             ))}
         </ActivityIndicator>
 
-        {insuranceToShow && (
+        {/* {insuranceToShow && (
           <InsuranceModal
             toShow={true}
             data={insuranceToShow}
@@ -218,6 +219,27 @@ class Insurances extends Component {
             handleDelete={this.props.deleteInsurance}
             afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
+          />
+        )} */}
+        {insuranceToShow && (
+          <EditModal
+            toShow={true}
+            data={insuranceToShow}
+            inputs={editFieldConfig({
+              rentalCompanies: this.props.rentalCompanies
+            })}
+            handleClose={this.closeEditModal}
+            handleSubmit={this.props.editInsurance}
+            afterSubmitAction={this.editModalAndToast}
+            token={this.props.token}
+            formValuesTransformer={values => {
+              const insuranceId = values._id;
+
+              delete values._id;
+              delete values.__v;
+
+              return { insuranceId, fieldToUpdate: values };
+            }}
           />
         )}
         {createNewModal && (

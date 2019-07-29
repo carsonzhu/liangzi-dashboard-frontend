@@ -1,0 +1,30 @@
+.rental-companies__column-active {
+    background-color: #00C851;
+}
+
+.rental-companies__column-inactive {
+    background-color: #ff4444;
+}
+
+.table-hover tbody tr:hover {
+    cursor: pointer;
+}
+
+.rental-companies-route__legends {
+    display: flex;
+}
+
+.rental-companies-route__legends-green {
+    color: #00C851;
+    padding: 0 1rem;
+}
+
+.rental-companies-route__legends-red {
+    color: #ff4444;
+    padding: 0 1rem;
+}
+
+.rental-companies-route__title {
+    display: flex;
+    justify-content: space-between;
+}

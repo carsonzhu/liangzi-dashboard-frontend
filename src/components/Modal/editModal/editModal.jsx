@@ -36,6 +36,36 @@ class EditModal extends Component {
 
   toggleEditing = this.toggleEditing.bind(this);
 
+  validationHelper(inputs) {
+    return values => {
+      const errors = {};
+
+      for (let i = 0; i < inputs.length; i++) {
+        const field = inputs[i];
+        const {
+          key,
+          required = true,
+          customErrorValidation,
+          customErrorMsg = ""
+        } = field;
+
+        // Custom error check
+        if (customErrorValidation) {
+          if (customErrorValidation(values[key])) {
+            errors[key] = customErrorMsg;
+          }
+        }
+
+        // Required Check
+        if (required && !values[key]) {
+          errors[key] = "Required";
+        }
+      }
+
+      return errors;
+    };
+  }
+
   onSubmitHandler(values) {
     this.props.afterSubmitAction();
 
@@ -75,6 +105,7 @@ class EditModal extends Component {
     })
   }) {
     const disabledLogic = disabled => !beingEdited || disabled;
+    console.log("props.errors", props.errors);
 
     return inputs({ values: props.values }).map(
       (
@@ -105,7 +136,8 @@ class EditModal extends Component {
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
-              placeholder: placeholder
+              placeholder: placeholder,
+              error: props.errors[key]
             });
           }
 
@@ -120,7 +152,8 @@ class EditModal extends Component {
               labelClass: "modal__capitalized",
               optionValues: optionValues,
               onChange: selectionHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -134,7 +167,8 @@ class EditModal extends Component {
               checkGroupClass: "modal__checkGroupClass",
               radioValues: radioValues,
               onChange: checkBoxHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -146,7 +180,8 @@ class EditModal extends Component {
               disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -161,7 +196,8 @@ class EditModal extends Component {
               labelClass: "modal__capitalized",
               optionValues: optionValues,
               onChange: booleanDropdownHandler.bind(this, props, key),
-              onBlur: props.handleBlur
+              onBlur: props.handleBlur,
+              error: props.errors[key]
             });
           }
 
@@ -184,7 +220,8 @@ class EditModal extends Component {
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
-              placeholder: placeholder
+              placeholder: placeholder,
+              error: props.errors[key]
             });
         }
       }
@@ -221,6 +258,7 @@ class EditModal extends Component {
               </div>
             </form>
           )}
+          validate={this.validationHelper(inputs({ values: data }))}
         />
       </div>
     );

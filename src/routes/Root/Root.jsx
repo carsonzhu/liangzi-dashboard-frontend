@@ -122,6 +122,7 @@ class Root extends Component {
           />
           {this.generateTabComponent()}
           {/* <Footer /> */}
+          {/* Log in modal */}
           <Modal
             size="lg"
             dialogClassName="modal-90w"
@@ -136,6 +137,8 @@ class Root extends Component {
               <SignInForm />
             </Modal.Body>
           </Modal>
+          {/* Create new modal */}
+          {/* Edit modal */}
         </main>
       </div>
     );

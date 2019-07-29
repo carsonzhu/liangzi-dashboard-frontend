@@ -15,7 +15,8 @@ import {
   checkBoxHandler,
   locationHoursGroup,
   locationHoursGroupHandler,
-  booleanDropdownHandler
+  booleanDropdownHandler,
+  imageGroup
 } from "../../Forms/FormGroup";
 
 class EditModal extends Component {
@@ -86,7 +87,9 @@ class EditModal extends Component {
           inputOption,
           optionValues,
           radioValues,
-          placeholder
+          placeholder,
+          imgClassName = "",
+          containerClassName = ""
         },
         ind
       ) => {
@@ -159,6 +162,14 @@ class EditModal extends Component {
               optionValues: optionValues,
               onChange: booleanDropdownHandler.bind(this, props, key),
               onBlur: props.handleBlur
+            });
+          }
+
+          case "image": {
+            return imageGroup({
+              value: value,
+              imgClassName,
+              containerClassName
             });
           }
 

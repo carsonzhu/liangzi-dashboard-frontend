@@ -87,9 +87,9 @@ export const search = query => {
 //////////////////////////////////////////
 // API Usage
 //////////////////////////////////////////
-const REACT_APP_LIANG_ZI_BACKEND_URL =
-  process.env.REACT_APP_LIANG_ZI_BACKEND_URL || "http://localhost:4000";
-const VEHICLE_API = `${REACT_APP_LIANG_ZI_BACKEND_URL}/apis/vehicles`;
+const LIANG_ZI_BACKEND_URL = process.env.REACT_APP_LIANG_ZI_BACKEND_URL;
+const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
+const VEHICLE_IMAGE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles/updateImage`;
 
 export const fetchVehiclesRequest = ({ token }) => {
   const fetchVehiclesRequestJSONTransform = json => {
@@ -206,6 +206,22 @@ export const deleteVehicleRequest = ({ vehicleId }) => {
     url: VEHICLE_API,
     data: {
       vehicleId
+    }
+  });
+};
+
+export const updateVehicleImageRequest = ({ vehicleId, file, token }) => {
+  var formData = new FormData();
+  formData.append("vehicleId", vehicleId);
+  formData.append("file", file);
+  return axios({
+    method: "post",
+    url: VEHICLE_IMAGE_API,
+    data: {
+      formData
+    },
+    headers: {
+      authorization: token
     }
   });
 };

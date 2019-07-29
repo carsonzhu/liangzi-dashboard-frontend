@@ -1,9 +1,9 @@
 import axios from "axios";
 
 //Admin User
-const REACT_APP_LIANG_ZI_BACKEND_URL =
-  process.env.REACT_APP_LIANG_ZI_BACKEND_URL || "http://localhost:4000";
-const ADMIN_API = `${REACT_APP_LIANG_ZI_BACKEND_URL}/apis/admins`;
+const LIANG_ZI_BACKEND_URL = process.env.REACT_APP_LIANG_ZI_BACKEND_URL;
+
+const ADMIN_API = `${LIANG_ZI_BACKEND_URL}/apis/admins`;
 
 export const addAdminRequest = ({
   email,
@@ -78,6 +78,7 @@ export const fetchAdminsRequest = ({ token }) => {
     return { admins: users };
   };
 
+  console.log("ADMIN_API", ADMIN_API);
   return new Promise((resolve, reject) => {
     axios({
       method: "get",

@@ -1,5 +1,6 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import { fetchError } from "./utilities";
 import {
   FETCH_INSURANCES,
   FETCH_INSURANCES_SUCC,
@@ -34,7 +35,7 @@ function* fetchInsurancesAsync(action) {
   } catch (err) {
     yield put({
       type: FETCH_INSURANCES_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -58,7 +59,7 @@ function* editInsuranceAsync(action) {
   } catch (err) {
     yield put({
       type: EDIT_INSURANCE_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -82,7 +83,7 @@ function* deleteInsuranceAsync(action) {
   } catch (err) {
     yield put({
       type: DELETE_INSURANCE_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }
@@ -116,7 +117,7 @@ function* createNewInsuranceAsync(action) {
   } catch (err) {
     yield put({
       type: CREATE_NEW_INSURANCE_FAILED,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }

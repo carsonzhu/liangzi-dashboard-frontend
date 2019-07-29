@@ -1,5 +1,7 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 
+import { fetchError } from "./utilities";
+
 import {
   FETCH_RENTAL_COMPANIES,
   FETCH_RENTAL_COMPANIES_SUCC,
@@ -20,7 +22,7 @@ function* fetchRentalCompaniesAsync(action) {
   } catch (err) {
     yield put({
       type: FETCH_RENTAL_COMPANIES_FAIL,
-      payload: { error: err }
+      payload: { error: fetchError({ error: err }) }
     });
   }
 }

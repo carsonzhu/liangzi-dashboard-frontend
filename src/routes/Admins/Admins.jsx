@@ -5,9 +5,10 @@ import { Table, Toast, Button } from "react-bootstrap";
 import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
-import AdminModal from "../../components/Modal/adminModal";
+// import AdminModal from "../../components/Modal/adminModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
-import { createNewFieldConfig } from "./config";
+import EditModal from "../../components/Modal/editModal";
+import { createNewFieldConfig, editFieldConfig } from "./config";
 
 import {
   FETCH_ADMINS,
@@ -183,7 +184,7 @@ class Admins extends Component {
           )}
         </ActivityIndicator>
 
-        {adminToShow && (
+        {/* {adminToShow && (
           <AdminModal
             toShow={true}
             data={adminToShow}
@@ -192,6 +193,28 @@ class Admins extends Component {
             afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
             rentalCompanies={this.props.rentalCompanies}
+          />
+        )} */}
+        {adminToShow && (
+          <EditModal
+            toShow={true}
+            data={adminToShow}
+            inputs={editFieldConfig({
+              rentalCompanies: this.props.rentalCompanies
+            })}
+            handleClose={this.closeEditModal}
+            handleSubmit={this.props.editAdmin}
+            afterSubmitAction={this.editModalAndToast}
+            token={this.props.token}
+            formValuesTransformer={values => {
+              const userId = values._id;
+
+              delete values._id;
+              delete values.password;
+              delete values.__v;
+
+              return { userId, fieldToUpdate: values };
+            }}
           />
         )}
         {createNewModal && (

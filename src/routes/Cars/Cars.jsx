@@ -5,9 +5,15 @@ import { Table, Toast, Button } from "react-bootstrap";
 import "./Cars.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
-import CarModal from "../../components/Modal/carModal";
+// import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
-import { header, createNewFieldConfig, getRentalCompanyName } from "./config";
+import EditModal from "../../components/Modal/editModal";
+import {
+  header,
+  createNewFieldConfig,
+  getRentalCompanyName,
+  editFieldConfig
+} from "./config";
 
 import {
   FETCH_VEHICLES,
@@ -23,7 +29,8 @@ const mapStateToProps = state => ({
   token: state.login.token,
   rentalCompanies: state.rentalCompanies.rentalCompanies,
   userType: state.login.userType,
-  insurances: state.insurances.insurances
+  insurances: state.insurances.insurances,
+  error: state.cars.error
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,7 +97,8 @@ class Cars extends Component {
     vehicles: [],
     isLoading: false,
     token: "",
-    rentalCompanies: []
+    rentalCompanies: [],
+    createVehicle: () => {}
   };
 
   state = {
@@ -228,7 +236,7 @@ class Cars extends Component {
             ))}
         </ActivityIndicator>
 
-        {vehicleToShow && (
+        {/* {vehicleToShow && (
           <CarModal
             toShow={true}
             data={vehicleToShow}
@@ -239,6 +247,29 @@ class Cars extends Component {
             isSuper={this.props.userType === SUPER_ADMIN}
             rentalCompanies={this.props.rentalCompanies}
             insurances={this.props.insurances}
+          />
+        )} */}
+        {vehicleToShow && (
+          <EditModal
+            toShow={true}
+            data={vehicleToShow}
+            inputs={editFieldConfig({
+              rentalCompanies: this.props.rentalCompanies,
+              insurances: this.props.insurances
+            })}
+            handleClose={this.clearVehicleInfo}
+            handleSubmit={this.props.updateVehicles}
+            afterSubmitAction={this.editModalAndToast}
+            token={this.props.token}
+            formValuesTransformer={values => {
+              const vehicleId = values._id;
+
+              delete values.vehicleImage;
+              delete values._id;
+              delete values.__v;
+
+              return { vehicleId, fieldToUpdate: values };
+            }}
           />
         )}
         {createNewModal && (

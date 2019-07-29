@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
 import { Alert, Form, Modal, Button, Col } from "react-bootstrap";
-import "./createNewModal.css";
+import "./editModal.css";
 
 import {
   inputGroup,
@@ -14,24 +14,27 @@ import {
   selectionHandler,
   checkBoxHandler,
   locationHoursGroup,
-  locationHoursGroupHandler
+  locationHoursGroupHandler,
+  booleanDropdownHandler,
+  imageGroup
 } from "../../Forms/FormGroup";
 
-class CreateNewModal extends Component {
+class EditModal extends Component {
   static propTypes = {
     toShow: PropTypes.bool,
     handleClose: PropTypes.func,
     handleSubmit: PropTypes.func,
     afterSubmitAction: PropTypes.func,
     inputs: PropTypes.array.isRequired,
-    token: PropTypes.string
+    token: PropTypes.string,
+    formValuesTransformer: PropTypes.func.isRequired
   };
 
-  onSubmitHandler(values) {
-    this.props.afterSubmitAction();
+  state = {
+    beingEdited: false
+  };
 
-    this.props.handleSubmit({ ...values, token: this.props.token });
-  }
+  toggleEditing = this.toggleEditing.bind(this);
 
   validationHelper(inputs) {
     return values => {
@@ -63,40 +66,61 @@ class CreateNewModal extends Component {
     };
   }
 
+  onSubmitHandler(values) {
+    this.props.afterSubmitAction();
+
+    this.props.handleSubmit({
+      ...values,
+      token: this.props.token
+    });
+  }
+
+  toggleEditing() {
+    this.setState(prevState => ({
+      beingEdited: !prevState.beingEdited
+    }));
+  }
+
   formGenerator({
     props,
-    inputs = [
-      {
-        key: "",
-        inputType: "text", //html input type: email, password, date, etc
-        label: "",
-        disabled: false,
-        inputOption: INPUT_TEXT,
-        optionValues: [{ label: "", value: "" }], // optional (only for INPUT_DOWNDOWN)
-        // optional (only for INPUT_CHECKBOX)
-        radioValues: [
-          {
-            label: "",
-            name: "",
-            id: "",
-            checked: true
-          }
-        ],
-        placeholder: "" //optional for text
-      }
-    ]
+    beingEdited,
+    inputs = () => ({
+      key: "",
+      inputType: "text", //html input type: email, password, date, etc
+      value: "",
+      label: "",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      optionValues: [{ label: "", value: "" }], // optional (only for INPUT_DOWNDOWN)
+      // optional (only for INPUT_CHECKBOX)
+      radioValues: [
+        {
+          label: "",
+          name: "",
+          id: "",
+          checked: true
+        }
+      ],
+      placeholder: "" //optional for text
+    })
   }) {
-    return inputs.map(
+    const disabledLogic = disabled => !beingEdited || disabled;
+    console.log("props.errors", props.errors);
+
+    return inputs({ values: props.values }).map(
       (
         {
           key,
           inputType,
+          value,
           label,
           disabled,
           inputOption,
           optionValues,
           radioValues,
-          placeholder
+          placeholder,
+          imgClassName = "",
+          containerClassName = ""
         },
         ind
       ) => {
@@ -106,9 +130,9 @@ class CreateNewModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
-              disabled: disabled,
+              disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
@@ -122,9 +146,9 @@ class CreateNewModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
-              disabled: disabled,
+              disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               optionValues: optionValues,
               onChange: selectionHandler.bind(this, props, key),
@@ -138,7 +162,7 @@ class CreateNewModal extends Component {
               ind: ind,
               label: label,
               name: key,
-              disabled: disabled,
+              disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               checkGroupClass: "modal__checkGroupClass",
               radioValues: radioValues,
@@ -152,12 +176,36 @@ class CreateNewModal extends Component {
             return locationHoursGroup({
               ind,
               name: key,
-              value: props.values[key],
-              disabled,
+              value: value,
+              disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
               onBlur: props.handleBlur,
               error: props.errors[key]
+            });
+          }
+
+          case "bool": {
+            return optionGroup({
+              ind: ind,
+              label: label,
+              type: inputType,
+              value: value,
+              name: key,
+              disabled: disabledLogic(disabled),
+              labelClass: "modal__capitalized",
+              optionValues: optionValues,
+              onChange: booleanDropdownHandler.bind(this, props, key),
+              onBlur: props.handleBlur,
+              error: props.errors[key]
+            });
+          }
+
+          case "image": {
+            return imageGroup({
+              value: value,
+              imgClassName,
+              containerClassName
             });
           }
 
@@ -166,9 +214,9 @@ class CreateNewModal extends Component {
               ind: ind,
               label: label,
               type: inputType,
-              value: props.values[key],
+              value: value,
               name: key,
-              disabled: disabled,
+              disabled: disabledLogic(disabled),
               labelClass: "modal__capitalized",
               onChange: props.handleChange,
               onBlur: props.handleBlur,
@@ -180,51 +228,61 @@ class CreateNewModal extends Component {
     );
   }
 
-  createForm({ handleClose, inputs }) {
+  createForm({ data, handleClose, beingEdited, inputs }) {
     return (
       <div className="dataForm">
         <Formik
+          initialValues={data}
           onSubmit={(values, _) => {
             // TODO: values transform
             console.log("values", values);
 
-            this.onSubmitHandler(values);
+            this.onSubmitHandler(this.props.formValuesTransformer(values));
           }}
           render={props => (
             <form onSubmit={props.handleSubmit}>
-              {this.formGenerator({ props, inputs })}
+              {this.formGenerator({ props, inputs, beingEdited })}
               <div className="dataForm__button-group">
-                <Button variant="primary" onClick={props.handleSubmit}>
-                  Submit
-                </Button>
+                {beingEdited ? (
+                  <Button variant="primary" onClick={props.handleSubmit}>
+                    Submit
+                  </Button>
+                ) : (
+                  <Button variant="primary" onClick={this.toggleEditing}>
+                    Edit
+                  </Button>
+                )}
                 <Button variant="secondary" onClick={handleClose}>
                   Close
                 </Button>
               </div>
             </form>
           )}
-          validate={this.validationHelper(inputs)}
+          validate={this.validationHelper(inputs({ values: data }))}
         />
       </div>
     );
   }
 
   render() {
-    const { toShow, handleClose, inputs } = this.props;
+    const {
+      toShow,
+      handleClose,
+      inputs,
+      modalName = "Edit",
+      data
+    } = this.props;
 
     return (
-      <Modal
-        className="createNewModal"
-        show={toShow}
-        size="lg"
-        onHide={handleClose}
-      >
+      <Modal className="editModal" show={toShow} size="lg" onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Create New</Modal.Title>
+          <Modal.Title>{modalName}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {this.createForm({
+            data,
             handleClose,
+            beingEdited: this.state.beingEdited,
             inputs
           })}
         </Modal.Body>
@@ -233,4 +291,4 @@ class CreateNewModal extends Component {
   }
 }
 
-export default CreateNewModal;
+export default EditModal;

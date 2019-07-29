@@ -10,7 +10,7 @@ import {
   optionGroup,
   checkBoxHandler,
   selectionHandler,
-  isActiveHandler
+  booleanDropdownHandler
 } from "../../Forms/FormGroup";
 
 class AdminModal extends Component {
@@ -164,7 +164,7 @@ class AdminModal extends Component {
               { label: "Yes", value: "1" },
               { label: "No", value: "2" }
             ],
-            onChange: isActiveHandler.bind(this, props, key),
+            onChange: booleanDropdownHandler.bind(this, props, key),
             onBlur: props.handleBlur
           });
         }

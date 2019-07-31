@@ -78,7 +78,6 @@ export const fetchAdminsRequest = ({ token }) => {
     return { admins: users };
   };
 
-  console.log("ADMIN_API", ADMIN_API);
   return new Promise((resolve, reject) => {
     axios({
       method: "get",

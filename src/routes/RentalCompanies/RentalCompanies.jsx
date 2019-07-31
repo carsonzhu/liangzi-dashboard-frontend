@@ -36,7 +36,7 @@ class RentalCompanies extends Component {
   };
 
   state = {
-    adminToShow: null,
+    rentalCompanyToShow: null,
     showToast: false,
     createNewModal: false
   };
@@ -58,16 +58,15 @@ class RentalCompanies extends Component {
       <tr
         key={ind}
         className={
-          info.isActive
+          info.rentalCompanyStatus === "AVAILABLE"
             ? "rental-companies__column-active"
             : "rental-companies__column-inactive"
         }
         onClick={this.openEditModel.bind(this, info)}
       >
         <td>{ind}</td>
-        <td>{info.userType}</td>
-        <td>{info.email}</td>
-        <td>{info.username}</td>
+        <td>{info.name}</td>
+        <td>{info.address}</td>
       </tr>
     ));
   }
@@ -76,19 +75,18 @@ class RentalCompanies extends Component {
     return (
       <tr>
         <th>#</th>
-        <th>User Type</th>
-        <th>Email</th>
-        <th>Username</th>
+        <th>Company Name</th>
+        <th>Company Address</th>
       </tr>
     );
   }
 
   openEditModel(data) {
-    this.setState({ adminToShow: data });
+    this.setState({ rentalCompanyToShow: data });
   }
 
   closeEditModal() {
-    this.setState({ adminToShow: null });
+    this.setState({ rentalCompanyToShow: null });
   }
 
   openNewModal() {
@@ -100,7 +98,10 @@ class RentalCompanies extends Component {
   }
 
   editModalAndToast() {
-    this.setState({ adminToShow: null, showToast: "Update Successfully!" });
+    this.setState({
+      rentalCompanyToShow: null,
+      showToast: "Update Successfully!"
+    });
   }
 
   createNewModalAndToast() {
@@ -108,7 +109,7 @@ class RentalCompanies extends Component {
   }
 
   render() {
-    const { adminToShow, showToast, createNewModal } = this.state;
+    const { rentalCompanyToShow, showToast, createNewModal } = this.state;
 
     return (
       <div className="rental-companies-route">
@@ -125,21 +126,19 @@ class RentalCompanies extends Component {
           </Toast>
         )}
         <div className="rental-companies-route__title">
-          <strong>Admins</strong>
+          <strong>Rental Companies</strong>
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.admins && this.props.admins.length && (
+          {this.props.rentalCompanies && this.props.rentalCompanies.length && (
             <div>
               <Table responsive hover>
-                <thead>
-                  {this.theadGenerater({
-                    fields: Object.keys(this.props.admins[0])
-                  })}
-                </thead>
+                <thead>{this.theadGenerater()}</thead>
 
                 <tbody>
-                  {this.tbodyGenerator({ admins: this.props.admins })}
+                  {this.tbodyGenerator({
+                    rentalCompanies: this.props.rentalCompanies
+                  })}
                 </tbody>
               </Table>
               <div className="rental-companies-route__legends">
@@ -150,10 +149,10 @@ class RentalCompanies extends Component {
           )}
         </ActivityIndicator>
 
-        {/* {adminToShow && (
+        {/* {rentalCompanyToShow && (
           <AdminModal
             toShow={true}
-            data={adminToShow}
+            data={rentalCompanyToShow}
             handleClose={this.closeEditModal}
             handleEdit={this.props.editAdmin}
             afterSubmitAction={this.editModalAndToast}
@@ -161,25 +160,22 @@ class RentalCompanies extends Component {
             rentalCompanies={this.props.rentalCompanies}
           />
         )} */}
-        {adminToShow && (
+        {rentalCompanyToShow && (
           <EditModal
             toShow={true}
-            data={adminToShow}
-            inputs={editFieldConfig({
-              rentalCompanies: this.props.rentalCompanies
-            })}
+            data={rentalCompanyToShow}
+            inputs={editFieldConfig}
             handleClose={this.closeEditModal}
             handleSubmit={this.props.editAdmin}
             afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
             formValuesTransformer={values => {
-              const userId = values._id;
+              const rentalCompanyId = values._id;
 
               delete values._id;
-              delete values.password;
               delete values.__v;
 
-              return { userId, fieldToUpdate: values };
+              return { rentalCompanyId, fieldToUpdate: values };
             }}
           />
         )}
@@ -187,11 +183,9 @@ class RentalCompanies extends Component {
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={this.props.createNewAdmin}
+            handleSubmit={() => {}}
             afterSubmitAction={this.createNewModalAndToast}
-            inputs={createNewFieldConfig({
-              rentalCompanies: this.props.rentalCompanies
-            })}
+            inputs={createNewFieldConfig()}
             token={this.props.token}
           />
         )}

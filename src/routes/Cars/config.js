@@ -130,15 +130,15 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       inputOption: INPUT_TEXT,
       placeholder: "Ex. Toyota"
     },
+    // TODO: image upload
     {
       key: "vehicleImage",
       name: "vehicleImage",
-      inputType: "file",
+      inputType: "text",
       label: "Vehicle Image",
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO
     {
       key: "vehicleNotes",
       inputType: "text",

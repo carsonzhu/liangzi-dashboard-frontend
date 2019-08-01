@@ -28,3 +28,66 @@ export const getRentalCompaniesRequest = ({ token }) => {
       .catch(reject);
   });
 };
+
+export const createRentalCompaniesRequest = ({
+  token,
+  name,
+  address,
+  image,
+  rating,
+  perks,
+  locationAlias
+}) => {
+  const createRentalCompanyRequestJSONTransform = json => {
+    const { newRentalCompany } = json.data.data;
+
+    return { rentalCompany: newRentalCompany };
+  };
+
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "post",
+      url: RENTAL_COMPANY_API,
+      data: { name, address, image, rating, perks, locationAlias },
+      headers: {
+        authorization: token
+      }
+    })
+      .then(json => {
+        if (json.status !== 200) {
+          return reject({ msg: "Internal Error" });
+        }
+
+        return resolve(createRentalCompanyRequestJSONTransform(json));
+      })
+      .catch(reject);
+  });
+};
+
+export const editRentalCompaniesRequest = ({
+  token,
+  rentalCompanyId,
+  fieldToUpdate
+}) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: "put",
+      url: RENTAL_COMPANY_API,
+      data: {
+        rentalCompanyId,
+        fieldToUpdate
+      },
+      headers: {
+        authorization: token
+      }
+    })
+      .then(json => {
+        if (json.status !== 200) {
+          return reject({ msg: "Internal Error" });
+        }
+
+        return resolve(json);
+      })
+      .catch(reject);
+  });
+};

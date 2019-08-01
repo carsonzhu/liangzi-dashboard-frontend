@@ -52,6 +52,5 @@ $ npm test
 
 ## Deployment
 
-- The app will be automatically deployed on Netlify at https://lz-carrental-webapp.netlify.com.<br>
-- Storybook will be automatically deployed on Netlify at https://lz-carrental-storybook.netlify.com.<br>
+- The app will be automatically deployed on Netlify at https://5d4269304fc6f000087da9b2--stoic-easley-8e8f65.netlify.com.<br>
 - Every pull request will also have a deployed preview.

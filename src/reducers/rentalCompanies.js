@@ -42,9 +42,12 @@ export default (state = initialState, action) => {
         loading: true
       };
     case CREATE_RENTAL_COMPANIES_SUCC:
-      // TODO
       return {
         ...state,
+        rentalCompanies: [
+          ...state.rentalCompanies,
+          action.payload.rentalCompany
+        ],
         loading: false,
         error: ""
       };
@@ -60,7 +63,6 @@ export default (state = initialState, action) => {
         loading: true
       };
     case EDIT_RENTAL_COMPANIES_SUCC:
-      // TODO
       return {
         ...state,
         loading: false,

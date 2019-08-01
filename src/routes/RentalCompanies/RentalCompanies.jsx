@@ -9,7 +9,11 @@ import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
 
-import { FETCH_RENTAL_COMPANIES } from "../../reducers/rentalCompanies.js";
+import {
+  FETCH_RENTAL_COMPANIES,
+  CREATE_RENTAL_COMPANIES,
+  EDIT_RENTAL_COMPANIES
+} from "../../reducers/rentalCompanies.js";
 
 const mapStateToProps = state => ({
   token: state.login.token,
@@ -18,7 +22,25 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchRentalCompanies: ({ token }) =>
-    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } })
+    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } }),
+  createRentalCompany: ({
+    token,
+    name,
+    address,
+    image,
+    rating,
+    perks,
+    locationAlias
+  }) =>
+    dispatch({
+      type: CREATE_RENTAL_COMPANIES,
+      payload: { token, name, address, image, rating, perks, locationAlias }
+    }),
+  editRentalCompany: ({ token, rentalCompanyId, fieldToUpdate }) =>
+    dispatch({
+      type: EDIT_RENTAL_COMPANIES,
+      payload: { token, rentalCompanyId, fieldToUpdate }
+    })
 });
 
 class RentalCompanies extends Component {
@@ -166,7 +188,7 @@ class RentalCompanies extends Component {
             data={rentalCompanyToShow}
             inputs={editFieldConfig}
             handleClose={this.closeEditModal}
-            handleSubmit={this.props.editAdmin}
+            handleSubmit={this.props.editRentalCompany}
             afterSubmitAction={this.editModalAndToast}
             token={this.props.token}
             formValuesTransformer={values => {
@@ -183,7 +205,7 @@ class RentalCompanies extends Component {
           <CreateNewModal
             toShow={true}
             handleClose={this.closeNewModal}
-            handleSubmit={() => {}}
+            handleSubmit={this.props.createRentalCompany}
             afterSubmitAction={this.createNewModalAndToast}
             inputs={createNewFieldConfig()}
             token={this.props.token}

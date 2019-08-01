@@ -39,9 +39,9 @@ export const createRentalCompaniesRequest = ({
   locationAlias
 }) => {
   const createRentalCompanyRequestJSONTransform = json => {
-    const { rentalCompanies } = json.data.data;
+    const { newRentalCompany } = json.data.data;
 
-    return { rentalCompanies };
+    return { rentalCompany: newRentalCompany };
   };
 
   return new Promise((resolve, reject) => {

@@ -96,11 +96,14 @@ export const editFieldConfig = ({ values }) => {
     {
       key: "rentalCompanyStatus",
       inputType: "text",
-      value: values["rentalCompanyStatus"] ? "1" : "2",
+      value: values["rentalCompanyStatus"],
       label: "Active Company",
       disabled: false,
-      inputOption: "bool",
-      optionValues: [{ label: "Yes", value: "1" }, { label: "No", value: "2" }]
+      inputOption: INPUT_DROPDOWN,
+      optionValues: [
+        { label: "Yes", value: "AVAILABLE" },
+        { label: "No", value: "UNAVAILABLE" }
+      ]
     }
   ];
 };

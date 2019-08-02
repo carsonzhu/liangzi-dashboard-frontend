@@ -4,6 +4,8 @@ import {
   INPUT_DROPDOWN
 } from "../../components/Forms/FormGroup";
 
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+
 export const header = [
   { title: "Rental Company", key: "rentalCompanyId" },
   { title: "Location Address", key: "locationAddress" },
@@ -31,10 +33,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
     placeholder: true
   });
 
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   const insuranceCheckBoxes = insurances.map(insurance => ({
     label: `${insurance.name} from ${insurance.rentalCompanyName}`,
@@ -86,7 +87,26 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       inputType: "text",
       label: "Location Hours",
       disabled: false,
-      inputOption: "locationHours"
+      inputOption: "locationHours",
+      customErrorValidation: value => {
+        if (!value) {
+          return false;
+        }
+
+        const days = ["mon", "tue", "wed", "thur", "fri", "sat", "sun"];
+
+        for (let i = 0; i < days.length; i++) {
+          const day = days[i];
+
+          if (
+            !(day in value && "open" in value[day] && "close" in value[day])
+          ) {
+            return true;
+          }
+        }
+        return false;
+      },
+      customErrorMsg: "Please fill out the open and close time from Mon - Sun"
     },
     {
       key: "transmission",
@@ -134,10 +154,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
     {
       key: "vehicleImage",
       name: "vehicleImage",
-      inputType: "text",
       label: "Vehicle Image",
       disabled: false,
-      inputOption: INPUT_TEXT
+      inputOption: "imageInput"
     },
     {
       key: "vehicleNotes",
@@ -169,10 +188,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
 export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
   values
 }) => {
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   const insuranceCheckBoxes = insurances.map(insurance => ({
     label: `${insurance.name} from ${insurance.rentalCompanyName}`,

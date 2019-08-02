@@ -14,7 +14,9 @@ import {
   selectionHandler,
   checkBoxHandler,
   locationHoursGroup,
-  locationHoursGroupHandler
+  locationHoursGroupHandler,
+  imageInputGroup,
+  imageInputHandler
 } from "../../Forms/FormGroup";
 
 class CreateNewModal extends Component {
@@ -42,12 +44,12 @@ class CreateNewModal extends Component {
         const {
           key,
           required = true,
-          customErrorValidation,
+          customErrorValidation = false,
           customErrorMsg = ""
         } = field;
 
         // Custom error check
-        if (customErrorValidation) {
+        if (customErrorValidation !== false) {
           if (customErrorValidation(values[key])) {
             errors[key] = customErrorMsg;
           }
@@ -157,6 +159,21 @@ class CreateNewModal extends Component {
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
               onBlur: props.handleBlur,
+              error: props.errors[key]
+            });
+          }
+
+          case "imageInput": {
+            return imageInputGroup({
+              ind: ind,
+              label: label,
+              value: props.values[key],
+              name: key,
+              disabled: disabled,
+              labelClass: "modal__capitalized",
+              onChange: imageInputHandler.bind(this, props, key),
+              onBlur: props.handleBlur,
+              placeholder: placeholder,
               error: props.errors[key]
             });
           }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Formik } from "formik";
-import { Alert, Form, Modal, Button, Col } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import "./editModal.css";
 
 import {

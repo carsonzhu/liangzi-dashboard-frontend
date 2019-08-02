@@ -107,3 +107,19 @@ export const editFieldConfig = ({ values }) => {
     }
   ];
 };
+
+const filterCompanies = ({ rentalCompanies = [{}], status }) => {
+  return rentalCompanies.filter(
+    rentalCompany => rentalCompany.rentalCompanyStatus === status
+  );
+};
+
+export const rentalCompanyDropdownHelper = ({ rentalCompanies }) => {
+  return filterCompanies({
+    rentalCompanies,
+    status: "AVAILABLE"
+  }).map(rentalCompany => ({
+    label: rentalCompany.name,
+    value: rentalCompany._id
+  }));
+};

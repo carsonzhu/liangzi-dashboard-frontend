@@ -58,8 +58,6 @@ function* addVehiclesAsync(action) {
     insuranceIds
   } = action.payload;
 
-  console.log("vehicleImage", vehicleImage);
-
   try {
     const json = yield call(addVehicleRequest, {
       token,
@@ -78,8 +76,6 @@ function* addVehiclesAsync(action) {
       vehicleNotes,
       insuranceIds
     });
-
-    console.log("addVehicleRequest", json);
 
     const vehicleId = json.vehicle._id;
 

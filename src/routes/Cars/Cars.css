@@ -37,3 +37,7 @@
     display: flex;
     justify-content: space-between;
 }
+
+.form-control-file {
+    width: 60%;
+}

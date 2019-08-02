@@ -211,15 +211,14 @@ export const deleteVehicleRequest = ({ vehicleId }) => {
 };
 
 export const updateVehicleImageRequest = ({ vehicleId, file, token }) => {
-  var formData = new FormData();
+  const formData = new FormData();
   formData.append("vehicleId", vehicleId);
   formData.append("file", file);
+
   return axios({
     method: "post",
     url: VEHICLE_IMAGE_API,
-    data: {
-      formData
-    },
+    data: formData,
     headers: {
       authorization: token
     }

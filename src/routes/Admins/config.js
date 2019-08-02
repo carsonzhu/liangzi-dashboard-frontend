@@ -4,6 +4,8 @@ import {
   INPUT_DROPDOWN
 } from "../../components/Forms/FormGroup";
 
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+
 export const createNewFieldConfig = ({ rentalCompanies }) => {
   const PLACEHOLDER = label => ({
     label: label,
@@ -11,10 +13,9 @@ export const createNewFieldConfig = ({ rentalCompanies }) => {
     placeholder: true
   });
 
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   return [
     {
@@ -94,10 +95,9 @@ export const createNewFieldConfig = ({ rentalCompanies }) => {
 };
 
 export const editFieldConfig = ({ rentalCompanies }) => ({ values }) => {
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   const operationRadioBoxes = [
     {
@@ -155,7 +155,8 @@ export const editFieldConfig = ({ rentalCompanies }) => ({ values }) => {
       value: "12345678",
       label: "Password",
       disabled: true,
-      inputOption: INPUT_TEXT
+      inputOption: INPUT_TEXT,
+      required: false
     },
     {
       key: "userType",

@@ -4,6 +4,8 @@ import {
   INPUT_DROPDOWN
 } from "../../components/Forms/FormGroup";
 
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+
 export const header = [
   { title: "Rental Company", key: "rentalCompanyId" },
   { title: "Location Address", key: "locationAddress" },
@@ -31,10 +33,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
     placeholder: true
   });
 
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   const insuranceCheckBoxes = insurances.map(insurance => ({
     label: `${insurance.name} from ${insurance.rentalCompanyName}`,
@@ -169,10 +170,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
 export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
   values
 }) => {
-  const rentalCompanyDropdown = rentalCompanies.map(rentalCompany => ({
-    label: rentalCompany.name,
-    value: rentalCompany._id
-  }));
+  const rentalCompanyDropdown = rentalCompanyDropdownHelper({
+    rentalCompanies
+  });
 
   const insuranceCheckBoxes = insurances.map(insurance => ({
     label: `${insurance.name} from ${insurance.rentalCompanyName}`,

@@ -383,3 +383,45 @@ export const imageGroup = ({ containerClassName, imgClassName, value }) => (
     <img className={imgClassName} src={value} alt={imgClassName} />
   </div>
 );
+
+export const imageInputGroup = ({
+  ind,
+  label,
+  name,
+  disabled,
+  labelClass,
+  onChange,
+  onBlur,
+  error,
+  placeholder = "",
+  required = true
+}) => {
+  return (
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
+        <Form.Control
+          type={"file"}
+          name={name}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          required={required}
+          accept={".jpg, .jpeg, .png"}
+        />
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
+  );
+};
+
+export const imageInputHandler = function imageInputHandler(
+  formikProps,
+  key,
+  event
+) {
+  const file = event.target.files[0];
+
+  formikProps.setFieldValue(key, file, false);
+};

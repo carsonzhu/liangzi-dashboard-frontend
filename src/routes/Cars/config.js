@@ -87,7 +87,26 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       inputType: "text",
       label: "Location Hours",
       disabled: false,
-      inputOption: "locationHours"
+      inputOption: "locationHours",
+      customErrorValidation: value => {
+        if (!value) {
+          return false;
+        }
+
+        const days = ["mon", "tue", "wed", "thur", "fri", "sat", "sun"];
+
+        for (let i = 0; i < days.length; i++) {
+          const day = days[i];
+
+          if (
+            !(day in value && "open" in value[day] && "close" in value[day])
+          ) {
+            return true;
+          }
+        }
+        return false;
+      },
+      customErrorMsg: "Please fill out the open and close time from Mon - Sun"
     },
     {
       key: "transmission",
@@ -135,10 +154,9 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
     {
       key: "vehicleImage",
       name: "vehicleImage",
-      inputType: "text",
       label: "Vehicle Image",
       disabled: false,
-      inputOption: INPUT_TEXT
+      inputOption: "imageInput"
     },
     {
       key: "vehicleNotes",

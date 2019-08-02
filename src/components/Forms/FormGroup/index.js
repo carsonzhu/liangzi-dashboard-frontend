@@ -1,4 +1,6 @@
 import React from "react";
+import _ from "lodash";
+
 import { Form } from "react-bootstrap";
 
 export const INPUT_TEXT = "INPUT_TEXT";
@@ -378,11 +380,21 @@ export const locationHoursGroup = ({
   );
 };
 
-export const imageGroup = ({ containerClassName, imgClassName, value }) => (
-  <div className={containerClassName}>
-    <img className={imgClassName} src={value} alt={imgClassName} />
-  </div>
-);
+export const imageGroup = ({ containerClassName, imgClassName, value }) => {
+  const binaryData = _.get(value, "data.data", []);
+
+  return (
+    <div className={containerClassName}>
+      <img
+        className={imgClassName}
+        src={`data:image/png;base64,${btoa(
+          String.fromCharCode.apply(null, new Uint8Array(binaryData))
+        )}`}
+        alt={imgClassName}
+      />
+    </div>
+  );
+};
 
 export const imageInputGroup = ({
   ind,

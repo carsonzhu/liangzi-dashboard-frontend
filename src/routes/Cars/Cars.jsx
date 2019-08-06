@@ -264,7 +264,6 @@ class Cars extends Component {
             formValuesTransformer={values => {
               const vehicleId = values._id;
 
-              delete values.vehicleImage;
               delete values._id;
               delete values.__v;
 

@@ -16,7 +16,9 @@ import {
   locationHoursGroup,
   locationHoursGroupHandler,
   booleanDropdownHandler,
-  imageGroup
+  imageGroup,
+  editableImageGroup,
+  imageInputHandler
 } from "../../Forms/FormGroup";
 
 class EditModal extends Component {
@@ -105,7 +107,6 @@ class EditModal extends Component {
     })
   }) {
     const disabledLogic = disabled => !beingEdited || disabled;
-    console.log("props.errors", props.errors);
 
     return inputs({ values: props.values }).map(
       (
@@ -202,10 +203,39 @@ class EditModal extends Component {
           }
 
           case "image": {
-            return imageGroup({
+            // const isDisabled = disabledLogic(disabled);
+
+            // return isDisabled
+            //   ? imageGroup({
+            //       value: value,
+            //       imgClassName,
+            //       containerClassName
+            //     })
+            //   : editableImageGroup({
+            //       ind: ind,
+            //       name: key,
+            //       value: value,
+            //       imgClassName,
+            //       containerClassName,
+            //       label: label,
+            //       labelClass: "modal__capitalized",
+            //       onChange: imageInputHandler.bind(this, props, key),
+            //       onBlur: props.handleBlur,
+            //       placeholder: placeholder
+            //     });
+
+            return editableImageGroup({
+              ind: ind,
+              name: key,
               value: value,
               imgClassName,
-              containerClassName
+              containerClassName,
+              label: label,
+              labelClass: "modal__capitalized",
+              onChange: imageInputHandler.bind(this, props, key),
+              onBlur: props.handleBlur,
+              disabled: disabledLogic(disabled),
+              error: props.errors[key]
             });
           }
 
@@ -235,7 +265,6 @@ class EditModal extends Component {
           initialValues={data}
           onSubmit={(values, _) => {
             // TODO: values transform
-            console.log("values", values);
 
             this.onSubmitHandler(this.props.formValuesTransformer(values));
           }}

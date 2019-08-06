@@ -105,12 +105,24 @@ function* addVehiclesAsync(action) {
 
 function* updateVehiclesAsync(action) {
   const { token, vehicleId, fieldToUpdate } = action.payload;
+
+  const { vehicleImage = null } = fieldToUpdate;
+  delete fieldToUpdate.vehicleImage;
+
   try {
     yield call(updateVehicleRequest, {
       token,
       vehicleId,
       fieldToUpdate
     });
+
+    if (vehicleImage) {
+      yield call(updateVehicleImageRequest, {
+        vehicleId,
+        file: vehicleImage,
+        token
+      });
+    }
 
     yield put({
       type: UPDATE_VEHICLES_SUCC

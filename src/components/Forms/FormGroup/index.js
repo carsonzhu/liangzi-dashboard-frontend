@@ -437,3 +437,49 @@ export const imageInputHandler = function imageInputHandler(
 
   formikProps.setFieldValue(key, file, false);
 };
+
+export const editableImageGroup = ({
+  ind,
+  name,
+  label,
+  labelClass,
+  containerClassName,
+  imgClassName,
+  value,
+  onChange,
+  onBlur,
+  placeholder,
+  required = true,
+  disabled,
+  error
+}) => {
+  const binaryData = _.get(value, "data.data", null);
+
+  return (
+    <div className={containerClassName}>
+      {binaryData && (
+        <img
+          className={imgClassName}
+          src={`data:image/png;base64,${btoa(
+            String.fromCharCode.apply(null, new Uint8Array(binaryData))
+          )}`}
+          alt={imgClassName}
+        />
+      )}
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
+        <Form.Control
+          type={"file"}
+          name={name}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          required={required}
+          accept={".jpg, .jpeg, .png"}
+        />
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
+  );
+};

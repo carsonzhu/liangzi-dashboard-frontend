@@ -26,6 +26,8 @@ export const getRentalCompanyName = ({ rentalCompanyId, rentalCompanies }) => {
   return rentalCompanyName;
 };
 
+const MULTER_FILESIZE_LIMIT = 1000000;
+
 export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
   const PLACEHOLDER = label => ({
     label: label,
@@ -150,13 +152,23 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       inputOption: INPUT_TEXT,
       placeholder: "Ex. Toyota"
     },
-    // TODO: image upload
     {
       key: "vehicleImage",
       name: "vehicleImage",
       label: "Vehicle Image",
       disabled: false,
-      inputOption: "imageInput"
+      inputOption: "imageInput",
+      customErrorValidation: value => {
+        if (!value) {
+          return false;
+        }
+
+        if (value.size > MULTER_FILESIZE_LIMIT) {
+          return true;
+        }
+        return false;
+      },
+      customErrorMsg: "Image oversize"
     },
     {
       key: "vehicleNotes",
@@ -205,7 +217,20 @@ export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
       value: values["vehicleImage"],
       containerClassName: "vehile-image",
       imgClassName: "target-image",
-      inputOption: "image"
+      inputOption: "image",
+      disabled: false,
+      label: "Vehicle Image",
+      customErrorValidation: value => {
+        if (!value) {
+          return false;
+        }
+
+        if (value.size > MULTER_FILESIZE_LIMIT) {
+          return true;
+        }
+        return false;
+      },
+      customErrorMsg: "Image oversize"
     },
     {
       key: "dailyRate",
@@ -245,7 +270,6 @@ export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
       disabled: false,
       inputOption: INPUT_TEXT
     },
-    // TODO
     {
       key: "locationHours",
       inputType: "text",
@@ -300,7 +324,6 @@ export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
       inputOption: INPUT_TEXT,
       placeholder: "Ex. Toyota"
     },
-    // TODO
     {
       key: "vehicleNotes",
       inputType: "text",

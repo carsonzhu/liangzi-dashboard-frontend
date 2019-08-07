@@ -1,6 +1,8 @@
 import axios from "axios";
 import _ from "lodash";
 
+import { LIANG_ZI_BACKEND_URL } from "./utilities";
+
 const SEARCH_VEHICLE_API = process.env.REACT_APP_SEARCH_VEHICLE_API;
 
 export const searchQueryBuilder = () => {
@@ -87,7 +89,6 @@ export const search = query => {
 //////////////////////////////////////////
 // API Usage
 //////////////////////////////////////////
-import { LIANG_ZI_BACKEND_URL } from "./utilities";
 
 const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
 const VEHICLE_IMAGE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles/updateImage`;

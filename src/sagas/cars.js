@@ -116,7 +116,7 @@ function* updateVehiclesAsync(action) {
       fieldToUpdate
     });
 
-    if (vehicleImage) {
+    if (typeof vehicleImage.name == "string") {
       yield call(updateVehicleImageRequest, {
         vehicleId,
         file: vehicleImage,

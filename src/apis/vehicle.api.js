@@ -87,7 +87,8 @@ export const search = query => {
 //////////////////////////////////////////
 // API Usage
 //////////////////////////////////////////
-const LIANG_ZI_BACKEND_URL = process.env.REACT_APP_LIANG_ZI_BACKEND_URL;
+import { LIANG_ZI_BACKEND_URL } from "./utilities";
+
 const VEHICLE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles`;
 const VEHICLE_IMAGE_API = `${LIANG_ZI_BACKEND_URL}/apis/vehicles/updateImage`;
 

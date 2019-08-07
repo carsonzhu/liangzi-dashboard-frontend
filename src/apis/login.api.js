@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const LIANG_ZI_BACKEND_URL = process.env.REACT_APP_LIANG_ZI_BACKEND_URL;
+import { LIANG_ZI_BACKEND_URL } from "./utilities";
 
 const LOGIN_API = `${LIANG_ZI_BACKEND_URL}/apis/authentication/login`;
 const REGISTER_API = `${LIANG_ZI_BACKEND_URL}/apis/authentication/register/email`;

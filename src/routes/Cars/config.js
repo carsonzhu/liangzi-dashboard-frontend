@@ -190,7 +190,7 @@ export const createNewFieldConfig = ({ rentalCompanies, insurances }) => {
       inputType: "text",
       label: "Special Services",
       disabled: false,
-      inputOption: INPUT_TEXT,
+      inputOption: "listInputGroup",
       required: false,
       placeholder: "(OPTIONAL)"
     }
@@ -346,7 +346,7 @@ export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
       value: values["specialServices"],
       label: "Special Services",
       disabled: false,
-      inputOption: INPUT_TEXT,
+      inputOption: "listInputGroup",
       required: false,
       placeholder: "(OPTIONAL)"
     },

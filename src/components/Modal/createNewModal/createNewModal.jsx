@@ -16,7 +16,9 @@ import {
   locationHoursGroup,
   locationHoursGroupHandler,
   imageInputGroup,
-  imageInputHandler
+  imageInputHandler,
+  ListInputGroup,
+  listInputGroupHandler
 } from "../../Forms/FormGroup";
 
 class CreateNewModal extends Component {
@@ -159,7 +161,8 @@ class CreateNewModal extends Component {
               labelClass: "modal__capitalized",
               onChange: locationHoursGroupHandler.bind(this, props, key),
               onBlur: props.handleBlur,
-              error: props.errors[key]
+              error: props.errors[key],
+              placeholder: true
             });
           }
 
@@ -176,6 +179,24 @@ class CreateNewModal extends Component {
               placeholder: placeholder,
               error: props.errors[key]
             });
+          }
+
+          case "listInputGroup": {
+            return (
+              <ListInputGroup
+                ind={ind}
+                label={label}
+                type={inputType}
+                value={props.values[key]}
+                name={key}
+                disabled={disabled}
+                labelClass={"modal__capitalized"}
+                onChange={listInputGroupHandler.bind(this, props, key)}
+                onBlur={props.handleBlur}
+                placeholder={placeholder}
+                error={props.errors[key]}
+              />
+            );
           }
 
           default:

@@ -1,0 +1,10 @@
+.listInputGroup__input-container {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.listInputGroup__input-container .listInputGroup__input.form-control {
+    width: 100%;
+}

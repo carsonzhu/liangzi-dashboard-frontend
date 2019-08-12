@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 
-import { Form } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 
 export const INPUT_TEXT = "INPUT_TEXT";
 export const INPUT_DROPDOWN = "INPUT_DROPDOWN";
@@ -224,7 +224,8 @@ export const locationHoursGroup = ({
   onChange,
   onBlur,
   error,
-  required = true
+  required = true,
+  placeholder = false
 }) => {
   const getObjectValue = ({ value, keys }) => {
     const [day, time] = keys.split("_");
@@ -326,20 +327,12 @@ export const locationHoursGroup = ({
                   onBlur={onBlur}
                   required={required}
                 >
+                  {placeholder && (
+                    <option value="" disabled={true} selected={true}>
+                      ----
+                    </option>
+                  )}
                   {amOptionValues.map((option, ind) => {
-                    if (option.placeholder) {
-                      return (
-                        <option
-                          key={ind}
-                          value={option.value}
-                          disabled={option.disabled}
-                          selected={option.selected}
-                        >
-                          {option.label}
-                        </option>
-                      );
-                    }
-
                     return <option value={option.value}>{option.label}</option>;
                   })}
                 </Form.Control>
@@ -353,20 +346,12 @@ export const locationHoursGroup = ({
                   onBlur={onBlur}
                   required={required}
                 >
+                  {placeholder && (
+                    <option value="" disabled={true} selected={true}>
+                      ----
+                    </option>
+                  )}
                   {pmOptionValues.map((option, ind) => {
-                    if (option.placeholder) {
-                      return (
-                        <option
-                          key={ind}
-                          value={option.value}
-                          disabled={option.disabled}
-                          selected={option.selected}
-                        >
-                          {option.label}
-                        </option>
-                      );
-                    }
-
                     return <option value={option.value}>{option.label}</option>;
                   })}
                 </Form.Control>
@@ -482,4 +467,82 @@ export const editableImageGroup = ({
       {error && <div className="error-msg">{error}</div>}
     </div>
   );
+};
+
+export const ListInputGroup = ({
+  ind,
+  label,
+  type,
+  value = [],
+  name,
+  disabled,
+  labelClass,
+  error,
+  onChange,
+  onBlur,
+  required = true,
+  placeholder
+}) => {
+  const [listInputs, setListInputs] = useState(value.length || 1);
+
+  const inputGenerator = ({ type, value, key }) => (
+    <Form.Control
+      type={type}
+      value={value}
+      name={key}
+      disabled={disabled}
+      onChange={onChange}
+      onBlur={onBlur}
+      placeholder={placeholder}
+      required={required}
+      className={"listInputGroup__input"}
+    />
+  );
+
+  return (
+    <div>
+      <Form.Group key={ind} controlId={`form-${name}`}>
+        <Form.Label className={labelClass}>{label}</Form.Label>
+        <div className={"listInputGroup__input-container"}>
+          {_.range(listInputs).map(index =>
+            inputGenerator({
+              type,
+              value: value[index],
+              key: `${name}-${index}`
+            })
+          )}
+          {!disabled && (
+            <Button
+              variant="outline-primary"
+              onClick={() => setListInputs(listInputs + 1)}
+            >
+              +
+            </Button>
+          )}
+        </div>
+      </Form.Group>
+      {error && <div className="error-msg">{error}</div>}
+    </div>
+  );
+};
+
+export const listInputGroupHandler = function listInputGroupHandler(
+  formikProps,
+  key,
+  event
+) {
+  const value = event.target.value || "";
+  const fieldName = event.target.name || "-";
+
+  const [_, index] = fieldName.split("-");
+
+  const inputList = formikProps.values[key] || [];
+
+  if (index > inputList.length) {
+    inputList.push(value);
+  } else {
+    inputList[index] = value;
+  }
+
+  formikProps.setFieldValue(key, inputList, false);
 };

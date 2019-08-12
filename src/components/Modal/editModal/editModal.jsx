@@ -18,7 +18,9 @@ import {
   booleanDropdownHandler,
   imageGroup,
   editableImageGroup,
-  imageInputHandler
+  imageInputHandler,
+  ListInputGroup,
+  listInputGroupHandler
 } from "../../Forms/FormGroup";
 
 class EditModal extends Component {
@@ -203,27 +205,6 @@ class EditModal extends Component {
           }
 
           case "image": {
-            // const isDisabled = disabledLogic(disabled);
-
-            // return isDisabled
-            //   ? imageGroup({
-            //       value: value,
-            //       imgClassName,
-            //       containerClassName
-            //     })
-            //   : editableImageGroup({
-            //       ind: ind,
-            //       name: key,
-            //       value: value,
-            //       imgClassName,
-            //       containerClassName,
-            //       label: label,
-            //       labelClass: "modal__capitalized",
-            //       onChange: imageInputHandler.bind(this, props, key),
-            //       onBlur: props.handleBlur,
-            //       placeholder: placeholder
-            //     });
-
             return editableImageGroup({
               ind: ind,
               name: key,
@@ -237,6 +218,24 @@ class EditModal extends Component {
               disabled: disabledLogic(disabled),
               error: props.errors[key]
             });
+          }
+
+          case "listInputGroup": {
+            return (
+              <ListInputGroup
+                ind={ind}
+                label={label}
+                type={inputType}
+                value={props.values[key]}
+                name={key}
+                disabled={disabledLogic(disabled)}
+                labelClass={"modal__capitalized"}
+                onChange={listInputGroupHandler.bind(this, props, key)}
+                onBlur={props.handleBlur}
+                placeholder={placeholder}
+                error={props.errors[key]}
+              />
+            );
           }
 
           default:

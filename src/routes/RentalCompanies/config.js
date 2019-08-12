@@ -19,6 +19,15 @@ export const createNewFieldConfig = () => {
       label: "Company Address",
       disabled: false,
       inputOption: INPUT_TEXT
+    },
+    {
+      key: "locationAlias",
+      inputType: "text",
+      label: "Location Alias",
+      disabled: false,
+      required: false,
+      inputOption: "listInputGroup",
+      placeholder: "(OPTIONAL)"
     }
     // {
     //   key: "rating",
@@ -32,15 +41,6 @@ export const createNewFieldConfig = () => {
     //   key: "perks",
     //   inputType: "text",
     //   label: "Perks",
-    //   disabled: false,
-    //   required: false,
-    //   inputOption: INPUT_TEXT,
-    //   placeholder: "(OPTIONAL)"
-    // },
-    // {
-    //   key: "locationAlias",
-    //   inputType: "text",
-    //   label: "Location Alias",
     //   disabled: false,
     //   required: false,
     //   inputOption: INPUT_TEXT,
@@ -84,15 +84,15 @@ export const editFieldConfig = ({ values }) => {
     //   required: false,
     //   inputOption: INPUT_TEXT
     // },
-    // {
-    //   key: "locationAlias",
-    //   inputType: "text",
-    //   value: values["locationAlias"],
-    //   label: "Location Alias",
-    //   disabled: false,
-    //   required: false,
-    //   inputOption: INPUT_TEXT
-    // },
+    {
+      key: "locationAlias",
+      inputType: "text",
+      value: values["locationAlias"],
+      label: "Location Alias",
+      disabled: false,
+      required: false,
+      inputOption: "listInputGroup"
+    },
     {
       key: "rentalCompanyStatus",
       inputType: "text",

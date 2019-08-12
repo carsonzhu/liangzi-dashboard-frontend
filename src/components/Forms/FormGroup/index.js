@@ -440,13 +440,27 @@ export const editableImageGroup = ({
 }) => {
   const binaryData = _.get(value, "data.data", null);
 
+  function Uint8ToBase64(u8Arr) {
+    var CHUNK_SIZE = 0x8000; //arbitrary number
+    var index = 0;
+    var length = u8Arr.length;
+    var result = "";
+    var slice;
+    while (index < length) {
+      slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
+      result += String.fromCharCode.apply(null, slice);
+      index += CHUNK_SIZE;
+    }
+    return btoa(result);
+  }
+
   return (
     <div className={containerClassName}>
       {binaryData && (
         <img
           className={imgClassName}
-          src={`data:image/png;base64,${btoa(
-            String.fromCharCode.apply(null, new Uint8Array(binaryData))
+          src={`data:image/png;base64,${Uint8ToBase64(
+            new Uint8Array(binaryData)
           )}`}
           alt={imgClassName}
         />

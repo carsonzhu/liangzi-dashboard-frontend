@@ -8,7 +8,7 @@ import {
   FETCH_ORDERS_FAIL
 } from "../reducers/orders";
 
-import {} from "../apis/rentalCompany.api";
+import { getOrdersRequest } from "../apis/orders.api";
 
 // Sagas
 function* fetchOrdersAsync(action) {
@@ -17,12 +17,12 @@ function* fetchOrdersAsync(action) {
     const json = yield call(getOrdersRequest, { token });
 
     yield put({
-      type: FETCH_RENTAL_COMPANIES_SUCC,
+      type: FETCH_ORDERS_SUCC,
       payload: json
     });
   } catch (err) {
     yield put({
-      type: FETCH_RENTAL_COMPANIES_FAIL,
+      type: FETCH_ORDERS_FAIL,
       payload: { error: fetchError({ error: err }) }
     });
   }
@@ -30,7 +30,7 @@ function* fetchOrdersAsync(action) {
 
 // Watcher Sagas
 function* fetchOrdersSaga() {
-  yield takeEvery(FETCH_RENTAL_COMPANIES, fetchOrdersAsync);
+  yield takeEvery(FETCH_ORDERS, fetchOrdersAsync);
 }
 
 export default [fetchOrdersSaga()];

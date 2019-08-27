@@ -31,7 +31,7 @@ export const getOrdersRequest = ({ token }) => {
 };
 
 // TODO
-export const createOrdersRequest = ({ token }) => {
+export const createOrderRequest = ({ token }) => {
   const createOrderRequestJSONTransform = json => {
     const { newOrder } = json.data.data;
 
@@ -58,7 +58,7 @@ export const createOrdersRequest = ({ token }) => {
   });
 };
 
-export const editOrdersRequest = ({ token, orderId, fieldToUpdate }) => {
+export const editOrderRequest = ({ token, orderId, fieldToUpdate }) => {
   return new Promise((resolve, reject) => {
     axios({
       method: "put",

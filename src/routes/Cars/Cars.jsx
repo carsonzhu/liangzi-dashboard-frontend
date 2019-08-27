@@ -30,7 +30,8 @@ const mapStateToProps = state => ({
   rentalCompanies: state.rentalCompanies.rentalCompanies,
   userType: state.login.userType,
   insurances: state.insurances.insurances,
-  error: state.cars.error
+  error: state.cars.error,
+  orders: state.orders.orders
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,7 +91,8 @@ class Cars extends Component {
     rentalCompanies: PropTypes.array,
     fetchInsurances: PropTypes.func,
     updateVehicles: PropTypes.func,
-    addVehicle: PropTypes.func
+    addVehicle: PropTypes.func,
+    orders: PropTypes.array
   };
 
   static defaultProps = {
@@ -98,7 +100,8 @@ class Cars extends Component {
     isLoading: false,
     token: "",
     rentalCompanies: [],
-    createVehicle: () => {}
+    createVehicle: () => {},
+    orders: []
   };
 
   state = {

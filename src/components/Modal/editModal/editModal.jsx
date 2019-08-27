@@ -264,7 +264,6 @@ class EditModal extends Component {
           initialValues={data}
           onSubmit={(values, _) => {
             // TODO: values transform
-
             this.onSubmitHandler(this.props.formValuesTransformer(values));
           }}
           render={props => (

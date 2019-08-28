@@ -37,7 +37,9 @@ export const createRentalCompaniesRequest = ({
   image,
   rating,
   perks,
-  locationAlias
+  locationAlias,
+  companyRepName,
+  companyPhoneNumber
 }) => {
   const createRentalCompanyRequestJSONTransform = json => {
     const { newRentalCompany } = json.data.data;
@@ -49,7 +51,16 @@ export const createRentalCompaniesRequest = ({
     axios({
       method: "post",
       url: RENTAL_COMPANY_API,
-      data: { name, address, image, rating, perks, locationAlias },
+      data: {
+        name,
+        address,
+        image,
+        rating,
+        perks,
+        locationAlias,
+        companyRepName,
+        companyPhoneNumber
+      },
       headers: {
         authorization: token
       }

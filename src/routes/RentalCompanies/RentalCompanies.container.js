@@ -21,11 +21,23 @@ const mapDispatchToProps = dispatch => ({
     image,
     rating,
     perks,
-    locationAlias
+    locationAlias,
+    companyRepName,
+    companyPhoneNumber
   }) =>
     dispatch({
       type: CREATE_RENTAL_COMPANIES,
-      payload: { token, name, address, image, rating, perks, locationAlias }
+      payload: {
+        token,
+        name,
+        address,
+        image,
+        rating,
+        perks,
+        locationAlias,
+        companyRepName,
+        companyPhoneNumber
+      }
     }),
   editRentalCompany: ({ token, rentalCompanyId, fieldToUpdate }) =>
     dispatch({

@@ -28,6 +28,24 @@ export const createNewFieldConfig = () => {
       required: false,
       inputOption: "listInputGroup",
       placeholder: "(OPTIONAL)"
+    },
+    {
+      key: "companyRepName",
+      inputType: "text",
+      label: "Company Rep Name",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false,
+      placeholder: "Company Representative (OPTIONAL)"
+    },
+    {
+      key: "companyPhoneNumber",
+      inputType: "tel",
+      label: "Company Phone Number",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false,
+      placeholder: "Company Phone Number (OPTIONAL)"
     }
     // {
     //   key: "rating",
@@ -92,6 +110,24 @@ export const editFieldConfig = ({ values }) => {
       disabled: false,
       required: false,
       inputOption: "listInputGroup"
+    },
+    {
+      key: "companyRepName",
+      inputType: "text",
+      value: values["companyRepName"],
+      label: "Company Rep Name",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false
+    },
+    {
+      key: "companyPhoneNumber",
+      inputType: "tel",
+      value: values["companyPhoneNumber"],
+      label: "Company Phone Number",
+      disabled: false,
+      inputOption: INPUT_TEXT,
+      required: false
     },
     {
       key: "rentalCompanyStatus",

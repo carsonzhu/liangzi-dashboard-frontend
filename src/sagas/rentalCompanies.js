@@ -45,7 +45,9 @@ function* createRentalCompaniesAsync(action) {
     image,
     rating,
     perks,
-    locationAlias
+    locationAlias,
+    companyRepName,
+    companyPhoneNumber
   } = action.payload;
   try {
     const json = yield call(createRentalCompaniesRequest, {
@@ -55,7 +57,9 @@ function* createRentalCompaniesAsync(action) {
       image,
       rating,
       perks,
-      locationAlias
+      locationAlias,
+      companyRepName,
+      companyPhoneNumber
     });
 
     yield put({

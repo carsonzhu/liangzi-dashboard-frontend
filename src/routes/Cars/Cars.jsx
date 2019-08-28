@@ -22,6 +22,7 @@ import {
 } from "../../reducers/cars";
 import { FETCH_INSURANCES } from "../../reducers/insurances";
 import { SUPER_ADMIN } from "../../constants";
+import { checkVehicleAvailable } from "./utilities";
 
 const mapStateToProps = state => ({
   isLoading: state.cars.loading,
@@ -175,7 +176,15 @@ class Cars extends Component {
     return cars.map((info, ind) => (
       <tr
         key={ind}
-        className={classNamePicker({ status: info.vehicleStatus })}
+        // className={classNamePicker({ status: info.vehicleStatus })}
+        className={
+          checkVehicleAvailable({
+            orders: this.props.orders,
+            vehicleId: info._id
+          })
+            ? "cars__column-active"
+            : "cars__column-inuse"
+        }
         onClick={this.vehicleInfoShow.bind(this, info)}
       >
         {header.map((field, ind) => {

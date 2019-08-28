@@ -1,8 +1,10 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
+import { ordersTransform } from "./utilities";
+
 const fields = [
-  { title: "Total", key: "amount" },
+  { title: "Amount", key: "amount" },
   { title: "Currency", key: "currency" },
   { title: "Pickup Time", key: "pickTime" },
   { title: "Return Time", key: "returnTime" },
@@ -19,6 +21,11 @@ const OrderHistory = ({ data, insurances }) => {
       default:
         return paymentMethod;
     }
+  };
+
+  const displayTime = time => {
+    // "2019-08-26T17:54:51.009Z"
+    return time.replace("T", " ").slice(0, -5);
   };
   const displayInsurance = (insurances, insuranceId) => {
     if (!insuranceId) {
@@ -53,7 +60,7 @@ const OrderHistory = ({ data, insurances }) => {
           switch (key) {
             case "pickTime":
             case "returnTime":
-              return <td key={`${ind}-${key}`}>{order[key]}</td>;
+              return <td key={`${ind}-${key}`}>{displayTime(order[key])}</td>;
             case "paymentMethod":
               return (
                 <td key={`${ind}-${key}`}>{displayPayment(order[key])}</td>

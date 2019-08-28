@@ -14,7 +14,7 @@ import {
   editFieldConfig
 } from "./config";
 
-import { checkVehicleAvailable } from "./utilities";
+import { checkVehicleAvailable, ordersTransform } from "./utilities";
 import OrderHistory from "./OrderHistory";
 
 class Cars extends Component {
@@ -42,7 +42,8 @@ class Cars extends Component {
     vehicleToShow: null,
     showToast: false,
     createNewModal: false,
-    orderHistory: null
+    orderHistory: null,
+    vehicleHistory: {}
   };
 
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
@@ -55,9 +56,16 @@ class Cars extends Component {
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
     this.props.fetchInsurances({ token: this.props.token });
+    // this.setState({
+    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
+    // });
   }
 
-  componentDidUpdate(prevProps) {}
+  componentDidUpdate(prevProps) {
+    // this.setState({
+    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
+    // });
+  }
 
   vehicleInfoShow(info) {
     this.setState({ vehicleToShow: info });
@@ -94,7 +102,7 @@ class Cars extends Component {
   theadGenerater() {
     return (
       <tr>
-        {header.map((field, ind) => {
+        {header(this.props.userType).map((field, ind) => {
           return <th key={ind}>{field.title}</th>;
         })}
       </tr>
@@ -129,7 +137,7 @@ class Cars extends Component {
             : "cars__column-inuse"
         }
       >
-        {header.map((field, ind) => {
+        {header(this.props.userType).map((field, ind) => {
           if (field.key === "rentalCompanyId") {
             const rentalCompanyId = info[field.key];
 
@@ -232,7 +240,8 @@ class Cars extends Component {
             data={vehicleToShow}
             inputs={editFieldConfig({
               rentalCompanies: this.props.rentalCompanies,
-              insurances: this.props.insurances
+              insurances: this.props.insurances,
+              userType: this.props.userType
             })}
             handleClose={this.clearVehicleInfo}
             handleSubmit={this.props.updateVehicles}

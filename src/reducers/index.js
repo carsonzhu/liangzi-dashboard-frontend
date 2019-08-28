@@ -4,6 +4,7 @@ import componentState from "./componentState";
 import admins from "./admins";
 import insurances from "./insurances";
 import rentalCompanies from "./rentalCompanies";
+import orders from "./orders";
 
 const appReducer = {
   cars,
@@ -11,7 +12,8 @@ const appReducer = {
   componentState,
   admins,
   insurances,
-  rentalCompanies
+  rentalCompanies,
+  orders
 };
 
 export default appReducer;

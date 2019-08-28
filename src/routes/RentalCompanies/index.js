@@ -1,2 +1,2 @@
-import RentalCompanies from "./RentalCompanies.jsx";
+import RentalCompanies from "./RentalCompanies.container";
 export default RentalCompanies;

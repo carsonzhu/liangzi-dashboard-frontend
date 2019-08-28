@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+
 import { Table, Toast, Button } from "react-bootstrap";
 import "./RentalCompanies.css";
 
@@ -8,40 +8,6 @@ import ActivityIndicator from "../../utilities/activity-indicator";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
-
-import {
-  FETCH_RENTAL_COMPANIES,
-  CREATE_RENTAL_COMPANIES,
-  EDIT_RENTAL_COMPANIES
-} from "../../reducers/rentalCompanies.js";
-
-const mapStateToProps = state => ({
-  token: state.login.token,
-  rentalCompanies: state.rentalCompanies.rentalCompanies
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchRentalCompanies: ({ token }) =>
-    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } }),
-  createRentalCompany: ({
-    token,
-    name,
-    address,
-    image,
-    rating,
-    perks,
-    locationAlias
-  }) =>
-    dispatch({
-      type: CREATE_RENTAL_COMPANIES,
-      payload: { token, name, address, image, rating, perks, locationAlias }
-    }),
-  editRentalCompany: ({ token, rentalCompanyId, fieldToUpdate }) =>
-    dispatch({
-      type: EDIT_RENTAL_COMPANIES,
-      payload: { token, rentalCompanyId, fieldToUpdate }
-    })
-});
 
 class RentalCompanies extends Component {
   static propTypes = {
@@ -216,7 +182,4 @@ class RentalCompanies extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RentalCompanies);
+export default RentalCompanies;

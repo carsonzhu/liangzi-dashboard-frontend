@@ -5,6 +5,7 @@ import Admins from "./admins";
 import Cars from "./cars";
 import Insurances from "./insurances";
 import RentalCompanies from "./rentalCompanies";
+import Orders from "./orders";
 
 export default function* rootSaga() {
   yield all([
@@ -13,6 +14,7 @@ export default function* rootSaga() {
     ...Admins,
     ...Cars,
     ...Insurances,
-    ...RentalCompanies
+    ...RentalCompanies,
+    ...Orders
   ]);
 }

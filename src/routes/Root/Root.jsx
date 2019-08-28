@@ -16,6 +16,7 @@ import { superAdminTabs, normalAdminTabs } from "./config";
 import { SUPER_ADMIN } from "../../constants";
 import { LOGOUT } from "../../reducers/login";
 import { FETCH_RENTAL_COMPANIES } from "../../reducers/rentalCompanies";
+import { FETCH_ORDERS } from "../../reducers/orders.js";
 
 import "./Root.css";
 
@@ -30,7 +31,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   logOut: () => dispatch({ type: LOGOUT }),
   fetchRental: ({ token }) =>
-    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } })
+    dispatch({ type: FETCH_RENTAL_COMPANIES, payload: { token } }),
+  fetchOrders: ({ token }) =>
+    dispatch({ type: FETCH_ORDERS, payload: { token } })
 });
 
 class Root extends Component {
@@ -52,6 +55,7 @@ class Root extends Component {
 
   componentDidUpdate(prevProps) {
     if (!prevProps.token && this.props.token) {
+      this.props.fetchOrders({ token: this.props.token });
       this.props.fetchRental({ token: this.props.token });
     }
   }

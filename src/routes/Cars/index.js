@@ -1,2 +1,2 @@
-import Cars from "./Cars";
+import Cars from "./Cars.container";
 export default Cars;

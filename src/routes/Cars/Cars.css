@@ -10,8 +10,8 @@
     background-color: #ff4444;
 }
 
-.table-hover tbody tr:hover {
-    cursor: pointer;
+.cars-route .table-hover tbody tr:hover {
+    cursor: initial;
 }
 
 .cars-route__legends {

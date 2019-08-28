@@ -11,7 +11,8 @@ export const header = [
   { title: "Location Address", key: "locationAddress" },
   { title: "Vehicle Type", key: "vehicleType" },
   { title: "Vehicle Make", key: "vehicleMake" },
-  { title: "Daily Rate", key: "dailyRateDisplay" }
+  { title: "Daily Rate", key: "dailyRateDisplay" },
+  { title: "Action", key: "action" }
 ];
 
 export const getRentalCompanyName = ({ rentalCompanyId, rentalCompanies }) => {
@@ -349,19 +350,19 @@ export const editFieldConfig = ({ rentalCompanies, insurances }) => ({
       inputOption: "listInputGroup",
       required: false,
       placeholder: "(OPTIONAL)"
-    },
-    {
-      key: "vehicleStatus",
-      inputType: "text",
-      value: values["vehicleStatus"],
-      label: "Vehicle Status",
-      disabled: false,
-      inputOption: INPUT_DROPDOWN,
-      optionValues: [
-        { label: "AVAILABLE", value: "AVAILABLE" },
-        { label: "UNAVAILABLE", value: "UNAVAILABLE" },
-        { label: "RENTED", value: "RENTED" }
-      ]
     }
+    // {
+    //   key: "vehicleStatus",
+    //   inputType: "text",
+    //   value: values["vehicleStatus"],
+    //   label: "Vehicle Status",
+    //   disabled: false,
+    //   inputOption: INPUT_DROPDOWN,
+    //   optionValues: [
+    //     { label: "AVAILABLE", value: "AVAILABLE" },
+    //     { label: "UNAVAILABLE", value: "UNAVAILABLE" },
+    //     { label: "RENTED", value: "RENTED" }
+    //   ]
+    // }
   ];
 };

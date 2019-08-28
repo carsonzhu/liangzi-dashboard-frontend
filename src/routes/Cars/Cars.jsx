@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Table, Toast, Button } from "react-bootstrap";
+import { Table, Toast, Button, Modal } from "react-bootstrap";
 import "./Cars.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
@@ -15,74 +14,8 @@ import {
   editFieldConfig
 } from "./config";
 
-import {
-  FETCH_VEHICLES,
-  ADD_VEHICLES,
-  UPDATE_VEHICLES
-} from "../../reducers/cars";
-import { FETCH_INSURANCES } from "../../reducers/insurances";
-import { SUPER_ADMIN } from "../../constants";
 import { checkVehicleAvailable } from "./utilities";
-
-const mapStateToProps = state => ({
-  isLoading: state.cars.loading,
-  vehicles: state.cars.vehicles,
-  token: state.login.token,
-  rentalCompanies: state.rentalCompanies.rentalCompanies,
-  userType: state.login.userType,
-  insurances: state.insurances.insurances,
-  error: state.cars.error,
-  orders: state.orders.orders
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchVehicles: ({ token }) =>
-    dispatch({ type: FETCH_VEHICLES, payload: { token } }),
-  fetchInsurances: ({ token }) =>
-    dispatch({ type: FETCH_INSURANCES, payload: { token } }),
-  updateVehicles: ({ token, vehicleId, fieldToUpdate }) =>
-    dispatch({
-      type: UPDATE_VEHICLES,
-      payload: { token, vehicleId, fieldToUpdate }
-    }),
-  addVehicle: ({
-    token,
-    dailyRate,
-    dailyRateUnit,
-    locationAddress,
-    locationHours,
-    specialServices,
-    transmission,
-    vehicleType,
-    trunkSize,
-    seats,
-    rentalCompanyId,
-    vehicleMake,
-    vehicleImage,
-    vehicleNotes,
-    insuranceIds
-  }) =>
-    dispatch({
-      type: ADD_VEHICLES,
-      payload: {
-        token,
-        dailyRate,
-        dailyRateUnit,
-        locationAddress,
-        locationHours,
-        specialServices,
-        transmission,
-        vehicleType,
-        trunkSize,
-        seats,
-        rentalCompanyId,
-        vehicleMake,
-        vehicleImage,
-        vehicleNotes,
-        insuranceIds
-      }
-    })
-});
+import OrderHistory from "./OrderHistory";
 
 class Cars extends Component {
   static propTypes = {
@@ -108,7 +41,8 @@ class Cars extends Component {
   state = {
     vehicleToShow: null,
     showToast: false,
-    createNewModal: false
+    createNewModal: false,
+    orderHistory: null
   };
 
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
@@ -116,6 +50,7 @@ class Cars extends Component {
   closeNewModal = this.closeNewModal.bind(this);
   createNewModalAndToast = this.createNewModalAndToast.bind(this);
   editModalAndToast = this.editModalAndToast.bind(this);
+  clearOrderHistory = this.clearOrderHistory.bind(this);
 
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
@@ -146,6 +81,14 @@ class Cars extends Component {
 
   createNewModalAndToast() {
     this.setState({ createNewModal: false, showToast: "Create Successfully!" });
+  }
+
+  orderHistoryShow(info) {
+    this.setState({ orderHistory: info });
+  }
+
+  clearOrderHistory() {
+    this.setState({ orderHistory: null });
   }
 
   theadGenerater() {
@@ -185,7 +128,6 @@ class Cars extends Component {
             ? "cars__column-active"
             : "cars__column-inuse"
         }
-        onClick={this.vehicleInfoShow.bind(this, info)}
       >
         {header.map((field, ind) => {
           if (field.key === "rentalCompanyId") {
@@ -199,15 +141,38 @@ class Cars extends Component {
                 })}
               </td>
             );
+          } else if (field.key === "action") {
+            return (
+              <td key={ind} style={{ display: "flex", flexDirection: "row" }}>
+                <button onClick={this.vehicleInfoShow.bind(this, info)}>
+                  Edit
+                </button>
+                <button
+                  onClick={this.orderHistoryShow.bind(
+                    this,
+                    this.props.orders.filter(
+                      order => order.vehicleId === info._id
+                    )
+                  )}
+                >
+                  History
+                </button>
+              </td>
+            );
+          } else {
+            return <td key={ind}>{info[field.key]}</td>;
           }
-
-          return <td key={ind}>{info[field.key]}</td>;
         })}
       </tr>
     ));
   }
   render() {
-    const { vehicleToShow, createNewModal, showToast } = this.state;
+    const {
+      vehicleToShow,
+      createNewModal,
+      showToast,
+      orderHistory
+    } = this.state;
 
     return (
       <div className="cars-route">
@@ -240,7 +205,7 @@ class Cars extends Component {
                 <div className="cars-route__legends">
                   <p className="cars-route__legends-green">Active</p>
                   <p className="cars-route__legends-yellow">Rented</p>
-                  <p className="cars-route__legends-red">Inactive</p>
+                  {/* <p className="cars-route__legends-red">Inactive</p> */}
                 </div>
               </div>
             ) : (
@@ -296,12 +261,31 @@ class Cars extends Component {
             token={this.props.token}
           />
         )}
+        {orderHistory && (
+          <Modal size="lg" show={true} onHide={this.clearOrderHistory}>
+            <Modal.Header closeButton>
+              <Modal.Title>Order History</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {!orderHistory.length ? (
+                "No order for this vehicle yet"
+              ) : (
+                <OrderHistory
+                  data={orderHistory}
+                  insurances={this.props.insurances}
+                />
+              )}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={this.clearOrderHistory}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
       </div>
     );
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Cars);
+export default Cars;

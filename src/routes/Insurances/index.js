@@ -1,2 +1,2 @@
-import Insurances from "./Insurances";
+import Insurances from "./Insurances.container";
 export default Insurances;

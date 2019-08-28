@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
+
 import { Table, Toast, Button } from "react-bootstrap";
 import "./Admins.css";
 
@@ -9,47 +9,6 @@ import ActivityIndicator from "../../utilities/activity-indicator";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
-
-import {
-  FETCH_ADMINS,
-  EDIT_ADMINS,
-  CREATE_NEW_ADMINS
-} from "../../reducers/admins";
-
-const mapStateToProps = state => ({
-  isLoading: state.admins.loading,
-  admins: state.admins.admins,
-  token: state.login.token,
-  rentalCompanies: state.rentalCompanies.rentalCompanies
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchAdmins: ({ token }) =>
-    dispatch({ type: FETCH_ADMINS, payload: { token } }),
-  editAdmin: ({ userId, fieldToUpdate, token }) =>
-    dispatch({ type: EDIT_ADMINS, payload: { userId, fieldToUpdate, token } }),
-  createNewAdmin: ({
-    email,
-    password,
-    userType,
-    username,
-    allowedOperations,
-    token,
-    rentalCompanyId
-  }) =>
-    dispatch({
-      type: CREATE_NEW_ADMINS,
-      payload: {
-        email,
-        password,
-        userType,
-        username,
-        allowedOperations,
-        token,
-        rentalCompanyId
-      }
-    })
-});
 
 class Admins extends Component {
   static propTypes = {
@@ -234,7 +193,4 @@ class Admins extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Admins);
+export default Admins;

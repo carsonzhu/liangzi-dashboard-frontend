@@ -167,6 +167,12 @@ class Cars extends Component {
                 </button>
               </td>
             );
+          } else if (field.key === "_id") {
+            return (
+              <td key={ind}>
+                {info[field.key].slice(info[field.key].length - 5)}
+              </td>
+            );
           } else {
             return <td key={ind}>{info[field.key]}</td>;
           }

@@ -49,3 +49,17 @@ export const vehicleStatus = ({ vehicleStatus, vehicleId, orders, date }) => {
 
   return status;
 };
+
+export const vehicleTypeDropdown = ({ cars }) => {
+  const carTypes = {};
+
+  cars.forEach(car => {
+    const carType = car.vehicleType.toLowerCase();
+
+    if (!(carType in carTypes)) {
+      carTypes[carType] = true;
+    }
+  });
+
+  return Object.keys(carTypes).map(type => ({ label: type, value: type }));
+};

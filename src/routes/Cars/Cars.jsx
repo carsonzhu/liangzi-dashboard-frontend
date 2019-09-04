@@ -18,7 +18,7 @@ import {
   editFieldConfig
 } from "./config";
 
-import { checkVehicleAvailable, vehicleStatus } from "./utilities";
+import { vehicleStatus, vehicleTypeDropdown } from "./utilities";
 import OrderHistory from "./OrderHistory";
 import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
 
@@ -173,20 +173,6 @@ class Cars extends Component {
     ));
   }
 
-  vehicleTypeDropdown({ cars }) {
-    const carTypes = {};
-
-    cars.forEach(car => {
-      const carType = car.vehicleType.toLowerCase();
-
-      if (!(carType in carTypes)) {
-        carTypes[carType] = true;
-      }
-    });
-
-    return Object.keys(carTypes).map(type => ({ label: type, value: type }));
-  }
-
   applyFilter({ car = { Company: {}, rentalCompanyId: "" }, states = {} }) {
     const {
       filterRentalCompanyId,
@@ -232,7 +218,10 @@ class Cars extends Component {
       createNewModal,
       showToast,
       orderHistory,
-      filterDisplay
+      filterDisplay,
+      filterRentalCompanyId,
+      filterVehicleStatus,
+      filterVehicleType
     } = this.state;
 
     const rentalCompaniesFilter = [
@@ -253,7 +242,7 @@ class Cars extends Component {
 
     const vehicleTypeFilter = [
       { label: "All", value: "All" },
-      ...this.vehicleTypeDropdown({ cars: this.props.vehicles })
+      ...vehicleTypeDropdown({ cars: this.props.vehicles })
     ];
 
     const filteredVehicles = this.props.vehicles.filter(car =>
@@ -312,6 +301,13 @@ class Cars extends Component {
                     }
                   >
                     {rentalCompaniesFilter.map(option => {
+                      if (option.value === filterRentalCompanyId) {
+                        return (
+                          <option value={option.value} selected>
+                            {option.label}
+                          </option>
+                        );
+                      }
                       return (
                         <option value={option.value}>{option.label}</option>
                       );
@@ -329,6 +325,13 @@ class Cars extends Component {
                     }
                   >
                     {statusFilter.map(option => {
+                      if (option.value === filterVehicleStatus) {
+                        return (
+                          <option value={option.value} selected>
+                            {option.label}
+                          </option>
+                        );
+                      }
                       return (
                         <option value={option.value}>{option.label}</option>
                       );
@@ -346,6 +349,13 @@ class Cars extends Component {
                     }
                   >
                     {vehicleTypeFilter.map(option => {
+                      if (option.value === filterVehicleType) {
+                        return (
+                          <option value={option.value} selected>
+                            {option.label}
+                          </option>
+                        );
+                      }
                       return (
                         <option value={option.value}>{option.label}</option>
                       );

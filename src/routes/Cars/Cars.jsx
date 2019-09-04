@@ -18,7 +18,7 @@ import {
   editFieldConfig
 } from "./config";
 
-import { vehicleStatus, vehicleTypeDropdown } from "./utilities";
+import { vehicleStatus, vehicleTypeDropdown, applyFilter } from "./utilities";
 import OrderHistory from "./OrderHistory";
 import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
 
@@ -173,45 +173,6 @@ class Cars extends Component {
     ));
   }
 
-  applyFilter({ car = { Company: {}, rentalCompanyId: "" }, states = {} }) {
-    const {
-      filterRentalCompanyId,
-      filterVehicleStatus,
-      filterVehicleType,
-      filterDate
-    } = states;
-
-    if (
-      filterRentalCompanyId &&
-      filterRentalCompanyId !== "All" &&
-      car.rentalCompanyId !== filterRentalCompanyId
-    ) {
-      return false;
-    }
-
-    if (
-      filterVehicleType &&
-      filterVehicleType !== "All" &&
-      car.vehicleType.toLowerCase() !== filterVehicleType
-    ) {
-      return false;
-    }
-
-    if (filterVehicleStatus) {
-      const carStatus = vehicleStatus({
-        vehicleStatus: car.vehicleStatus,
-        vehicleId: car._id,
-        orders: this.props.orders,
-        date: filterDate
-      });
-
-      if (filterVehicleStatus !== "All" && carStatus !== filterVehicleStatus)
-        return false;
-    }
-
-    return true;
-  }
-
   render() {
     const {
       vehicleToShow,
@@ -246,7 +207,7 @@ class Cars extends Component {
     ];
 
     const filteredVehicles = this.props.vehicles.filter(car =>
-      this.applyFilter({ car, states: this.state })
+      applyFilter({ car, states: this.state, orders: this.props.orders })
     );
 
     return (
@@ -290,30 +251,32 @@ class Cars extends Component {
             </div>
             {filterDisplay && (
               <div className="cars-route__filter">
-                <Form.Group>
-                  <Form.Label>Rental Company</Form.Label>
-                  <Form.Control
-                    as="select"
-                    onChange={value =>
-                      this.setState({
-                        filterRentalCompanyId: value.target.value
-                      })
-                    }
-                  >
-                    {rentalCompaniesFilter.map(option => {
-                      if (option.value === filterRentalCompanyId) {
-                        return (
-                          <option value={option.value} selected>
-                            {option.label}
-                          </option>
-                        );
+                {this.props.userType === "superAdmin" && (
+                  <Form.Group>
+                    <Form.Label>Rental Company</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={value =>
+                        this.setState({
+                          filterRentalCompanyId: value.target.value
+                        })
                       }
-                      return (
-                        <option value={option.value}>{option.label}</option>
-                      );
-                    })}
-                  </Form.Control>
-                </Form.Group>
+                    >
+                      {rentalCompaniesFilter.map(option => {
+                        if (option.value === filterRentalCompanyId) {
+                          return (
+                            <option value={option.value} selected>
+                              {option.label}
+                            </option>
+                          );
+                        }
+                        return (
+                          <option value={option.value}>{option.label}</option>
+                        );
+                      })}
+                    </Form.Control>
+                  </Form.Group>
+                )}
                 <Form.Group>
                   <Form.Label>Vehicle Status</Form.Label>
                   <Form.Control
@@ -379,19 +342,6 @@ class Cars extends Component {
           </div>
         </ActivityIndicator>
 
-        {/* {vehicleToShow && (
-          <CarModal
-            toShow={true}
-            data={vehicleToShow}
-            handleClose={this.clearVehicleInfo}
-            handleEdit={this.props.updateVehicles}
-            afterSubmitAction={this.editModalAndToast}
-            token={this.props.token}
-            isSuper={this.props.userType === SUPER_ADMIN}
-            rentalCompanies={this.props.rentalCompanies}
-            insurances={this.props.insurances}
-          />
-        )} */}
         {vehicleToShow && (
           <EditModal
             toShow={true}

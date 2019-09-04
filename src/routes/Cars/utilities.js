@@ -63,3 +63,46 @@ export const vehicleTypeDropdown = ({ cars }) => {
 
   return Object.keys(carTypes).map(type => ({ label: type, value: type }));
 };
+
+export const applyFilter = ({
+  car = { Company: {}, rentalCompanyId: "" },
+  states = {},
+  orders
+}) => {
+  const {
+    filterRentalCompanyId,
+    filterVehicleStatus,
+    filterVehicleType,
+    filterDate
+  } = states;
+
+  if (
+    filterRentalCompanyId &&
+    filterRentalCompanyId !== "All" &&
+    car.rentalCompanyId !== filterRentalCompanyId
+  ) {
+    return false;
+  }
+
+  if (
+    filterVehicleType &&
+    filterVehicleType !== "All" &&
+    car.vehicleType.toLowerCase() !== filterVehicleType
+  ) {
+    return false;
+  }
+
+  if (filterVehicleStatus) {
+    const carStatus = vehicleStatus({
+      vehicleStatus: car.vehicleStatus,
+      vehicleId: car._id,
+      orders,
+      date: filterDate
+    });
+
+    if (filterVehicleStatus !== "All" && carStatus !== filterVehicleStatus)
+      return false;
+  }
+
+  return true;
+};

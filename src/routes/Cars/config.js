@@ -7,6 +7,7 @@ import {
 import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
 
 export const header = userType => [
+  { title: "Id", key: "_id" },
   { title: "Rental Company", key: "rentalCompanyId" },
   { title: "Location Address", key: "locationAddress" },
   { title: "Vehicle Type", key: "vehicleType" },
@@ -15,7 +16,8 @@ export const header = userType => [
     title: "Daily Rate",
     key: userType === "superAdmin" ? "dailyRateDisplay" : "dailyRate"
   },
-  { title: "Action", key: "action" }
+  { title: "Action", key: "action" },
+  { title: "Status", key: "vehicleStatus" }
 ];
 
 export const getRentalCompanyName = ({ rentalCompanyId, rentalCompanies }) => {

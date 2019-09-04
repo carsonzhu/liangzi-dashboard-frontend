@@ -1,9 +1,13 @@
 import React, { Component } from "react";
+import moment from "moment";
 import PropTypes from "prop-types";
-import { Table, Toast, Button, Modal } from "react-bootstrap";
+import { Table, Toast, Button, Modal, Form } from "react-bootstrap";
 import "./Cars.css";
 
+import Calendar from "react-calendar";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import ActivityIndicator from "../../utilities/activity-indicator";
+
 // import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
@@ -14,8 +18,9 @@ import {
   editFieldConfig
 } from "./config";
 
-import { checkVehicleAvailable, ordersTransform } from "./utilities";
+import { vehicleStatus, vehicleTypeDropdown, applyFilter } from "./utilities";
 import OrderHistory from "./OrderHistory";
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
 
 class Cars extends Component {
   static propTypes = {
@@ -43,7 +48,12 @@ class Cars extends Component {
     showToast: false,
     createNewModal: false,
     orderHistory: null,
-    vehicleHistory: {}
+    vehicleHistory: {},
+    filterRentalCompanyId: "All",
+    filterVehicleStatus: null,
+    filterVehicleType: null,
+    filterDate: moment(),
+    filterDisplay: false
   };
 
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
@@ -110,33 +120,8 @@ class Cars extends Component {
   }
 
   tbodyGenerator(cars) {
-    const classNamePicker = ({ status }) => {
-      switch (status) {
-        case "AVAILABLE":
-          return "cars__column-active";
-        case "RENTED":
-          return "cars__column-inuse";
-        case "UNAVAILABLE":
-          return "cars__column-inactive";
-
-        default:
-          return "cars__column-active";
-      }
-    };
-
     return cars.map((info, ind) => (
-      <tr
-        key={ind}
-        // className={classNamePicker({ status: info.vehicleStatus })}
-        className={
-          checkVehicleAvailable({
-            orders: this.props.orders,
-            vehicleId: info._id
-          })
-            ? "cars__column-active"
-            : "cars__column-inuse"
-        }
-      >
+      <tr key={ind}>
         {header(this.props.userType).map((field, ind) => {
           if (field.key === "rentalCompanyId") {
             const rentalCompanyId = info[field.key];
@@ -163,8 +148,21 @@ class Cars extends Component {
                     )
                   )}
                 >
-                  History
+                  Order Info
                 </button>
+              </td>
+            );
+          } else if (field.key === "_id") {
+            return <td key={ind}>{info[field.key].slice(-5)}</td>;
+          } else if (field.key === "vehicleStatus") {
+            return (
+              <td key={ind}>
+                {vehicleStatus({
+                  vehicleStatus: info.vehicleStatus,
+                  vehicleId: info._id,
+                  orders: this.props.orders,
+                  date: this.state.filterDate
+                })}
               </td>
             );
           } else {
@@ -174,13 +172,43 @@ class Cars extends Component {
       </tr>
     ));
   }
+
   render() {
     const {
       vehicleToShow,
       createNewModal,
       showToast,
-      orderHistory
+      orderHistory,
+      filterDisplay,
+      filterRentalCompanyId,
+      filterVehicleStatus,
+      filterVehicleType
     } = this.state;
+
+    const rentalCompaniesFilter = [
+      { label: "All", value: "All" },
+      ...rentalCompanyDropdownHelper({
+        rentalCompanies: this.props.rentalCompanies
+      })
+    ];
+
+    const statusFilter = [
+      { label: "All", value: "All" },
+      { label: "Unavailable", value: "Unavailable" },
+      { label: "Available", value: "Available" },
+      { label: "Rented", value: "Rented" },
+      { label: "Pickup", value: "Pickup" },
+      { label: "Return", value: "Return" }
+    ];
+
+    const vehicleTypeFilter = [
+      { label: "All", value: "All" },
+      ...vehicleTypeDropdown({ cars: this.props.vehicles })
+    ];
+
+    const filteredVehicles = this.props.vehicles.filter(car =>
+      applyFilter({ car, states: this.state, orders: this.props.orders })
+    );
 
     return (
       <div className="cars-route">
@@ -202,38 +230,119 @@ class Cars extends Component {
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.vehicles &&
-            (this.props.vehicles.length ? (
-              <div>
-                <Table responsive hover>
-                  <thead>{this.theadGenerater()}</thead>
-                  <tbody>{this.tbodyGenerator(this.props.vehicles)}</tbody>
-                </Table>
-
-                <div className="cars-route__legends">
-                  <p className="cars-route__legends-green">Active</p>
-                  <p className="cars-route__legends-yellow">Rented</p>
-                  {/* <p className="cars-route__legends-red">Inactive</p> */}
-                </div>
+          <div>
+            <div
+              className="cars-route__filter-toggle"
+              style={
+                filterDisplay ? { paddingTop: "1rem" } : { padding: "1rem 0" }
+              }
+            >
+              filter
+              {!filterDisplay ? (
+                <IoIosArrowDown
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: true })}
+                />
+              ) : (
+                <IoIosArrowUp
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: false })}
+                />
+              )}
+            </div>
+            {filterDisplay && (
+              <div className="cars-route__filter">
+                {this.props.userType === "superAdmin" && (
+                  <Form.Group>
+                    <Form.Label>Rental Company</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={value =>
+                        this.setState({
+                          filterRentalCompanyId: value.target.value
+                        })
+                      }
+                    >
+                      {rentalCompaniesFilter.map(option => {
+                        if (option.value === filterRentalCompanyId) {
+                          return (
+                            <option value={option.value} selected>
+                              {option.label}
+                            </option>
+                          );
+                        }
+                        return (
+                          <option value={option.value}>{option.label}</option>
+                        );
+                      })}
+                    </Form.Control>
+                  </Form.Group>
+                )}
+                <Form.Group>
+                  <Form.Label>Vehicle Status</Form.Label>
+                  <Form.Control
+                    as="select"
+                    onChange={value =>
+                      this.setState({
+                        filterVehicleStatus: value.target.value
+                      })
+                    }
+                  >
+                    {statusFilter.map(option => {
+                      if (option.value === filterVehicleStatus) {
+                        return (
+                          <option value={option.value} selected>
+                            {option.label}
+                          </option>
+                        );
+                      }
+                      return (
+                        <option value={option.value}>{option.label}</option>
+                      );
+                    })}
+                  </Form.Control>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Vehicle Type</Form.Label>
+                  <Form.Control
+                    as="select"
+                    onChange={value =>
+                      this.setState({
+                        filterVehicleType: value.target.value
+                      })
+                    }
+                  >
+                    {vehicleTypeFilter.map(option => {
+                      if (option.value === filterVehicleType) {
+                        return (
+                          <option value={option.value} selected>
+                            {option.label}
+                          </option>
+                        );
+                      }
+                      return (
+                        <option value={option.value}>{option.label}</option>
+                      );
+                    })}
+                  </Form.Control>
+                </Form.Group>
+                <Calendar
+                  onChange={date => this.setState({ filterDate: moment(date) })}
+                  value={this.state.filterDate.toDate()}
+                />
               </div>
+            )}
+            {filteredVehicles.length ? (
+              <Table striped responsive hover>
+                <thead>{this.theadGenerater()}</thead>
+                <tbody>{this.tbodyGenerator(filteredVehicles)}</tbody>
+              </Table>
             ) : (
               <div>No Vehicle in the Record</div>
-            ))}
+            )}
+          </div>
         </ActivityIndicator>
 
-        {/* {vehicleToShow && (
-          <CarModal
-            toShow={true}
-            data={vehicleToShow}
-            handleClose={this.clearVehicleInfo}
-            handleEdit={this.props.updateVehicles}
-            afterSubmitAction={this.editModalAndToast}
-            token={this.props.token}
-            isSuper={this.props.userType === SUPER_ADMIN}
-            rentalCompanies={this.props.rentalCompanies}
-            insurances={this.props.insurances}
-          />
-        )} */}
         {vehicleToShow && (
           <EditModal
             toShow={true}
@@ -282,6 +391,7 @@ class Cars extends Component {
                 <OrderHistory
                   data={orderHistory}
                   insurances={this.props.insurances}
+                  selectedDate={this.state.filterDate}
                 />
               )}
             </Modal.Body>

@@ -142,7 +142,7 @@ class Insurances extends Component {
           {this.props.insurances &&
             (this.props.insurances.length ? (
               <div>
-                <Table responsive hover>
+                <Table striped responsive hover>
                   <thead>
                     {this.theadGenerater({
                       fields: Object.keys(this.props.insurances[0])

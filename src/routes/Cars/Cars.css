@@ -74,3 +74,25 @@
 .cars-route .form-control option {
     text-transform: capitalize;
 }
+
+.order-history__hightlighted {
+    border-left: 6px solid #2196F3;
+    background-color: #ddffff;
+}
+
+.order-history__legends-blue {
+    color: #2196F3;
+    line-height: 1;
+}
+
+.order-history__legends {
+    display: flex;
+    flex-direction: row;
+}
+
+.order-history__legends-square {
+    height: 1rem;
+    width: 1rem;
+    background-color: #2196F3;
+    margin-right: 0.5rem;
+}

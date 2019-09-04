@@ -3,6 +3,12 @@ import { extendMoment } from "moment-range";
 
 const moment = extendMoment(Moment);
 
+export const checkInRange = ({ start, end, date = moment() }) => {
+  const existingTime = moment.range(start, end);
+
+  return existingTime.contains(date);
+};
+
 export const checkVehicleAvailable = ({
   orders = [],
   date = moment(),

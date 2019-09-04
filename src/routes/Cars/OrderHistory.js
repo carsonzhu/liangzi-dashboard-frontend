@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-import { formatPhoneNumber } from "./utilities";
+import { formatPhoneNumber, checkInRange } from "./utilities";
 
 const fields = [
   { title: "Amount", key: "amount" },
@@ -14,7 +14,7 @@ const fields = [
   { title: "Account Contact", key: "contact" }
 ];
 
-const OrderHistory = ({ data, insurances }) => {
+const OrderHistory = ({ data, insurances, selectedDate }) => {
   const displayPayment = paymentMethod => {
     switch (paymentMethod) {
       case "WAITTOCHOOSE":
@@ -55,7 +55,17 @@ const OrderHistory = ({ data, insurances }) => {
 
   const tbodyGenerator = (data, insurances) => {
     return data.map(order => (
-      <tr>
+      <tr
+        className={
+          checkInRange({
+            start: order.pickTime,
+            end: order.returnTime,
+            selected: selectedDate
+          })
+            ? "order-history__hightlighted"
+            : ""
+        }
+      >
         {fields.map((field, ind) => {
           const key = field.key;
 
@@ -110,10 +120,16 @@ const OrderHistory = ({ data, insurances }) => {
   };
 
   return (
-    <Table responsive hover>
-      <thead>{theadGenerater()}</thead>
-      <tbody>{tbodyGenerator(data, insurances)}</tbody>
-    </Table>
+    <div>
+      <Table responsive hover>
+        <thead>{theadGenerater()}</thead>
+        <tbody>{tbodyGenerator(data, insurances)}</tbody>
+      </Table>
+      <div className="order-history__legends">
+        <div className="order-history__legends-square" />
+        <p className="order-history__legends-blue">Current Order</p>
+      </div>
+    </div>
   );
 };
 

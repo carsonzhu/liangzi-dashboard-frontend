@@ -333,7 +333,7 @@ class Cars extends Component {
               </div>
             )}
             {filteredVehicles.length ? (
-              <Table responsive hover>
+              <Table striped responsive hover>
                 <thead>{this.theadGenerater()}</thead>
                 <tbody>{this.tbodyGenerator(filteredVehicles)}</tbody>
               </Table>
@@ -391,6 +391,7 @@ class Cars extends Component {
                 <OrderHistory
                   data={orderHistory}
                   insurances={this.props.insurances}
+                  selectedDate={this.state.filterDate}
                 />
               )}
             </Modal.Body>

@@ -41,3 +41,34 @@
 .form-control-file {
     width: 60%;
 }
+
+.cars-route .react-calendar {
+    width: initial;
+}
+
+.cars-route__filter {
+    padding: 2.5rem 1rem;
+}
+
+.cars-route__filter-toggle {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cars-route__filter-toggle-btn {
+    cursor: pointer;
+}
+
+.cars-route .form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.cars-route .form-control {
+    width: 60%;
+}
+
+.cars-route .form-control option {
+    text-transform: capitalize;
+}

@@ -24,18 +24,14 @@ export const checkVehicleAvailable = ({
 export const checkPickUpOrReturn = ({ orders, date, vehicleId }) => {
   const filteredOrders = orders.filter(order => order.vehicleId === vehicleId);
 
-  if (filteredOrders.length === 0) {
-    return true;
-  }
-
   for (let i = 0; i < filteredOrders.length; i++) {
     const order = filteredOrders[i];
 
     const existingTime = moment.range(order.pickTime, order.returnTime);
 
     if (existingTime.contains(date)) {
-      if (date.isSame(order.pickTime)) return "Pickup";
-      if (date.isSame(order.returnTime)) return "Return";
+      if (date.isSame(moment(order.pickTime.slice(0, 10)))) return "Pickup";
+      if (date.isSame(moment(order.returnTime.slice(0, 10)))) return "Return";
 
       return "Rented";
     }
@@ -50,5 +46,6 @@ export const vehicleStatus = ({ vehicleStatus, vehicleId, orders, date }) => {
   if (status === "Available" && vehicleStatus === "UNAVAILABLE") {
     return "Unavailable";
   }
+
   return status;
 };

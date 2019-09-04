@@ -1,9 +1,12 @@
 import React, { Component } from "react";
+import moment from "moment";
 import PropTypes from "prop-types";
 import { Table, Toast, Button, Modal } from "react-bootstrap";
 import "./Cars.css";
 
+import Calendar from "react-calendar";
 import ActivityIndicator from "../../utilities/activity-indicator";
+
 // import CarModal from "../../components/Modal/carModal";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
@@ -14,8 +17,9 @@ import {
   editFieldConfig
 } from "./config";
 
-import { checkVehicleAvailable, ordersTransform } from "./utilities";
+import { checkVehicleAvailable, vehicleStatus } from "./utilities";
 import OrderHistory from "./OrderHistory";
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
 
 class Cars extends Component {
   static propTypes = {
@@ -43,7 +47,11 @@ class Cars extends Component {
     showToast: false,
     createNewModal: false,
     orderHistory: null,
-    vehicleHistory: {}
+    vehicleHistory: {},
+    filterRentalCompanyId: null,
+    filterVehicleStatus: null,
+    filterVehicleType: null,
+    filterDate: moment()
   };
 
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
@@ -128,14 +136,14 @@ class Cars extends Component {
       <tr
         key={ind}
         // className={classNamePicker({ status: info.vehicleStatus })}
-        className={
-          checkVehicleAvailable({
-            orders: this.props.orders,
-            vehicleId: info._id
-          })
-            ? "cars__column-active"
-            : "cars__column-inuse"
-        }
+        // className={
+        //   checkVehicleAvailable({
+        //     orders: this.props.orders,
+        //     vehicleId: info._id
+        //   })
+        //     ? "cars__column-active"
+        //     : "cars__column-inuse"
+        // }
       >
         {header(this.props.userType).map((field, ind) => {
           if (field.key === "rentalCompanyId") {
@@ -173,6 +181,17 @@ class Cars extends Component {
                 {info[field.key].slice(info[field.key].length - 5)}
               </td>
             );
+          } else if (field.key === "vehicleStatus") {
+            return (
+              <td key={ind}>
+                {vehicleStatus({
+                  vehicleStatus: info["vehicleStatus"],
+                  vehicleId: info._id,
+                  orders: this.props.orders,
+                  date: this.state.filterDate
+                })}
+              </td>
+            );
           } else {
             return <td key={ind}>{info[field.key]}</td>;
           }
@@ -180,6 +199,7 @@ class Cars extends Component {
       </tr>
     ));
   }
+
   render() {
     const {
       vehicleToShow,
@@ -187,6 +207,33 @@ class Cars extends Component {
       showToast,
       orderHistory
     } = this.state;
+
+    const applyFilter = (car = { Company: {}, rentalCompanyId: "" }) => {
+      console.log("state", this.state);
+      const {
+        filterRentalCompanyId,
+        filterVehicleStatus,
+        filterVehicleType
+      } = this.state;
+
+      if (
+        filterRentalCompanyId &&
+        car.rentalCompanyId !== filterRentalCompanyId
+      ) {
+        return false;
+      }
+
+      if (filterVehicleType && car.vehicleType.lower() !== filterVehicleType) {
+        return false;
+      }
+
+      // if (filterVehicleStatus) {
+      // }
+
+      return true;
+    };
+
+    const filteredVehicles = this.props.vehicles.filter(applyFilter);
 
     return (
       <div className="cars-route">
@@ -208,23 +255,26 @@ class Cars extends Component {
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.vehicles &&
-            (this.props.vehicles.length ? (
-              <div>
-                <Table responsive hover>
-                  <thead>{this.theadGenerater()}</thead>
-                  <tbody>{this.tbodyGenerator(this.props.vehicles)}</tbody>
-                </Table>
+          {filteredVehicles.length ? (
+            <div>
+              <Calendar
+                onChange={date => this.setState({ filterDate: moment(date) })}
+                value={this.state.filterDate.toDate()}
+              />
+              <Table responsive hover>
+                <thead>{this.theadGenerater()}</thead>
+                <tbody>{this.tbodyGenerator(filteredVehicles)}</tbody>
+              </Table>
 
-                <div className="cars-route__legends">
+              {/* <div className="cars-route__legends">
                   <p className="cars-route__legends-green">Active</p>
                   <p className="cars-route__legends-yellow">Rented</p>
-                  {/* <p className="cars-route__legends-red">Inactive</p> */}
-                </div>
-              </div>
-            ) : (
-              <div>No Vehicle in the Record</div>
-            ))}
+                  <p className="cars-route__legends-red">Inactive</p>
+                </div> */}
+            </div>
+          ) : (
+            <div>No Vehicle in the Record</div>
+          )}
         </ActivityIndicator>
 
         {/* {vehicleToShow && (

@@ -3,18 +3,52 @@ import { extendMoment } from "moment-range";
 
 const moment = extendMoment(Moment);
 
-export const checkVehicleAvailable = ({ orders = [], vehicleId = "" }) => {
+export const checkVehicleAvailable = ({
+  orders = [],
+  date = moment(),
+  vehicleId = ""
+}) => {
   const filteredOrders = orders.filter(order => order.vehicleId === vehicleId);
 
   if (filteredOrders.length === 0) {
     return true;
   }
 
-  const currTime = moment();
-
   return !filteredOrders.some(order => {
     const existingTime = moment.range(order.pickTime, order.returnTime);
 
-    return existingTime.contains(currTime);
+    return existingTime.contains(date);
   });
+};
+
+export const checkPickUpOrReturn = ({ orders, date, vehicleId }) => {
+  const filteredOrders = orders.filter(order => order.vehicleId === vehicleId);
+
+  if (filteredOrders.length === 0) {
+    return true;
+  }
+
+  for (let i = 0; i < filteredOrders.length; i++) {
+    const order = filteredOrders[i];
+
+    const existingTime = moment.range(order.pickTime, order.returnTime);
+
+    if (existingTime.contains(date)) {
+      if (date.isSame(order.pickTime)) return "Pickup";
+      if (date.isSame(order.returnTime)) return "Return";
+
+      return "Rented";
+    }
+  }
+
+  return "Available";
+};
+
+export const vehicleStatus = ({ vehicleStatus, vehicleId, orders, date }) => {
+  const status = checkPickUpOrReturn({ orders, date, vehicleId });
+
+  if (status === "Available" && vehicleStatus === "UNAVAILABLE") {
+    return "Unavailable";
+  }
+  return status;
 };

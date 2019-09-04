@@ -148,7 +148,7 @@ class Cars extends Component {
                     )
                   )}
                 >
-                  History
+                  Order Info
                 </button>
               </td>
             );

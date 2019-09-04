@@ -237,6 +237,7 @@ class Cars extends Component {
                 filterDisplay ? { paddingTop: "1rem" } : { padding: "1rem 0" }
               }
             >
+              filter
               {!filterDisplay ? (
                 <IoIosArrowDown
                   className="cars-route__filter-toggle-btn"

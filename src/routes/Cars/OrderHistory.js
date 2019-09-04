@@ -1,7 +1,7 @@
 import React from "react";
 import { Table } from "react-bootstrap";
 
-import { ordersTransform } from "./utilities";
+import { formatPhoneNumber } from "./utilities";
 
 const fields = [
   { title: "Amount", key: "amount" },
@@ -9,7 +9,9 @@ const fields = [
   { title: "Pickup Time", key: "pickTime" },
   { title: "Return Time", key: "returnTime" },
   { title: "Payment", key: "paymentMethod" },
-  { title: "Insurance", key: "insuranceId" }
+  { title: "Insurance", key: "insuranceId" },
+  { title: "Driver Name", key: "driver" },
+  { title: "Account Contact", key: "contact" }
 ];
 
 const OrderHistory = ({ data, insurances }) => {
@@ -71,6 +73,34 @@ const OrderHistory = ({ data, insurances }) => {
                   {displayInsurance(insurances, order[key])}
                 </td>
               );
+            case "driver":
+              if (
+                !order.Driver ||
+                !order.Driver.firstName ||
+                !order.Driver.lastName
+              ) {
+                return <td key={`${ind}-${key}`}>None</td>;
+              }
+
+              return (
+                <td key={`${ind}-${key}`}>
+                  {`${order.Driver.firstName} ${order.Driver.lastName}`}
+                </td>
+              );
+            case "contact":
+              if (
+                !order.User ||
+                (!order.User.phoneNumber && !order.User.email)
+              ) {
+                return <td key={`${ind}-${key}`}>None</td>;
+              } else if (order.User.phoneNumber) {
+                return (
+                  <td key={`${ind}-${key}`}>
+                    {formatPhoneNumber(order.User.phoneNumber)}
+                  </td>
+                );
+              }
+              return <td key={`${ind}-${key}`}>{order.User.email}</td>;
             default:
               return <td key={`${ind}-${key}`}>{order[key]}</td>;
           }

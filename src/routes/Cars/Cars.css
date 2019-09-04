@@ -53,10 +53,12 @@
 .cars-route__filter-toggle {
     display: flex;
     justify-content: flex-end;
+    line-height: 0.9rem;
 }
 
 .cars-route__filter-toggle-btn {
     cursor: pointer;
+    margin-left: 0.3rem;
 }
 
 .cars-route .form-group {

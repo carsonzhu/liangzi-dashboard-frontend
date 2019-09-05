@@ -183,11 +183,12 @@ class Insurances extends Component {
             token={this.props.token}
             formValuesTransformer={values => {
               const insuranceId = values._id;
+              const fieldToUpdate = { ...values };
 
-              delete values._id;
-              delete values.__v;
+              delete fieldToUpdate._id;
+              delete fieldToUpdate.__v;
 
-              return { insuranceId, fieldToUpdate: values };
+              return { insuranceId, fieldToUpdate };
             }}
           />
         )}

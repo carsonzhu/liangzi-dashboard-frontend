@@ -159,11 +159,12 @@ class RentalCompanies extends Component {
             token={this.props.token}
             formValuesTransformer={values => {
               const rentalCompanyId = values._id;
+              const fieldToUpdate = { ...values };
 
-              delete values._id;
-              delete values.__v;
+              delete fieldToUpdate._id;
+              delete fieldToUpdate.__v;
 
-              return { rentalCompanyId, fieldToUpdate: values };
+              return { rentalCompanyId, fieldToUpdate };
             }}
           />
         )}

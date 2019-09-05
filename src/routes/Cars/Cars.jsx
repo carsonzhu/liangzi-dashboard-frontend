@@ -358,11 +358,12 @@ class Cars extends Component {
             token={this.props.token}
             formValuesTransformer={values => {
               const vehicleId = values._id;
+              const fieldToUpdate = { ...values };
 
-              delete values._id;
-              delete values.__v;
+              delete fieldToUpdate._id;
+              delete fieldToUpdate.__v;
 
-              return { vehicleId, fieldToUpdate: values };
+              return { vehicleId, fieldToUpdate };
             }}
           />
         )}

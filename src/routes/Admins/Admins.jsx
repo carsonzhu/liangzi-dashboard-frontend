@@ -167,12 +167,13 @@ class Admins extends Component {
             token={this.props.token}
             formValuesTransformer={values => {
               const userId = values._id;
+              const fieldToUpdate = { ...values };
 
-              delete values._id;
-              delete values.password;
-              delete values.__v;
+              delete fieldToUpdate._id;
+              delete fieldToUpdate.__v;
+              delete fieldToUpdate.password;
 
-              return { userId, fieldToUpdate: values };
+              return { userId, fieldToUpdate };
             }}
           />
         )}

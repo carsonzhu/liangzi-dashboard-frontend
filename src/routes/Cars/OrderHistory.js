@@ -29,6 +29,7 @@ const OrderHistory = ({ data, insurances, selectedDate }) => {
     // "2019-08-26T17:54:51.009Z"
     return time.replace("T", " ").slice(0, -5);
   };
+
   const displayInsurance = (insurances, insuranceId) => {
     if (!insuranceId) {
       return "None";

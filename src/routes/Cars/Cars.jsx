@@ -66,15 +66,13 @@ class Cars extends Component {
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
     this.props.fetchInsurances({ token: this.props.token });
-    // this.setState({
-    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
-    // });
   }
 
   componentDidUpdate(prevProps) {
-    // this.setState({
-    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
-    // });
+    if (!prevProps.token && this.props.token) {
+      this.props.fetchVehicles({ token: this.props.token });
+      this.props.fetchInsurances({ token: this.props.token });
+    }
   }
 
   vehicleInfoShow(info) {

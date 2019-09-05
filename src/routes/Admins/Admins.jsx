@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { Table, Toast, Button } from "react-bootstrap";
+import { Table, Toast, Button, Form } from "react-bootstrap";
 import "./Admins.css";
 
 import ActivityIndicator from "../../utilities/activity-indicator";
@@ -9,6 +9,10 @@ import ActivityIndicator from "../../utilities/activity-indicator";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
+
+import { applyFilter } from "./utilities";
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 class Admins extends Component {
   static propTypes = {
@@ -33,7 +37,10 @@ class Admins extends Component {
   state = {
     adminToShow: null,
     showToast: false,
-    createNewModal: false
+    createNewModal: false,
+    filterRentalCompanyId: "All",
+    filterDisplay: false,
+    sorting: null
   };
 
   closeEditModal = this.closeEditModal.bind(this);
@@ -49,6 +56,18 @@ class Admins extends Component {
   componentDidUpdate(prevProps) {}
 
   tbodyGenerator({ admins }) {
+    const displayCompany = ({ rentalCompanyId }) => {
+      for (let i = 0; i < this.props.rentalCompanies.length; i++) {
+        let company = this.props.rentalCompanies[i];
+
+        if (company._id === rentalCompanyId) {
+          return company.name;
+        }
+      }
+
+      return "None";
+    };
+
     return admins.map((info, ind) => (
       <tr
         key={ind}
@@ -61,6 +80,11 @@ class Admins extends Component {
         <td>{info.userType}</td>
         <td>{info.email}</td>
         <td>{info.username}</td>
+        <td>
+          {info.userType === "superAdmin"
+            ? "SUPER"
+            : displayCompany({ rentalCompanyId: info.rentalCompanyId })}
+        </td>
       </tr>
     ));
   }
@@ -72,6 +96,7 @@ class Admins extends Component {
         <th>User Type</th>
         <th>Email</th>
         <th>Username</th>
+        <th>Company</th>
       </tr>
     );
   }
@@ -101,7 +126,39 @@ class Admins extends Component {
   }
 
   render() {
-    const { adminToShow, showToast, createNewModal } = this.state;
+    const {
+      adminToShow,
+      showToast,
+      createNewModal,
+      filterRentalCompanyId,
+      filterDisplay,
+      sorting
+    } = this.state;
+
+    const rentalCompaniesFilter = [
+      { label: "All", value: "All" },
+      ...rentalCompanyDropdownHelper({
+        rentalCompanies: this.props.rentalCompanies
+      })
+    ];
+
+    const filteredAdmins = this.props.admins.filter(admin =>
+      applyFilter({ admin, states: this.state })
+    );
+
+    if (sorting) {
+      filteredAdmins.sort((a, b) => {
+        switch (sorting) {
+          case "email":
+            return a.email.localeCompare(b.email);
+          case "username": {
+            return a.username.localeCompare(b.username);
+          }
+          default:
+            return 0;
+        }
+      });
+    }
 
     return (
       <div className="admins-route">
@@ -122,8 +179,83 @@ class Admins extends Component {
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.admins && this.props.admins.length && (
-            <div>
+          <div>
+            <div
+              className="cars-route__filter-toggle"
+              style={
+                filterDisplay ? { paddingTop: "1rem" } : { padding: "1rem 0" }
+              }
+            >
+              filter
+              {!filterDisplay ? (
+                <IoIosArrowDown
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: true })}
+                />
+              ) : (
+                <IoIosArrowUp
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: false })}
+                />
+              )}
+            </div>
+            {filterDisplay && (
+              <div className="cars-route__filter">
+                {this.props.userType === "superAdmin" && (
+                  <Form.Group>
+                    <Form.Label>Rental Company</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={value =>
+                        this.setState({
+                          filterRentalCompanyId: value.target.value
+                        })
+                      }
+                    >
+                      {rentalCompaniesFilter.map(option => {
+                        if (option.value === filterRentalCompanyId) {
+                          return (
+                            <option value={option.value} selected>
+                              {option.label}
+                            </option>
+                          );
+                        }
+                        return (
+                          <option value={option.value}>{option.label}</option>
+                        );
+                      })}
+                    </Form.Control>
+                  </Form.Group>
+                )}
+                <div className="sorting-button">
+                  <p
+                    className={
+                      sorting === "username" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "username" ? null : "username"
+                      })
+                    }
+                  >
+                    Sort By Username
+                  </p>
+                  <p
+                    className={
+                      sorting === "email" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "email" ? null : "email"
+                      })
+                    }
+                  >
+                    Sort By Email
+                  </p>
+                </div>
+              </div>
+            )}
+            {filteredAdmins.length ? (
               <Table responsive hover>
                 <thead>
                   {this.theadGenerater({
@@ -131,16 +263,16 @@ class Admins extends Component {
                   })}
                 </thead>
 
-                <tbody>
-                  {this.tbodyGenerator({ admins: this.props.admins })}
-                </tbody>
+                <tbody>{this.tbodyGenerator({ admins: filteredAdmins })}</tbody>
               </Table>
-              <div className="admins-route__legends">
-                <p className="admins-route__legends-green">Active</p>
-                <p className="admins-route__legends-red">Inactive</p>
-              </div>
+            ) : (
+              <p>No admin in the record</p>
+            )}
+            <div className="admins-route__legends">
+              <p className="admins-route__legends-green">Active</p>
+              <p className="admins-route__legends-red">Inactive</p>
             </div>
-          )}
+          </div>
         </ActivityIndicator>
 
         {/* {adminToShow && (

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import { Table, Toast, Button } from "react-bootstrap";
+import { Table, Toast, Button, Form } from "react-bootstrap";
 import _ from "lodash";
 
 import "./Insurances.css";
@@ -11,6 +11,10 @@ import ActivityIndicator from "../../utilities/activity-indicator";
 import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
+
+import { applyFilter } from "./utilities";
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 class Insurances extends Component {
   static propTypes = {
@@ -36,7 +40,10 @@ class Insurances extends Component {
   state = {
     insuranceToShow: null,
     showToast: false,
-    createNewModal: false
+    createNewModal: false,
+    filterRentalCompanyId: "All",
+    filterDisplay: false,
+    sorting: null
   };
 
   closeEditModal = this.closeEditModal.bind(this);
@@ -118,7 +125,45 @@ class Insurances extends Component {
   }
 
   render() {
-    const { insuranceToShow, showToast, createNewModal } = this.state;
+    const {
+      insuranceToShow,
+      showToast,
+      createNewModal,
+      filterRentalCompanyId,
+      filterDisplay,
+      sorting
+    } = this.state;
+
+    const rentalCompaniesFilter = [
+      { label: "All", value: "All" },
+      ...rentalCompanyDropdownHelper({
+        rentalCompanies: this.props.rentalCompanies
+      })
+    ];
+
+    const filteredInsurances = this.props.insurances.filter(insurance =>
+      applyFilter({ insurance, states: this.state })
+    );
+
+    if (sorting) {
+      filteredInsurances.sort((a, b) => {
+        switch (sorting) {
+          case "name":
+            return a.name.localeCompare(b.name);
+          case "rate": {
+            if (a.dailyRate > b.dailyRate) {
+              return 1;
+            } else if (a.dailyRate < b.dailyRate) {
+              return -1;
+            } else {
+              return 0;
+            }
+          }
+          default:
+            return 0;
+        }
+      });
+    }
 
     return (
       <div className="insurances-route">
@@ -139,24 +184,98 @@ class Insurances extends Component {
           <Button onClick={this.openNewModal}>Create New</Button>
         </div>
         <ActivityIndicator isLoading={this.props.isLoading}>
-          {this.props.insurances &&
-            (this.props.insurances.length ? (
-              <div>
-                <Table striped responsive hover>
-                  <thead>
-                    {this.theadGenerater({
-                      fields: Object.keys(this.props.insurances[0])
-                    })}
-                  </thead>
-
-                  <tbody>
-                    {this.tbodyGenerator({ insurances: this.props.insurances })}
-                  </tbody>
-                </Table>
+          <div>
+            <div
+              className="cars-route__filter-toggle"
+              style={
+                filterDisplay ? { paddingTop: "1rem" } : { padding: "1rem 0" }
+              }
+            >
+              filter
+              {!filterDisplay ? (
+                <IoIosArrowDown
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: true })}
+                />
+              ) : (
+                <IoIosArrowUp
+                  className="cars-route__filter-toggle-btn"
+                  onClick={() => this.setState({ filterDisplay: false })}
+                />
+              )}
+            </div>
+            {filterDisplay && (
+              <div className="cars-route__filter">
+                {this.props.userType === "superAdmin" && (
+                  <Form.Group>
+                    <Form.Label>Rental Company</Form.Label>
+                    <Form.Control
+                      as="select"
+                      onChange={value =>
+                        this.setState({
+                          filterRentalCompanyId: value.target.value
+                        })
+                      }
+                    >
+                      {rentalCompaniesFilter.map(option => {
+                        if (option.value === filterRentalCompanyId) {
+                          return (
+                            <option value={option.value} selected>
+                              {option.label}
+                            </option>
+                          );
+                        }
+                        return (
+                          <option value={option.value}>{option.label}</option>
+                        );
+                      })}
+                    </Form.Control>
+                  </Form.Group>
+                )}
+                <div className="sorting-button">
+                  <p
+                    className={
+                      sorting === "name" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "name" ? null : "name"
+                      })
+                    }
+                  >
+                    Sort By Name
+                  </p>
+                  <p
+                    className={
+                      sorting === "rate" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "rate" ? null : "rate"
+                      })
+                    }
+                  >
+                    Sort By Rate
+                  </p>
+                </div>
               </div>
+            )}
+            {filteredInsurances.length ? (
+              <Table striped responsive hover>
+                <thead>
+                  {this.theadGenerater({
+                    fields: Object.keys(this.props.insurances[0])
+                  })}
+                </thead>
+
+                <tbody>
+                  {this.tbodyGenerator({ insurances: filteredInsurances })}
+                </tbody>
+              </Table>
             ) : (
               <div>No Insurance in the Record</div>
-            ))}
+            )}
+          </div>
         </ActivityIndicator>
 
         {/* {insuranceToShow && (

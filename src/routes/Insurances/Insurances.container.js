@@ -12,7 +12,8 @@ const mapStateToProps = state => ({
   insurances: state.insurances.insurances,
   token: state.login.token,
   rentalCompanies: state.rentalCompanies.rentalCompanies,
-  error: state.insurances.error
+  error: state.insurances.error,
+  userType: state.login.userType
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -2,3 +2,49 @@
     display: flex;
     justify-content: space-between;
 }
+
+.insurances-route__filter {
+    padding: 2.5rem 1rem;
+}
+
+.insurances-route__filter-toggle {
+    display: flex;
+    justify-content: flex-end;
+    line-height: 0.9rem;
+}
+
+.insurances-route__filter-toggle-btn {
+    cursor: pointer;
+    margin-left: 0.3rem;
+}
+
+.insurances-route .form-group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.insurances-route .form-control {
+    width: 60%;
+}
+
+.insurances-route .form-control option {
+    text-transform: capitalize;
+}
+
+.sorting-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 1rem;
+    font-weight: bold;
+}
+
+.sorting-button p {
+    cursor: pointer;
+    padding: 0 0.5rem;
+}
+
+.sorting-button__active {
+    background-color: #e8e8e8;
+}

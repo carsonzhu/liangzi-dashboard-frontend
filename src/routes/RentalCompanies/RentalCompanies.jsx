@@ -9,6 +9,10 @@ import CreateNewModal from "../../components/Modal/createNewModal";
 import EditModal from "../../components/Modal/editModal";
 import { createNewFieldConfig, editFieldConfig } from "./config";
 
+import { applyFilter, formatPhoneNumber } from "./utilities";
+import { rentalCompanyDropdownHelper } from "../RentalCompanies/config";
+import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
 class RentalCompanies extends Component {
   static propTypes = {
     fetchRentalCompanies: PropTypes.func,
@@ -55,6 +59,8 @@ class RentalCompanies extends Component {
         <td>{ind}</td>
         <td>{info.name}</td>
         <td>{info.address}</td>
+        <td>{info.companyRepName || "--"}</td>
+        <td>{formatPhoneNumber(info.companyPhoneNumber) || "--"}</td>
       </tr>
     ));
   }
@@ -65,6 +71,8 @@ class RentalCompanies extends Component {
         <th>#</th>
         <th>Company Name</th>
         <th>Company Address</th>
+        <th>Contact Name</th>
+        <th>Contact Number</th>
       </tr>
     );
   }

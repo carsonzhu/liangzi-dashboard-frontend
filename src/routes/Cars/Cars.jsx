@@ -53,7 +53,9 @@ class Cars extends Component {
     filterVehicleStatus: null,
     filterVehicleType: null,
     filterDate: moment(),
-    filterDisplay: false
+    filterDisplay: false,
+    sorting: null,
+    showCalendar: false
   };
 
   clearVehicleInfo = this.clearVehicleInfo.bind(this);
@@ -66,15 +68,13 @@ class Cars extends Component {
   componentDidMount() {
     this.props.fetchVehicles({ token: this.props.token });
     this.props.fetchInsurances({ token: this.props.token });
-    // this.setState({
-    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
-    // });
   }
 
   componentDidUpdate(prevProps) {
-    // this.setState({
-    //   vehicleHistory: ordersTransform({ orders: this.props.orders })
-    // });
+    if (!prevProps.token && this.props.token) {
+      this.props.fetchVehicles({ token: this.props.token });
+      this.props.fetchInsurances({ token: this.props.token });
+    }
   }
 
   vehicleInfoShow(info) {
@@ -182,7 +182,10 @@ class Cars extends Component {
       filterDisplay,
       filterRentalCompanyId,
       filterVehicleStatus,
-      filterVehicleType
+      filterVehicleType,
+      sorting,
+      filterDate,
+      showCalendar
     } = this.state;
 
     const rentalCompaniesFilter = [
@@ -209,6 +212,28 @@ class Cars extends Component {
     const filteredVehicles = this.props.vehicles.filter(car =>
       applyFilter({ car, states: this.state, orders: this.props.orders })
     );
+
+    if (sorting) {
+      filteredVehicles.sort((a, b) => {
+        switch (sorting) {
+          case "type":
+            return a.vehicleType.localeCompare(b.vehicleType);
+          case "make":
+            return a.vehicleMake.localeCompare(b.vehicleMake);
+          case "rate": {
+            if (a.dailyRate > b.dailyRate) {
+              return 1;
+            } else if (a.dailyRate < b.dailyRate) {
+              return -1;
+            } else {
+              return 0;
+            }
+          }
+          default:
+            return 0;
+        }
+      });
+    }
 
     return (
       <div className="cars-route">
@@ -326,10 +351,69 @@ class Cars extends Component {
                     })}
                   </Form.Control>
                 </Form.Group>
-                <Calendar
-                  onChange={date => this.setState({ filterDate: moment(date) })}
-                  value={this.state.filterDate.toDate()}
-                />
+                {!showCalendar ? (
+                  <Form.Group>
+                    <Form.Label>Selected Date</Form.Label>
+                    <p
+                      onClick={() => this.setState({ showCalendar: true })}
+                      style={{
+                        fontWeight: "900",
+                        width: "60%",
+                        cursor: "pointer"
+                      }}
+                    >
+                      {filterDate.format("YYYY-MM-DD")}
+                    </p>
+                  </Form.Group>
+                ) : (
+                  <Calendar
+                    onChange={date =>
+                      this.setState({
+                        filterDate: moment(date),
+                        showCalendar: false
+                      })
+                    }
+                    value={filterDate.toDate()}
+                  />
+                )}
+                <div className="sorting-button">
+                  <p
+                    className={
+                      sorting === "type" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "type" ? null : "type"
+                      })
+                    }
+                  >
+                    Sort By Vehicle Type
+                  </p>
+                  <p
+                    className={
+                      sorting === "make" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "make" ? null : "make"
+                      })
+                    }
+                  >
+                    Sort By Vehilce Make
+                  </p>
+                  <p
+                    className={
+                      sorting === "rate" ? "sorting-button__active" : ""
+                    }
+                    onClick={() =>
+                      this.setState({
+                        sorting: sorting === "rate" ? null : "rate"
+                      })
+                    }
+                  >
+                    Sort By Daily Rate
+                  </p>
+                </div>
               </div>
             )}
             {filteredVehicles.length ? (

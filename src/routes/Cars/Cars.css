@@ -47,7 +47,7 @@
 }
 
 .cars-route__filter {
-    padding: 2.5rem 1rem;
+    padding: 1rem 1rem 2.5rem;
 }
 
 .cars-route__filter-toggle {
@@ -73,6 +73,26 @@
 
 .cars-route .form-control option {
     text-transform: capitalize;
+}
+
+.sorting-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-top: 1.5rem;
+}
+
+.sorting-button p {
+    cursor: pointer;
+    padding: 0.5rem 0.5rem;
+}
+
+.sorting-button p:hover {
+    background-color: #e8e8e8;
+}
+
+.sorting-button__active {
+    background-color: #e8e8e8;
 }
 
 .order-history__hightlighted {

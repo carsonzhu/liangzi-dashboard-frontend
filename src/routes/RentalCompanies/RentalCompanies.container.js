@@ -8,7 +8,8 @@ import {
 
 const mapStateToProps = state => ({
   token: state.login.token,
-  rentalCompanies: state.rentalCompanies.rentalCompanies
+  rentalCompanies: state.rentalCompanies.rentalCompanies,
+  userType: state.login.userType
 });
 
 const mapDispatchToProps = dispatch => ({
